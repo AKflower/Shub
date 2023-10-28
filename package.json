@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@grpc/grpc-js": "^1.9.7",
+    "class-validator": "^0.14.0"
+  }
+}
