@@ -1,0 +1,14 @@
+.title {
+    margin-left: 1em;
+}
+.action {
+    width: 100%;
+    display: flex;
+    border-radius: 0;
+    font-size: 1.1em;
+    padding: 1em 1em 1em 2em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+  }
