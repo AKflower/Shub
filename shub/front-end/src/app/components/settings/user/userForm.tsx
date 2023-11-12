@@ -1,129 +1,125 @@
-// Trong file User.tsx
-import { useState, useEffect, ChangeEvent } from 'react';
-import Languages from './Languages';
-import Rules from './Rules';
-import Permissions from './Permissions';
-import Commands from './Commands';
+import { useState } from 'react';
+import LanguageSelector from '../languages/lanuages';
+import styles from './userForm.module.scss'
+import Permissions from '../permissions/permissions';
+import Button from '../../button/button';
+const UserForm = () => {
+  // const [createUserDirData, setCreateUserDirData] = useState(false);
+  // const [originalUserScope, setOriginalUserScope] = useState('/');
 
-interface UserProps {
-  user: {
-    username: string;
-    password: string;
-    scope: string;
-    locale: string;
-    lockPassword: boolean;
-    perm: {
-      admin: boolean;
-    };
-    commands: string[];
-    rules: string[];
-  };
-  createUserDir: boolean;
-  isNew: boolean;
-  isDefault: boolean;
-}
+  // const passwordPlaceholder = isNew ? '' : 'settings.avoidChanges';
+  // const scopePlaceholder = createUserDir ? 'settings.userScopeGenerationPlaceholder' : '';
+  // const displayHomeDirectoryCheckbox = isNew && createUserDir;
+  // const isExecEnabled = true; // replace with your condition
 
-const User: React.FC<UserProps> = ({ user, createUserDir, isNew, isDefault }) => {
-  const [createUserDirData, setCreateUserDirData] = useState(false);
-  const [originalUserScope, setOriginalUserScope] = useState<string>("/");
+  // const handleAdminChange = () => {
+  //   if (!user.perm.admin) return;
+  //   user.lockPassword = false;
+  // };
 
-  useEffect(() => {
-    setOriginalUserScope(user.scope);
-    setCreateUserDirData(createUserDir);
-  }, [createUserDir, user.scope]);
-
-  const handleCreateUserDirChange = () => {
-    setCreateUserDirData((prev) => !prev);
-  };
-
-  const handleUserPermAdminChange = () => {
-    if (!user.perm.admin) return;
-    user.lockPassword = false;
-  };
-
-  const handleCreateUserDirDataChange = () => {
-    user.scope = createUserDirData ? "" : originalUserScope;
-  };
+  // const handleCreateUserDirDataChange = () => {
+  //   user.scope = createUserDirData ? '' : originalUserScope;
+  // };
 
   return (
-    <div>
-      {!isDefault && (
-        <p>
-          <label htmlFor="username">Settings Username</label>
+    <div className= {styles.column}>
+        <form action="" className={styles.card}>
+          <h2>New user</h2>
+          <label className={styles.headerInput}>User name</label>
+          <input
+            className={styles.input}
+            type="text"
+            id="username"
+          />
+           <label className={styles.headerInput}>Password</label>
+          <input
+            className={styles.input}
+            type="password"
+            id="password"
+          />
+          <label className={styles.headerInput}>Scope</label>
+      <input
+        
+        className={styles.input}
+        type="text"
+        
+        id="scope"
+      />
+      
+       
+      <label className={styles.headerInput}>Language</label>
+      <LanguageSelector/>
+      <p className={styles.prevent}>
+          <input type="checkbox"  className={styles.checkbox}/>
+          Prevent the user from changing the password
+      </p>
+      <Permissions />
+      <div className={styles.footer}>
+        <Button buttonName='DELETE' success={false} />
+        <Button buttonName='SAVE' success={true} />
+      </div>
+       </form>
+        
+          {/* <label htmlFor="username">settings.username</label>
           <input
             className="input input--block"
             type="text"
-            value={user.username}
+            
             id="username"
           />
-        </p>
-      )}
 
-      {!isDefault && (
-        <p>
-          <label htmlFor="password">Settings Password</label>
+          <label htmlFor="password">settings.password</label>
           <input
             className="input input--block"
             type="password"
-            placeholder={isNew ? '' : 'Avoid Changes'}
-            value={user.password}
+            
+            
             id="password"
           />
-        </p>
-      )}
+        
+      
 
-      <p>
-        <label htmlFor="scope">Settings Scope</label>
-        <input
-          disabled={createUserDirData}
-          placeholder={createUserDir ? 'User Scope Generation Placeholder' : ''}
-          className="input input--block"
-          type="text"
-          value={user.scope}
-          id="scope"
-        />
-      </p>
+      <label htmlFor="scope">settings.scope</label>
+      <input
+        
+        className="input input--block"
+        type="text"
+        
+        id="scope"
+      />
 
-      {isNew && createUserDir && (
+      
         <p className="small">
-          <input
-            type="checkbox"
-            checked={createUserDirData}
-            onChange={handleCreateUserDirChange}
-          />
-          Create User Home Directory
+          <input type="checkbox"  />
+          settings.createUserHomeDirectory
         </p>
-      )}
+      
 
-      <p>
-        <label htmlFor="locale">Settings Language</label>
-        <Languages locale={user.locale} />
-      </p>
+      <label htmlFor="locale">settings.language</label>
+      <LanguageSelector
+        
+        
+      />
 
-      {!isDefault && (
-        <p>
-          <input
-            type="checkbox"
-            disabled={user.perm.admin}
-            checked={user.lockPassword}
-            onChange={() => (user.lockPassword = !user.lockPassword)}
-          />
-          Lock Password
-        </p>
-      )}
+      
+        <input
+          type="checkbox"
+          
+        />
+      
 
-      <Permissions perm={user.perm} />
-      {isExecEnabled && <Commands commands={user.commands} />}
+      
+      
 
-      {!isDefault && (
+
         <div>
-          <h3>Settings Rules</h3>
-          <p className="small">Settings Rules Help</p>
-          <Rules rules={user.rules} />
-        </div>
-      )}
+          <h3>settings.rules</h3>
+          <p className="small">settings.rulesHelp</p>
+          
+        </div> */}
+      
     </div>
   );
 };
 
-export default User;
+export default UserForm;

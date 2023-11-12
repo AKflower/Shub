@@ -32,16 +32,7 @@ nav {
   left: 0;
   
 }
-nav .action {
-  width: 100%;
-  display: block;
-  border-radius: 0;
-  font-size: 1.1em;
-  padding: 0.5em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 nav > div {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   
