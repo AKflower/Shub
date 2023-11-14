@@ -1,6 +1,24 @@
 .title {
     margin-left: 1em;
 }
+.nav {
+    display: block;
+    position: fixed;
+    width: 13em;
+    top: 4em;
+    left: 0;
+    .container {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        
+    }
+    .action {
+        vertical-align: middle;
+        
+    }
+  }
+    
+  
+
 .action {
     width: 100%;
     display: flex;

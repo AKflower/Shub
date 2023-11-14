@@ -55,8 +55,8 @@ const UserForm = () => {
       </p>
       <Permissions />
       <div className={styles.footer}>
-        <Button buttonName='DELETE' success={false} />
-        <Button buttonName='SAVE' success={true} />
+        <Button buttonName='DELETE' color='red' />
+        <Button buttonName='SAVE' color='green' />
       </div>
        </form>
         

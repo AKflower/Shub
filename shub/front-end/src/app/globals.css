@@ -25,14 +25,15 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
-nav {
+
+/* nav {
   position: fixed;
   width: 13em;
   top: 4em;
   left: 0;
   
 }
-
+  
 nav > div {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   
@@ -40,4 +41,5 @@ nav > div {
 nav .action > * {
   vertical-align: middle;
   
-}
+} */
+

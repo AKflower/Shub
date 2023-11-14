@@ -1,10 +1,11 @@
 import styles from './button.module.scss'
 
-const Button = ({buttonName, success} : {buttonName: string; success: boolean}) => {
+const Button = ({buttonName, color} : {buttonName: string; color: string}) => {
     return (
         <>
-         {success && <button className={styles.success}>{buttonName}</button>}
-         {!success && <button className={styles.delete}>{buttonName}</button>}
+         {color=='green' && <button className={styles.green}>{buttonName}</button>}
+         {color=='red' && <button className={styles.red}>{buttonName}</button>}
+         {color=='blue' && <button className={styles.blue}>{buttonName}</button>}
         </>
 
        

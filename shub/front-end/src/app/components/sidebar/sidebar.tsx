@@ -11,8 +11,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const Sidebar = () => {
   return (
-    <nav className="">
-        <div className="">
+    <nav className={styles.nav}>
+        <div className={styles.container}>
+            <Link href="/" >
             <button
                 className={styles.action}
                 
@@ -22,46 +23,58 @@ const Sidebar = () => {
                 <FolderIcon />
                 <span className={styles.title}>My Files</span>
             </button>
+            </Link>
+           
         </div>
-        <div className="">
-            <button
+        <div className={styles.container}>
+            <Link href="">
+                <button
                 className={styles.action}
                
-                aria-label="My Files"
-                title="My Files"
+                aria-label="New Folder"
+                title="New Folder"
             >
                 <CreateNewFolderIcon />
                 <span className={styles.title}>New Folder</span>
             </button>
+            </Link>
+            <Link href="">
             <button
                 className={styles.action}
                
-                aria-label="My Files"
-                title="My Files"
+                aria-label="New File"
+                title="New File"
             >
                 <NoteAddIcon />
                 <span className={styles.title}>New File</span>
             </button>
+            </Link>
+           
         </div>
-        <div className="">
+        <div className={styles.container}>
+            <Link href="/setting/profile">
             <button
                 className={styles.action}
                
-                aria-label="My Files"
-                title="My Files"
+                aria-label="Settings"
+                title="Settingse"
             >
                 <SettingsApplicationsIcon />
                 <span className={styles.title}>Settings</span>
             </button>
+            </Link>
+            <Link href="">
             <button
                 className={styles.action}
                
-                aria-label="My Files"
-                title="My Files"
+                aria-label="Logout"
+                title="Logout"
             >
                 <LogoutIcon />
                 <span className={styles.title}>Logout</span>
             </button>
+            </Link>
+            
         </div>
     </nav>
   );

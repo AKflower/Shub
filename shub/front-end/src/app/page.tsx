@@ -7,16 +7,18 @@ import i18n from './components/settings/languages/i18n';
 import LanguageSelector from './components/settings/languages/lanuages'
 import UserForm from './components/settings/user/userForm';
 import Button from './components/button/button';
+import ProfileSettingPage from './setting/profile/page';
 export default function Home() {
   return (
     
-      <main className="min-h-screen flex">
       
-        {/* <Sidebar />
-        <Search /> */}
-        <UserForm />
+      
+        <>
+        <ProfileSettingPage />
+        </>
         
-      </main>
+        
+      
     
     
   )
