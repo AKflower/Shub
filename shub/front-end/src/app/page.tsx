@@ -14,7 +14,7 @@ export default function Home() {
       
       
         <>
-        <ProfileSettingPage />
+        <UserForm />
         </>
         
         
