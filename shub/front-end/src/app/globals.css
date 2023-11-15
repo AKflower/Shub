@@ -66,7 +66,10 @@ body {
   background-color: #fafafa;
   color: #333333;
 }
-
+main {
+  padding-top: 5em;
+  padding-bottom: 3em;
+}
 .button {
   outline: 0;
   border: 0;
@@ -88,9 +91,6 @@ body {
   margin: 0 0 0.5em;
   display: block;
   width: 100%;
-main {
-  padding-top: 5em;
-  padding-bottom: 3em;
 }
 
 
