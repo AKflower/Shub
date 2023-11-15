@@ -26,7 +26,8 @@ body {
     rgb(var(--background-start-rgb));
 }
 main {
-  padding-top: 4.5em;
+  padding-top: 5em;
+  padding-bottom: 3em;
 }
 /* nav {
   position: fixed;

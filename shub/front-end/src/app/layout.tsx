@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
       <HeaderBar />
       <Sidebar />
-      <main className='ml-60 mr-3 h-full'>
+      <main className='ml-60 mr-3 h-max'>
       {children}
       </main>
       
