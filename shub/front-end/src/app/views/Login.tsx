@@ -1,4 +1,7 @@
+"use client"
 import { useState, useEffect } from 'react';
+import styles from './Login.module.scss'
+import images from '../assets/img';
 // import * as auth from '@/utils/auth';
 // import {
 //   name,
@@ -13,11 +16,11 @@ interface Props {
 }
 
 const Login: React.FC<Props> = () => {
-//   const [createMode, setCreateMode] = useState(false);
-//   const [error, setError] = useState('');
-//   const [username, setUsername] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [createMode, setCreateMode] = useState(false);
+  const [error, setError] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
 //   useEffect(() => {
 //     if (!recaptcha) return;
@@ -80,10 +83,20 @@ const Login: React.FC<Props> = () => {
 //     }
 //   };
 
+let recaptcha = ''
+const submit = async (event: React.FormEvent<HTMLFormElement>) =>{}
+let name = 'name'
+// let error
+// let username = 'username'
+let signup = '1'
+  const toggleMode = () => {
+    setCreateMode(!createMode);
+  };
+
   return (
-    <div id="login" className={recaptcha ? 'recaptcha' : ''}>
-      <form >
-        <img src="{logoURL} "alt="File Browser" />
+    <div id={styles.login} className={recaptcha ? 'recaptcha' : ''}>
+      <form onSubmit={submit}>
+        <img src='/file.png' alt="File Browser" />
         <h1>{name}</h1>
         {error !== '' && <div className="wrong">{error}</div>}
 
@@ -92,26 +105,26 @@ const Login: React.FC<Props> = () => {
           className="input input--block"
           type="text"
           autoCapitalize="off"
-          value="{username}"
-        //   onChange={(e) => setUsername(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter your username"
         />
         <input
           className="input input--block"
           type="password"
-          value="{password}"
-        //   onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
         />
-        {/* {createMode && ( */}
+        {createMode && (
           <input
             className="input input--block"
             type="password"
-            // value={passwordConfirm}
-            // onChange={(e) => setPasswordConfirm(e.target.value)}
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
             placeholder="Confirm your password"
           />
-        {/* )} */}
+        )}
 
         {recaptcha && <div id="recaptcha"></div>}
         <input
