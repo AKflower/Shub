@@ -1,10 +1,19 @@
 "use client"
 import { FC, ReactNode  } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
+import ShareIcon from '@mui/icons-material/Share';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import InfoIcon from '@mui/icons-material/Info';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import GridViewIcon from '@mui/icons-material/GridView';
 // import { logoURL } from '@/utils/constants';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
-import Search from '../search/search';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
+
 interface HeaderBarProps {
   showLogo?: boolean;
   showMenu?: boolean;
@@ -19,39 +28,72 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   const openSidebar = () => {
 //     dispatch({ type: 'showHover', payload: 'sidebar' });
 //   };
+let currentPromptName = '1'
 
   return (
-    <header className={styles.head}>
-      
-      {showLogo !== undefined && <img src='/file.png' />}
-      <Search />
+    <header>
+      <div className={cx('flex')} >
+        {showLogo !== undefined && <img src='/file.png' />}
       {showMenu !== undefined && (
         <Action
                   icon="menu"
                   label={'Toggle Sidebar'}
                 //   onAction={openSidebar}
-                  className={styles.menuButton} 
-                  counter={0}        />
+                  className={cx('menu-button')} 
+                  counter={0}        
+                  />
       )}
 
       {children}
+      </div>
+        
+      <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
+      <Action 
+          icon={<GridViewIcon/>}
+          label='Switch View'
+          counter={0}        
 
-      {/* <div id="dropdown" className={currentPromptName === 'more' ? 'active' : ''}>
-        {children}
-      </div> */}
+        />
+      <Action 
+          icon={<FileDownloadIcon/>}
+          label='Download'
+          counter={0}        
+
+        />
+        <Action 
+          icon={<FileUploadIcon/>}
+          label='Upload'
+          counter={0}        
+
+        />
+        <Action 
+          icon={<InfoIcon/>}
+          label='Info'
+          counter={0}        
+
+        />
+        <Action 
+          icon={<CheckCircleIcon/>}
+          label='Select Multiple'
+          counter={0}        
+
+        />
+      </div>
 
       {children && (
         <Action
-                  id={styles.more}
+                  id={cx('more')} 
                   icon="more_vert"
                   label={'More'}
                 //   onAction={} 
                   counter={0}        />
       )}
 
-      {/* {currentPromptName === 'more' && (
-        <div className="overlay" onClick={() => dispatch({ type: 'closeHovers' })} />
-      )} */}
+      {currentPromptName === 'more' && (
+        <div className={cx('overlay')}
+      // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
+      />
+      )}
     </header>
   );
 };

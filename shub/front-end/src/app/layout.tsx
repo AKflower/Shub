@@ -20,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <HeaderBar />
+      <HeaderBar showLogo showMenu>
+        <Search/>
+      </HeaderBar>
       <Sidebar />
       <main className='ml-60 mr-3 h-max'>
       {children}
