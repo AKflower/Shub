@@ -1,9 +1,10 @@
 #search {
     position: relative;
-    height: 100%;
-    width: 100%;
-    max-width: 25em;
-    #input {
+    height: 3em;
+    width: 20em;
+    
+    
+      #input {
         background-color: #f5f5f5;
         display: flex;
         height: 100%;
@@ -16,7 +17,10 @@
     .inputField {
         width: 100%;
         border: 0;
-        background-color: gray;
+        background-color: #f5f5f5;
         padding: 0;
     }
+    
+
+   
   }

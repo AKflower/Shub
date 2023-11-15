@@ -8,13 +8,14 @@ import LanguageSelector from './components/settings/languages/lanuages'
 import UserForm from './components/settings/user/userForm';
 import Button from './components/button/button';
 import ProfileSettingPage from './setting/profile/page';
+
 export default function Home() {
   return (
     
       
       
         <>
-        
+        <Search />
         </>
         
         
