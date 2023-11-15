@@ -13,7 +13,7 @@ const Sidebar = () => {
   return (
     <nav className={styles.nav}>
         <div className={styles.container}>
-            <Link href="/" >
+            <Link href="/file" >
             <button
                 className={styles.action}
                 

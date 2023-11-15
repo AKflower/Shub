@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+    // exportPathMap: async function () {
+    //     return {
+    //       '/': { page: '/file' }
+    //     }
+    // }
+}
 
 module.exports = nextConfig
 

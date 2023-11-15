@@ -4,25 +4,36 @@ import { useState, useRef, useEffect } from 'react';
 import styles from './search.module.scss';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SearchView from './searchView/searchView';
 // import url from '@/utils/url';
 // import { search } from '@/api';
 
 const Search = () => {
 
   const [isSearching,setSearching] = useState(false);
-
+  const [lockSearching,setLock] = useState(false);
   const handleSearching = () => {
-      setSearching(!isSearching);
+    
+    setSearching(true);
+    console.log('fagwawg', isSearching);
+    
   }
+  const offSearching = () => {
+    
+    setSearching(false);
+    console.log('222', isSearching);
+
+  }
+  
   
   return (
     <>
     <div id={styles.search}  className=''>
+    {isSearching ? 
+        <div className={styles.click} onClick={offSearching}><ArrowBackIcon /></div> :<div className={styles.click}><SearchIcon /></div>} 
+      <div id={isSearching ? styles.inputSearching: styles.input } onClick={handleSearching}>
       
-      <div id={styles.input} onClick={handleSearching}>
-      
-        {isSearching ? 
-        <div className="" onClick={handleSearching}><ArrowBackIcon /></div> :<SearchIcon />}
+        
         <input
           type="text"
           className={styles.inputField}
@@ -34,7 +45,7 @@ const Search = () => {
   
   
     </div>
-    {isSearching && <div>Khoa</div>}
+    {isSearching && <SearchView />} 
   </>
     
   );

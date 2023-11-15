@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { logoURL } from '@/utils/constants';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
-
+import Search from '../search/search';
 interface HeaderBarProps {
   showLogo?: boolean;
   showMenu?: boolean;
@@ -21,8 +21,10 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   };
 
   return (
-    <header>
+    <header className={styles.head}>
+      
       {showLogo !== undefined && <img src='/file.png' />}
+      <Search />
       {showMenu !== undefined && (
         <Action
                   icon="menu"
