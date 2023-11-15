@@ -1,90 +1,96 @@
 // components/Delete.tsx
 
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { useRouter } from 'next/router';
+import classNames from 'classnames/bind';
+import styles from './Delete.module.scss'
+// import { useSelector, useDispatch } from 'react-redux';
+// import { RootState } from '@/store';
+// import { useRouter } from 'next/router';
 
-import { files as api } from '@/api';
-import buttons from '@/utils/buttons';
+// import { files as api } from '@/api';
+// import buttons from '@/utils/buttons';
+
+const cx = classNames.bind(styles);
 
 interface DeleteProps {}
 
 const Delete: React.FC<DeleteProps> = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { isListing, selectedCount, currentPrompt, req, selected } = useSelector(
-    (state: RootState) => ({
-      isListing: state.isListing,
-      selectedCount: state.selectedCount,
-      currentPrompt: state.currentPrompt,
-      req: state.req,
-      selected: state.selected,
-    })
-  );
+  // const dispatch = useDispatch();
+  // const router = useRouter();
+  // const { isListing, selectedCount, currentPrompt, req, selected } = useSelector(
+  //   (state: RootState) => ({
+  //     isListing: state.isListing,
+  //     selectedCount: state.selectedCount,
+  //     currentPrompt: state.currentPrompt,
+  //     req: state.req,
+  //     selected: state.selected,
+  //   })
+  // );
 
-  useEffect(() => {
-    // Assuming you need to do something on component mount
-    // If not, you can remove this useEffect block
-  }, []);
+  // useEffect(() => {
+  //   // Assuming you need to do something on component mount
+  //   // If not, you can remove this useEffect block
+  // }, []);
 
-  const closeHovers = () => {
-    dispatch({ type: 'CLOSE_HOVERS' });
-  };
+  // const closeHovers = () => {
+  //   dispatch({ type: 'CLOSE_HOVERS' });
+  // };
 
-  const submit = async () => {
-    buttons.loading('delete');
+  // const submit = async () => {
+  //   buttons.loading('delete');
 
-    try {
-      if (!isListing) {
-        await api.remove(router.asPath);
-        buttons.success('delete');
+  //   try {
+  //     if (!isListing) {
+  //       await api.remove(router.asPath);
+  //       buttons.success('delete');
 
-        currentPrompt?.confirm();
-        closeHovers();
-        return;
-      }
+  //       currentPrompt?.confirm();
+  //       closeHovers();
+  //       return;
+  //     }
 
-      closeHovers();
+  //     closeHovers();
 
-      if (selectedCount === 0) {
-        return;
-      }
+  //     if (selectedCount === 0) {
+  //       return;
+  //     }
 
-      let promises: Promise<any>[] = [];
-      for (let index of selected) {
-        promises.push(api.remove(req.items[index].url));
-      }
+  //     let promises: Promise<any>[] = [];
+  //     for (let index of selected) {
+  //       promises.push(api.remove(req.items[index].url));
+  //     }
 
-      await Promise.all(promises);
-      buttons.success('delete');
-      dispatch({ type: 'SET_RELOAD', payload: true });
-    } catch (e) {
-      buttons.done('delete');
-      // Assuming you have a showError function to display errors
-      // this.$showError(e);
-      console.error(e);
-      if (isListing) dispatch({ type: 'SET_RELOAD', payload: true });
-    }
-  };
+  //     await Promise.all(promises);
+  //     buttons.success('delete');
+  //     dispatch({ type: 'SET_RELOAD', payload: true });
+  //   } catch (e) {
+  //     buttons.done('delete');
+  //     // Assuming you have a showError function to display errors
+  //     // this.$showError(e);
+  //     console.error(e);
+  //     if (isListing) dispatch({ type: 'SET_RELOAD', payload: true });
+  //   }
+  // };
+
+  let selectedCount = 1
 
   return (
-    <div className="card floating">
-      <div className="card-content">
+    <div className={cx('card','floating')}>
+      <div className={cx("card-content")}>
         <p>{selectedCount === 1 ? 'Prompts delete message single' : `Prompts delete message multiple ${selectedCount}`}</p>
       </div>
-      <div className="card-action">
+      <div className={cx("card-action")}>
         <button
-          onClick={closeHovers}
-          className="button button--flat button--grey"
+          // onClick={closeHovers}
+          className={cx('button','button--flat',"button--grey")}
           aria-label="Cancel"
           title="Cancel"
         >
           Cancel
         </button>
         <button
-          onClick={submit}
-          className="button button--flat button--red"
+          // onClick={submit}
+          className={cx('button','button--flat',"button--red")}
           aria-label="Delete"
           title="Delete"
         >

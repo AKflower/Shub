@@ -4,7 +4,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 
-import Action from '@/components/header/Action';
+import Action from './Action';
 import { logoURL } from '@/utils/constants';
 
 interface HeaderBarProps {
@@ -29,8 +29,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ showLogo, showMenu }) => {
           className="menu-button"
           icon="menu"
           label="buttons.toggleSidebar"
-          action={openSidebar}
-        />
+          action={openSidebar} id={''} counter={0} show={false}        />
       )}
 
       {/* Assuming you're using React.Fragment for slots */}
@@ -46,8 +45,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ showLogo, showMenu }) => {
           id="more"
           icon="more_vert"
           label="buttons.more"
-          action={() => dispatch({ type: 'SHOW_HOVER', payload: 'more' })}
-        />
+          action={() => dispatch({ type: 'SHOW_HOVER', payload: 'more' })} className={''} counter={0} show={false}        />
       )}
 
       <div

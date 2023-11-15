@@ -4,6 +4,8 @@ import { FC } from 'react';
 import { useDispatch } from 'react-redux'; // Assuming you are using Redux for state management
 
 interface ActionProps {
+  className: string;
+  id: string;
   icon: string;
   label: string;
   counter: number;
