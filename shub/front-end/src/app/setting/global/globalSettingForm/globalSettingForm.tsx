@@ -3,6 +3,7 @@ import Button from '@/app/components/button/button'
 export default function GlobalSettingForm () {
     return (
         <div className={styles.container}>
+            <form action="" className="">
             <div className={styles.title}><h2 className="">Global Setting</h2></div>
             <div className={styles.content}>
                 <p className={styles.choose}>
@@ -33,6 +34,8 @@ export default function GlobalSettingForm () {
                 <Button buttonName='UPDATE' color='blue' />
             </div>
 
+            </form>
+           
         </div>
     )
 }

@@ -9,10 +9,10 @@ const Navigation = () => {
         <nav className={styles.nav}>
             <div className={styles.container}>
                 <ul className={styles.list}>
-                    <li className={pathname === "/setting/profile" ? styles.itemActive : styles.item}><Link href="/setting/profile"><span className={styles.title}>Profile Setting</span></Link></li>
-                    <li className={pathname === "/setting/share" ? styles.itemActive : styles.item}><Link href="/setting/share">Share Management</Link></li>
-                    <li className={pathname === "/setting/global" ? styles.itemActive : styles.item}><Link href="/setting/global">Global Settings</Link></li>
-                    <li className={pathname === "/setting/user" ? styles.itemActive : styles.item}><Link href="">User Management</Link></li>
+                    <Link href="/setting/profile"><li className={pathname === "/setting/profile" ? styles.itemActive : styles.item}><span className={styles.title}>Profile Setting</span></li></Link>
+                    <Link href="/setting/share"><li className={pathname === "/setting/share" ? styles.itemActive : styles.item}>Share Management</li></Link>
+                    <Link href="/setting/global"><li className={pathname === "/setting/global" ? styles.itemActive : styles.item}>Global Settings</li></Link>
+                    <Link href="/setting/users"><li className={pathname.startsWith("/setting/users" ) ? styles.itemActive : styles.item}>User Management</li></Link>
                     
                     
                 </ul>

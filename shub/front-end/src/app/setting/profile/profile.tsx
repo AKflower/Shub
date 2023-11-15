@@ -6,6 +6,7 @@ export default function Profile() {
        
         <div className="grid grid-cols-2 gap-4">
             <div className={styles.container}>
+                <form action="" className="">
                 <div className={styles.title}><h2 className="">Profile Setting</h2></div>
                 <div className={styles.content}>
                     <p className={styles.choose}><input type= "checkbox" className={styles.chooseTitle} /> Hide dot file</p>
@@ -17,6 +18,8 @@ export default function Profile() {
                     </div>
                 </div>
                 <div className={styles.footer}><Button buttonName='UPDATE' color='blue'/></div>
+                </form>
+               
                 
             </div>
             <div className={styles.container}>

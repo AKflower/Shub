@@ -3,7 +3,7 @@ import LanguageSelector from '../languages/lanuages';
 import styles from './userForm.module.scss'
 import Permissions from '../permissions/permissions';
 import Button from '../../button/button';
-const UserForm = () => {
+const UserForm = ({title}:{title:string}) => {
   // const [createUserDirData, setCreateUserDirData] = useState(false);
   // const [originalUserScope, setOriginalUserScope] = useState('/');
 
@@ -24,7 +24,7 @@ const UserForm = () => {
   return (
     <div className= {styles.column}>
         <form action="" className={styles.card}>
-          <h2>New user</h2>
+          <h2>{title}</h2>
           <label className={styles.headerInput}>User name</label>
           <input
             className={styles.input}
@@ -48,15 +48,20 @@ const UserForm = () => {
       
        
       <label className={styles.headerInput}>Language</label>
+      <div className={styles.language}>
       <LanguageSelector/>
       <p className={styles.prevent}>
           <input type="checkbox"  className={styles.checkbox}/>
           Prevent the user from changing the password
       </p>
+      </div>
+      <div className={styles.permissions}>
       <Permissions />
+      </div>
+      
       <div className={styles.footer}>
         <Button buttonName='DELETE' color='red' />
-        <Button buttonName='SAVE' color='green' />
+        <Button buttonName='SAVE' color='blue' />
       </div>
        </form>
         

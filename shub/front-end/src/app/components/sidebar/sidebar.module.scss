@@ -4,7 +4,7 @@
 .nav {
     display: block;
     position: fixed;
-    width: 13em;
+    width: 14em;
     top: 4em;
     left: 0;
     .container {
@@ -13,7 +13,12 @@
     }
     .action {
         vertical-align: middle;
+        color:#546e7a;
         
+    }
+    .action:hover {
+        // background-color: #8e9294;
+        background:rgba(0, 0, 0, 0.05);
     }
   }
     
@@ -21,6 +26,7 @@
 
 .action {
     width: 100%;
+    color:#546e7a;
     display: flex;
     border-radius: 0;
     font-size: 1.1em;
