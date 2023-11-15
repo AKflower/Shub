@@ -1,6 +1,8 @@
 "use client"
 import { useState, useEffect } from 'react';
 import styles from './Login.module.scss'
+import classNames from 'classnames/bind';
+
 // import images from '../assets/img';
 // import * as auth from '@/utils/auth';
 // import {
@@ -10,6 +12,8 @@ import styles from './Login.module.scss'
 //   recaptchaKey,
 //   signup,
 // } from '@/utils/constants';
+
+const cx = classNames.bind(styles);
 
 interface Props {
   // Add any props if needed
@@ -94,15 +98,15 @@ let signup = '1'
   };
 
   return (
-    <div id={styles.login} className={recaptcha ? 'recaptcha' : ''}>
+    <div id={cx('login')} className={recaptcha ? cx('recaptcha') : ''}>
       <form onSubmit={submit}>
         <img src='/file.png' alt="File Browser" />
         <h1>{name}</h1>
-        {error !== '' && <div className="wrong">{error}</div>}
+        {error !== '' && <div className={cx('wrong')}>{error}</div>}
 
         <input
           autoFocus
-          className="input input--block"
+          className={cx('input','input--block')}
           type="text"
           autoCapitalize="off"
           value={username}
@@ -110,7 +114,7 @@ let signup = '1'
           placeholder="Enter your username"
         />
         <input
-          className="input input--block"
+          className={cx('input','input--block')}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -118,7 +122,7 @@ let signup = '1'
         />
         {createMode && (
           <input
-            className="input input--block"
+            className={cx('input','input--block')}
             type="password"
             value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
@@ -128,7 +132,7 @@ let signup = '1'
 
         {recaptcha && <div id="recaptcha"></div>}
         <input
-          className="button button--block"
+          className={cx('button','button--block')}
           type="submit"
           value={createMode ? 'Sign Up' : 'Log In'}
         />

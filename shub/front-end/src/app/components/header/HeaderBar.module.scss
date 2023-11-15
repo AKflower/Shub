@@ -1,9 +1,3 @@
-.head {
-  background-color: #fff;
-  padding: 1em 0 1em 0; 
-  position: fixed;
-  width: 100%;
-}
 #more {
     display: none;
   }
@@ -11,6 +5,51 @@
   
 
   
-  .menuButton {
+.menu-button {
     display: none;
+  }
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    animation: .1s show forwards;
+  }
+  #dropdown{
+    display: block;
+    -webkit-box-flex: 0;
+
+  }
+  
+
+  #dropdown > div {
+    display: block;
+  }
+  #dropdown.active {
+    transform: scale(1);
+  }
+  #dropdown .action {
+    display: flex;
+    align-items: center;
+    border-radius: 0;
+    width: 100%;
+  }
+  #dropdown .action span:not(.counter) {
+    display: inline-block;
+    padding: .4em;
+  }
+  #dropdown .counter {
+    left: 2.25em;
+  }
+  
+  .flex{
+    display: flex;
+    height: 100%;
+    max-width: 30em;
   }
