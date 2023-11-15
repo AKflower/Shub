@@ -1,5 +1,5 @@
 "use client"
-import { FC, ReactNode  } from 'react';
+import { FC, ReactNode, useState  } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 import ShareIcon from '@mui/icons-material/Share';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -11,6 +11,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
 import classNames from 'classnames/bind';
+import Download from '../prompts/Download';
 
 const cx = classNames.bind(styles);
 
@@ -28,7 +29,10 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   const openSidebar = () => {
 //     dispatch({ type: 'showHover', payload: 'sidebar' });
 //   };
-let currentPromptName = '1'
+const [currentPromptName, setCurrentPromptName] = useState("");
+const [showDownload, setShowDownload] = useState("");
+
+
 
   return (
     <header>
@@ -57,7 +61,14 @@ let currentPromptName = '1'
       <Action 
           icon={<FileDownloadIcon/>}
           label='Download'
-          counter={0}        
+          counter={0}    
+          show={showDownload}   
+          onAction={()=>{
+            setShowDownload('show')
+            setCurrentPromptName('more')
+          }
+          
+          } 
 
         />
         <Action 
@@ -80,6 +91,10 @@ let currentPromptName = '1'
         />
       </div>
 
+      {showDownload && (
+        <Download />
+      )}
+
       {children && (
         <Action
                   id={cx('more')} 
@@ -92,8 +107,15 @@ let currentPromptName = '1'
       {currentPromptName === 'more' && (
         <div className={cx('overlay')}
       // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
+        onClick={
+          ()=>{
+            setCurrentPromptName('')
+            if(showDownload){setShowDownload('')}
+          }
+        }
       />
       )}
+      
     </header>
   );
 };
