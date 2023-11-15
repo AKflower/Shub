@@ -1,32 +1,31 @@
-// components/Action.tsx
-
-import { FC } from 'react';
-import { useDispatch } from 'react-redux'; // Assuming you are using Redux for state management
+import React, { FC } from 'react';
 
 interface ActionProps {
-  className: string;
-  id: string;
+
+    className?: string;
+    id?: string;
   icon: string;
   label: string;
   counter: number;
-  show: boolean;
-  action: () => void;
+  show?: string;
+  onAction?: () => void;
 }
 
-const Action: FC<ActionProps> = ({ icon, label, counter, show, action }) => {
-  const dispatch = useDispatch();
-
-  const handleAction = () => {
+const Action: FC<ActionProps> = ({ icon, label, counter, show, onAction }) => {
+  const handleClick = () => {
     if (show) {
-      // Assuming you have a Redux action called 'showHover'
-      dispatch({ type: 'SHOW_HOVER', payload: show });
+      // Assuming that the store dispatch function is available through a context or props
+      // Replace this with the actual way you access the store in your Next.js app
+      // dispatch({ type: 'showHover', payload: show });
     }
 
-    action();
+    if (onAction) {
+      onAction();
+    }
   };
 
   return (
-    <button onClick={handleAction} aria-label={label} title={label} className="action">
+    <button onClick={handleClick} aria-label={label} title={label} className="action">
       <i className="material-icons">{icon}</i>
       <span>{label}</span>
       {counter > 0 && <span className="counter">{counter}</span>}
