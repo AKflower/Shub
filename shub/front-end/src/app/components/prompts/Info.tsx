@@ -1,166 +1,122 @@
-import { FC, MouseEvent } from 'react';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
+"use client"
+
+import React from 'react';
+import { FC } from 'react';
+import classNames from 'classnames/bind';
+import styles from './Info.module.scss'
+// import { useSelector } from 'react-redux';
+// import { filesize } from '@/utils';
+// import moment from 'moment';
 // import { files as api } from '@/api';
-import { RootState } from '@/store';
+
+const cx = classNames.bind(styles);
 
 interface InfoProps {
-  closeHovers: () => void;
+  // Add any additional props if needed
 }
 
-const Info: FC<InfoProps> = ({ closeHovers }) => {
-  // const dispatch = useDispatch();
+const Info: FC<InfoProps> = () => {
   // const req = useSelector((state: RootState) => state.req);
   // const selected = useSelector((state: RootState) => state.selected);
   // const selectedCount = useSelector((state: RootState) => state.selectedCount);
   // const isListing = useSelector((state: RootState) => state.isListing);
 
-  // const [humanSize, setHumanSize] = useState<string>('');
-  // const [humanTime, setHumanTime] = useState<string>('');
-  // const [modTime, setModTime] = useState<string>('');
-  // const [name, setName] = useState<string>('');
-  // const [dir, setDir] = useState<boolean>(false);
+  // const humanSize = () => {
+  //   if (selectedCount === 0 || !isListing) {
+  //     return filesize(req.size);
+  //   }
 
-  // useEffect(() => {
-  //   const calculateHumanSize = () => {
-  //     if (selectedCount === 0 || !isListing) {
-  //       setHumanSize('0');
-  //       return;
-  //     }
+  //   let sum = 0;
 
-  //     let sum = 0;
+  //   for (const index of selected) {
+  //     sum += req.items[index].size;
+  //   }
 
-  //     for (let i of selected) {
-  //       sum += req.items[i].size;
-  //     }
+  //   return filesize(sum);
+  // };
 
-  //     setHumanSize('0');
-  //   };
+  // const humanTime = () => {
+  //   if (selectedCount === 0) {
+  //     return moment(req.modified).fromNow();
+  //   }
 
-  //   const calculateHumanTime = () => {
-  //     if (selectedCount === 0) {
-  //       setHumanTime(moment(req.modified).fromNow());
-  //     } else {
-  //       setHumanTime(moment(req.items[selected[0]].modified).fromNow());
-  //     }
-  //   };
+  //   return moment(req.items[selected[0]].modified).fromNow();
+  // };
 
-  //   const calculateModTime = () => {
-  //     setModTime(new Date(Date.parse(req.modified)).toLocaleString());
-  //   };
+  // const modTime = () => {
+  //   return new Date(Date.parse(req.modified)).toLocaleString();
+  // };
 
-  //   const calculateName = () => {
-  //     setName(selectedCount === 0 ? req.name : req.items[selected[0]].name);
-  //   };
+  // const name = () => {
+  //   return selectedCount === 0 ? req.name : req.items[selected[0]].name;
+  // };
 
-  //   const calculateDir = () => {
-  //     setDir(
-  //       selectedCount > 1 ||
-  //         (selectedCount === 0
-  //           ? req.isDir
-  //           : req.items[selected[0]].isDir)
-  //     );
-  //   };
+  // const dir = () => {
+  //   return selectedCount > 1 || (selectedCount === 0 ? req.isDir : req.items[selected[0]].isDir);
+  // };
 
-  //   calculateHumanSize();
-  //   calculateHumanTime();
-  //   calculateModTime();
-  //   calculateName();
-  //   calculateDir();
-  // }, [selected, selectedCount, isListing, req]);
+  // const checksum = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, algo: string) => {
+  //   event.preventDefault();
 
-  // // const checksum = async (event: MouseEvent, algo: string) => {
-  // //   event.preventDefault();
+  //   let link;
 
-  // //   let link;
+  //   if (selectedCount) {
+  //     link = req.items[selected[0]].url;
+  //   } else {
+  //     link = '/'; // Replace with the actual route path
+  //   }
 
-  // //   if (selectedCount) {
-  // //     link = req.items[selected[0]].url;
-  // //   } else {
-  // //     link = window.location.pathname;
-  // //   }
-
-  // //   try {
-  // //     const hash = await api.checksum(link, algo);
-  // //     // eslint-disable-next-line
-  // //     (event.target as HTMLAnchorElement).innerHTML = hash;
-  // //   } catch (e) {
-  // //     // Replace this with your error handling logic
-  // //     console.error(e);
-  // //   }
-  // // };
+  //   try {
+  //     const hash = await api.checksum(link, algo);
+  //     // eslint-disable-next-line
+  //     (event.target as HTMLAnchorElement).innerHTML = hash;
+  //   } catch (e) {
+  //     // Replace with your error handling logic
+  //   }
+  // };
+  let selectedCount = 1
 
   return (
-    <div className="card floating">
-      <div className="card-title">
-        <h2>Translation for "prompts.fileInfo"</h2>
+    <div className={cx('card','floating')}>
+      <div className={cx('card-title')}>
+        <h2>{"Translate Function to Replace $t('prompts.fileInfo')"}</h2>
       </div>
 
-      <div className="card-content">
-        <p>{selected.length > 1 && `Translation for "prompts.filesSelected", { count: selected.length }`}</p>
+      <div className={cx("card-content")}>
+        <p>{selectedCount > 1 ? `Translate Function for $t('prompts.filesSelected', { count: ${selectedCount} })` : null}</p>
 
-        <p className="break-word" style={{ display: selected.length < 2 ? 'block' : 'none' }}>
-          <strong>Translation for "prompts.displayName":</strong> {name}
+        <p className={cx("break-word")} style={{ display: selectedCount < 2 ? 'block' : 'none' }}>
+          <strong>{"displayName"}</strong> {/*name()*/}asd
         </p>
-        <p style={{ display: !dir || selected.length > 1 ? 'block' : 'none' }}>
-          <strong>Translation for "prompts.size":</strong>
-          <span id="content_length"></span> {humanSize}
-        </p>
-        <p style={{ display: selected.length < 2 ? 'block' : 'none' }} title={modTime}>
-          <strong>Translation for "prompts.lastModified":</strong> {humanTime}
-        </p>
-
-        <div style={{ display: dir && selected.length === 0 ? 'block' : 'none' }}>
-          <p>
-            <strong>Translation for "prompts.numberFiles":</strong> {req.numFiles}
-          </p>
-          <p>
-            <strong>Translation for "prompts.numberDirs":</strong> {req.numDirs}
-          </p>
-        </div>
-
-        <div style={{ display: !dir ? 'block' : 'none' }}>
-          <p>
-            <strong>MD5: </strong
-            ><code>
-              <a>Translation for "prompts.show"</a></code
-            >
-          </p>
-          <p>
-            <strong>SHA1: </strong
-            ><code>
-              <a >Translation for "prompts.show"</a></code
-            >
-          </p>
-          <p>
-            <strong>SHA256: </strong
-            ><code>
-              <a>Translation for "prompts.show"</a></code
-            >
-          </p>
-          <p>
-            <strong>SHA512: </strong
-            ><code>
-              <a >Translation for "prompts.show"</a></code
-            >
-          </p>
-        </div>
+        
+        {/* Add similar lines for other items */}
       </div>
 
-      <div className="card-action">
+      <div className={cx("card-action")}>
         <button
           type="submit"
-          onClick={closeHovers}
-          className="button button--flat"
-          aria-label="Translation for 'buttons.ok'"
-          title="Translation for 'buttons.ok'"
+          onClick={() => {
+            // Replace with the actual dispatch function from your store
+            // Example: dispatch({ type: 'closeHovers' });
+          }}
+          className={cx('button','button--flat')}
+          aria-label="Translate Function for $t('buttons.ok')"
+          title="Translate Function for $t('buttons.ok')"
         >
-          Translation for "buttons.ok"
+          OK
         </button>
+        
+        
       </div>
     </div>
   );
 };
 
 export default Info;
+
+interface RootState {
+  req: any; // Replace with the actual type of req in your store
+  selected: number[]; // Replace with the actual type of selected in your store
+  selectedCount: number; // Replace with the actual type of selectedCount in your store
+  isListing: boolean; // Replace with the actual type of isListing in your store
+}

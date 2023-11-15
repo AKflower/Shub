@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react';
 import styles from './Login.module.scss'
-import images from '../assets/img';
+// import images from '../assets/img';
 // import * as auth from '@/utils/auth';
 // import {
 //   name,

@@ -1,8 +1,13 @@
 import { FC, useEffect, useState } from 'react';
+import classNames from 'classnames/bind';
+import styles from './FileList.module.scss'
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RootState } from '@/store';
 // import { files as api } from '@/api';
 // import url from '@/utils/url';
+
+const cx = classNames.bind(styles);
+
 
 interface FileListProps {
   updateSelected: (val: string | null) => void;
@@ -124,7 +129,7 @@ const FileList: FC<FileListProps> = ({ updateSelected }) => {
 
   return (
     <div>
-      <ul className="file-list">
+      <ul className={cx('file-list')}>
         {items.map((item) => (
           <li
             key={item.name}

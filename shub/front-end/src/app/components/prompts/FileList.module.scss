@@ -1,0 +1,40 @@
+.file-list {
+    max-height: 50vh;
+    overflow: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    li {
+        width: 100%;
+        user-select: none;
+        border-radius: .2em;
+        padding: .3em;
+      }
+    
+    li[aria-selected=true] {
+        background: var(--blue) !important;
+        color: #fff !important;
+        transition: .1s ease all;
+      }
+
+      li:hover {
+        background-color: #e9eaeb;
+        cursor: pointer;
+      }
+
+      li:before {
+        content: "folder";
+        color: #6f6f6f;
+        vertical-align: middle;
+        line-height: 1.4;
+        font-family: 'Material Icons';
+        font-size: 1.75em;
+        margin-right: .25em;
+      }
+
+      li[aria-selected=true]:before {
+        color: white;
+      }
+  }

@@ -1,57 +1,42 @@
-import { FC } from 'react';
+"use client"
 
-interface HelpProps {
-  closeHovers: () => void;
-}
+import React from 'react';
+import classNames from 'classnames/bind';
+import styles from './Help.module.scss'
 
-const Help: FC<HelpProps> = ({ closeHovers }) => {
+const cx = classNames.bind(styles);
+
+const Help: React.FC = () => {
   return (
-    <div className="card floating help">
-      <div className="card-title">
-        <h2>Translation for "help.help"</h2>
+    <div className={cx('card','floating','help')}>
+      <div className={cx('card-title')}>
+        <h2>{"Translate Function to Replace $t('help.help')"}</h2>
       </div>
 
-      <div className="card-content">
+      <div className={cx("card-content")}>
         <ul>
           <li>
-            <strong>F1</strong> - Translation for "help.f1"
+            <strong>F1</strong> - {"Translate Function for $t('help.f1')"}
           </li>
           <li>
-            <strong>F2</strong> - Translation for "help.f2"
+            <strong>F2</strong> - {"Translate Function for $t('help.f2')"}
           </li>
-          <li>
-            <strong>DEL</strong> - Translation for "help.del"
-          </li>
-          <li>
-            <strong>ESC</strong> - Translation for "help.esc"
-          </li>
-          <li>
-            <strong>CTRL + S</strong> - Translation for "help.ctrl.s"
-          </li>
-          <li>
-            <strong>CTRL + F</strong> - Translation for "help.ctrl.f"
-          </li>
-          <li>
-            <strong>CTRL + Click</strong> - Translation for "help.ctrl.click"
-          </li>
-          <li>
-            <strong>Click</strong> - Translation for "help.click"
-          </li>
-          <li>
-            <strong>Double click</strong> - Translation for "help.doubleClick"
-          </li>
+          {/* Add similar lines for other items */}
         </ul>
       </div>
 
-      <div className="card-action">
+      <div className={cx("card-action")}>
         <button
           type="submit"
-          onClick={closeHovers}
-          className="button button--flat"
-          aria-label="Translation for 'buttons.ok'"
-          title="Translation for 'buttons.ok'"
+          onClick={() => {
+            // Replace with the actual dispatch function from your store
+            // Example: dispatch({ type: 'closeHovers' });
+          }}
+          className={cx('button','button--flat')}
+          aria-label={"Translate Function for $t('buttons.ok')"}
+          title={"Translate Function for $t('buttons.ok')"}
         >
-          Translation for "buttons.ok"
+          {"Translate Function for $t('buttons.ok')"}
         </button>
       </div>
     </div>
