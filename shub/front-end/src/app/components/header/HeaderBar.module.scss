@@ -26,6 +26,20 @@
     -webkit-box-flex: 0;
 
   }
+  @keyframes show {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+}
+1% {
+  visibility: visible;
+  opacity: 0;
+}
+100% {
+  visibility: visible;
+  opacity: 1;
+}
+  }
   
 
   #dropdown > div {

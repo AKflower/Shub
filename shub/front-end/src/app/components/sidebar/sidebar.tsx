@@ -1,4 +1,5 @@
 // Trong file Sidebar.js (hoặc Sidebar.jsx nếu sử dụng JSX)
+"use client"
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './sidebar.module.scss';
@@ -7,9 +8,17 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useState } from 'react';
+import classNames from 'classnames/bind';
+import NewFile from '../prompts/NewFile';
+
+const cx = classNames.bind(styles);
 
 
 const Sidebar = () => {
+    const [currentPromptName, setCurrentPromptName] = useState("");
+
+    const [showNewFile, setShowNewFile] = useState("");
   return (
     <nav className={styles.nav}>
         <div className={styles.container}>
@@ -41,7 +50,10 @@ const Sidebar = () => {
             <Link href="">
             <button
                 className={styles.action}
-               
+                onClick={()=>{
+                    setShowNewFile('show')
+                    setCurrentPromptName('more')
+                }}
                 aria-label="New File"
                 title="New File"
             >
@@ -55,7 +67,7 @@ const Sidebar = () => {
             <Link href="/setting/profile">
             <button
                 className={styles.action}
-               
+                
                 aria-label="Settings"
                 title="Settingse"
             >
@@ -74,7 +86,21 @@ const Sidebar = () => {
                 <span className={styles.title}>Logout</span>
             </button>
             </Link>
-            
+
+            {showNewFile && (
+        <NewFile />
+      )}
+            {currentPromptName === 'more' && (
+        <div className={cx('overlay')}
+      // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
+        onClick={
+          ()=>{
+            setCurrentPromptName('')
+            if(showNewFile){setShowNewFile('')}
+          }
+        }
+      />
+      )}
         </div>
     </nav>
   );
