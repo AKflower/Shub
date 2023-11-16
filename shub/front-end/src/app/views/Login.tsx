@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import styles from './Login.module.scss'
 import classNames from 'classnames/bind';
+import { useRouter } from 'next/navigation';
 
 // import images from '../assets/img';
 // import * as auth from '@/utils/auth';
@@ -25,6 +26,8 @@ const Login: React.FC<Props> = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const router = useRouter();
+
 
 //   useEffect(() => {
 //     if (!recaptcha) return;
@@ -88,7 +91,25 @@ const Login: React.FC<Props> = () => {
 //   };
 
 let recaptcha = ''
-const submit = async (event: React.FormEvent<HTMLFormElement>) =>{}
+const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  try {
+    if (createMode) {
+      // Handle signup logic
+    } else {
+      if (username === 'admin' && password === 'admin') {
+        // Navigate to '/files' after successful login
+        router.push('/files');
+      } else {
+        setError('Wrong credentials');
+      }
+    }
+  } catch (e) {
+    setError('An error occurred');
+  }
+};
 let name = 'name'
 // let error
 // let username = 'username'
