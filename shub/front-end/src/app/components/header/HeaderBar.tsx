@@ -1,7 +1,6 @@
 "use client"
 import { FC, ReactNode, useState  } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
-import ShareIcon from '@mui/icons-material/Share';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import InfoIcon from '@mui/icons-material/Info';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -12,6 +11,8 @@ import Action from './Action';
 import styles from './HeaderBar.module.scss'
 import classNames from 'classnames/bind';
 import Download from '../prompts/Download';
+import Info from '../prompts/Info';
+import Upload from '../prompts/Upload';
 
 const cx = classNames.bind(styles);
 
@@ -31,6 +32,8 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   };
 const [currentPromptName, setCurrentPromptName] = useState("");
 const [showDownload, setShowDownload] = useState("");
+const [showInfo, setShowInfo] = useState("");
+const [showUpload, setShowUpload] = useState("");
 
 
 
@@ -74,13 +77,24 @@ const [showDownload, setShowDownload] = useState("");
         <Action 
           icon={<FileUploadIcon/>}
           label='Upload'
-          counter={0}        
+          counter={0} 
+          onAction={()=>{
+            setShowUpload('show')
+            setCurrentPromptName('more')
+          }
+          }        
 
         />
         <Action 
           icon={<InfoIcon/>}
           label='Info'
-          counter={0}        
+          counter={0} 
+          onAction={()=>{
+            setShowInfo('show')
+            setCurrentPromptName('more')
+          }
+          }  
+                
 
         />
         <Action 
@@ -93,6 +107,14 @@ const [showDownload, setShowDownload] = useState("");
 
       {showDownload && (
         <Download />
+      )}
+
+      {showInfo && (
+        <Info />
+      )}
+
+      {showUpload && (
+        <Upload />
       )}
 
       {children && (
@@ -111,6 +133,8 @@ const [showDownload, setShowDownload] = useState("");
           ()=>{
             setCurrentPromptName('')
             if(showDownload){setShowDownload('')}
+            if(showInfo){setShowInfo('')}
+            if(showUpload){setShowUpload('')}
           }
         }
       />
