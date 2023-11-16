@@ -15,6 +15,7 @@ import classNames from 'classnames/bind';
 import Download from '../prompts/Download';
 import Info from '../prompts/Info';
 import Upload from '../prompts/Upload';
+import { usePathname } from 'next/navigation'
 
 const cx = classNames.bind(styles);
 
@@ -37,11 +38,14 @@ const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
 const [showView, setShowView] = useState('grid');
-
+const pathname = usePathname()
+const isLogin = (pathname=='/') //check login page ? not render : render
 
 
   return (
-    <header>
+    <>
+      {!isLogin && 
+      <header>
       <div className={cx('flex')} >
         {showLogo !== undefined && <img src='/file.png' />}
       {showMenu !== undefined && (
@@ -151,6 +155,9 @@ const [showView, setShowView] = useState('grid');
       )}
       
     </header>
+    }
+    </>
+    
   );
 };
 

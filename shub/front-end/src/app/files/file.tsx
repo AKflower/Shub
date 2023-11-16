@@ -1,5 +1,7 @@
 import styles from './file.module.scss'
 import Card from "./card/card";
+import FileSection from './fileSection/fileSection';
+import FolderSection from './folderSection/folderSection';
 export default function File () {
     const files = [
         {
@@ -130,25 +132,8 @@ export default function File () {
 
     return (
         <div className={styles.container}>
-            <div className={styles.part}>
-                <h3 className={styles.title}>Folders</h3>
-                <div className="grid grid-cols-4 gap-3">
-                    {folders.map((folder) => (
-                        <Card type="folder" key={folder.id} name={folder.name} date={folder.date}/>
-                    ))}
-                
-                </div>
-                
-            </div>
-            <div className={styles.part}>
-                <h3 className={styles.title}>Files</h3>
-                <div className="grid grid-cols-4 gap-3">
-                    {files.map((file) => (
-                        <Card type="file" key={file.id} name={file.name} size={file.size}  date={file.date}/>
-                    ))}
-                
-                </div>
-            </div>
+            <FolderSection folders={folders}/>
+            <FileSection files={files}/>
         </div>
     )
 }

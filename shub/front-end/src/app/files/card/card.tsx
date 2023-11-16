@@ -5,16 +5,17 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useState } from 'react';
 
 
-export default function Card ({type, name,size,date}: {type:string, name:string,size?:string,date?:string}) {
+export default function Card ({type, key, name,size,date, selected}: {type:string, key:number, name:string,size?:string,date?:string, selected?:boolean}) {
     
     const [select,setSelect] = useState(false);
+    
     const handleSelect = () => {
 
         setSelect(!select);
     }
 
     return (
-        <div className={select  ? styles.containerSelect: styles.container } onClick={handleSelect}>
+        <div className={ !selected ? styles.container : styles.containerSelect} onClick={handleSelect}>
            
             <div className={ styles.img} >
             {type=='folder' ? 

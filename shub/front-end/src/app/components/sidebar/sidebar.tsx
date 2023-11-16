@@ -11,6 +11,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useState } from 'react';
 import classNames from 'classnames/bind';
 import NewFile from '../prompts/NewFile';
+import { usePathname } from 'next/navigation'
 
 const cx = classNames.bind(styles);
 
@@ -19,10 +20,14 @@ const Sidebar = () => {
     const [currentPromptName, setCurrentPromptName] = useState("");
 
     const [showNewFile, setShowNewFile] = useState("");
+    const pathname = usePathname()
+    const isLogin = (pathname=='/') //check login page ? not render : render    
   return (
-    <nav className={styles.nav}>
+    <>
+         {!isLogin && 
+         <nav className={styles.nav}>
         <div className={styles.container}>
-            <Link href="/file" >
+            <Link href="/files" >
             <button
                 className={styles.action}
                 
@@ -103,6 +108,9 @@ const Sidebar = () => {
       )}
         </div>
     </nav>
+    }
+    </>
+   
   );
 };
 
