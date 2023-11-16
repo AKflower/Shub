@@ -6,6 +6,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import GridViewIcon from '@mui/icons-material/GridView';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 // import { logoURL } from '@/utils/constants';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
@@ -34,6 +36,7 @@ const [currentPromptName, setCurrentPromptName] = useState("");
 const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
+const [showView, setShowView] = useState('grid');
 
 
 
@@ -56,9 +59,16 @@ const [showUpload, setShowUpload] = useState("");
         
       <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
       <Action 
-          icon={<GridViewIcon/>}
+          icon={showView === 'grid' ? <GridViewIcon/> : showView === 'list' ? <ViewListIcon/> : <ViewModuleIcon/>}
           label='Switch View'
-          counter={0}        
+          counter={0}  
+          onAction={()=>{
+            if (showView === 'grid') setShowView('list')
+            else if (showView === 'list') setShowView('module')
+              else setShowView('grid')
+
+            }
+          }      
 
         />
       <Action 
