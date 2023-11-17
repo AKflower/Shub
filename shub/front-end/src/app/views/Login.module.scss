@@ -7,10 +7,12 @@
     height: 100%;
 
     img {
-        width: 4em;
-        height: 4em;
+        width: 10em;
+        height: 10em;
         margin: 0 auto;
         display: block;
+        box-shadow: -19px 19px 20px rgb(127 171 255 / 10%);
+        border-radius: 50%;
       }
 
     h1 {

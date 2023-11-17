@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styles from './Login.module.scss'
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 // import images from '../assets/img';
 // import * as auth from '@/utils/auth';
@@ -110,7 +111,7 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     setError('An error occurred');
   }
 };
-let name = 'name'
+let name = 'Shub'
 // let error
 // let username = 'username'
 let signup = '1'
@@ -121,7 +122,7 @@ let signup = '1'
   return (
     <div id={cx('login')} className={recaptcha ? cx('recaptcha') : ''}>
       <form onSubmit={submit}>
-        <img src='/file.png' alt="File Browser" />
+        <Image src="/images/logo.png" alt="Shub" width={400} height={400}/>
         <h1>{name}</h1>
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
 
