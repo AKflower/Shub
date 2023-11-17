@@ -9,15 +9,16 @@ import UserForm from './components/settings/user/userForm';
 import Button from './components/button/button';
 import ProfileSettingPage from './setting/profile/page';
 import Login from './views/Login';
+import { ShubProvider } from './Provider/Provider';
 
 export default function Home() {
   return (
     
       
       
-        <>
+        <ShubProvider>
           <Login/>
-        </>
+        </ShubProvider>
         
         
       

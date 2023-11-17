@@ -16,6 +16,9 @@ import Download from '../prompts/Download';
 import Info from '../prompts/Info';
 import Upload from '../prompts/Upload';
 import { usePathname } from 'next/navigation'
+import { useShub } from '@/app/Provider/Provider';
+import NewFile from '../prompts/NewFile';
+import NewDir from '../prompts/NewDir';
 
 const cx = classNames.bind(styles);
 
@@ -33,13 +36,13 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   const openSidebar = () => {
 //     dispatch({ type: 'showHover', payload: 'sidebar' });
 //   };
-const [currentPromptName, setCurrentPromptName] = useState("");
 const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
 const isLogin = (pathname=='/') //check login page ? not render : render
+const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir } = useShub();
 
 
   return (
@@ -82,7 +85,7 @@ const isLogin = (pathname=='/') //check login page ? not render : render
           show={showDownload}   
           onAction={()=>{
             setShowDownload('show')
-            setCurrentPromptName('more')
+            toggleCurrentPromptName()
           }
           
           } 
@@ -94,7 +97,8 @@ const isLogin = (pathname=='/') //check login page ? not render : render
           counter={0} 
           onAction={()=>{
             setShowUpload('show')
-            setCurrentPromptName('more')
+            toggleCurrentPromptName()
+
           }
           }        
 
@@ -105,7 +109,8 @@ const isLogin = (pathname=='/') //check login page ? not render : render
           counter={0} 
           onAction={()=>{
             setShowInfo('show')
-            setCurrentPromptName('more')
+            toggleCurrentPromptName()
+
           }
           }  
                 
@@ -130,6 +135,12 @@ const isLogin = (pathname=='/') //check login page ? not render : render
       {showUpload && (
         <Upload />
       )}
+      {showNewFile && (
+        <NewFile />
+      )}
+      {showNewDir && (
+        <NewDir />
+      )}
 
       {children && (
         <Action
@@ -145,10 +156,13 @@ const isLogin = (pathname=='/') //check login page ? not render : render
       // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
         onClick={
           ()=>{
-            setCurrentPromptName('')
+            toggleCurrentPromptName()
             if(showDownload){setShowDownload('')}
             if(showInfo){setShowInfo('')}
             if(showUpload){setShowUpload('')}
+            if(showNewFile){toggleShowNewFile()}
+            if(showNewDir){toggleShowNewDir()}
+            console.log(showNewFile)
           }
         }
       />

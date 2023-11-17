@@ -5,6 +5,7 @@ import './globals.css'
 import Sidebar from './components/sidebar/sidebar'
 import Search from './components/search/search'
 import HeaderBar from './components/header/HeaderBar'
+import { ShubProvider } from './Provider/Provider'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-   
+   <ShubProvider>
      <html lang="en">
       <body className={inter.className}>
       
@@ -34,7 +35,7 @@ export default function RootLayout({
       
       </body>
     </html>
-   
+    </ShubProvider> 
    
   )
 }

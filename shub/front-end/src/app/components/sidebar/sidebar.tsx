@@ -12,14 +12,19 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import NewFile from '../prompts/NewFile';
 import { usePathname } from 'next/navigation'
+import NewDir from '../prompts/NewDir';
+import { useShub } from '@/app/Provider/Provider';
+
 
 const cx = classNames.bind(styles);
 
 
 const Sidebar = () => {
-    const [currentPromptName, setCurrentPromptName] = useState("");
+    const { toggleCurrentPromptName, toggleShowNewFile, toggleShowNewDir } = useShub();
 
-    const [showNewFile, setShowNewFile] = useState("");
+
+    
+
     const pathname = usePathname()
     const isLogin = (pathname=='/') //check login page ? not render : render    
   return (
@@ -44,7 +49,10 @@ const Sidebar = () => {
             <Link href="">
                 <button
                 className={styles.action}
-               
+                onClick={()=>{
+                    toggleShowNewDir()
+                    toggleCurrentPromptName()
+                }}
                 aria-label="New Folder"
                 title="New Folder"
             >
@@ -56,8 +64,8 @@ const Sidebar = () => {
             <button
                 className={styles.action}
                 onClick={()=>{
-                    setShowNewFile('show')
-                    setCurrentPromptName('more')
+                    toggleShowNewFile()
+                    toggleCurrentPromptName()
                 }}
                 aria-label="New File"
                 title="New File"
@@ -92,21 +100,10 @@ const Sidebar = () => {
             </button>
             </Link>
 
-            {showNewFile && (
-        <NewFile />
-      )}
-            {currentPromptName === 'more' && (
-        <div className={cx('overlay')}
-      // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
-        onClick={
-          ()=>{
-            setCurrentPromptName('')
-            if(showNewFile){setShowNewFile('')}
-          }
-        }
-      />
-      )}
+            
+            
         </div>
+       
     </nav>
     }
     </>
