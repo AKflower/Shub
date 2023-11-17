@@ -162,7 +162,6 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showUpload){setShowUpload('')}
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
-            console.log(showNewFile)
           }
         }
       />
