@@ -4,6 +4,7 @@ import styles from './Login.module.scss'
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import axios from 'axios';
 
 // import images from '../assets/img';
 // import * as auth from '@/utils/auth';
@@ -100,12 +101,10 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     if (createMode) {
       // Handle signup logic
     } else {
-      if (username === 'admin' && password === 'admin') {
-        // Navigate to '/files' after successful login
-        router.push('/files');
-      } else {
-        setError('Wrong credentials');
-      }
+      const response = await axios.post('http://localhost:3001/auth/login', { username, password });
+
+      console.log(response.data); 
+      router.push('/files');
     }
   } catch (e) {
     setError('An error occurred');
