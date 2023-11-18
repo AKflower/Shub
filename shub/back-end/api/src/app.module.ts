@@ -1,12 +1,8 @@
+// app.module.ts
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { FileModule } from './modules/file/file.module';
-import { FabricModule } from './modules/fabric/fabric.module';
+import { AuthModule } from './auth/auth.module';  // Assuming you have an AuthModule
 
 @Module({
-  imports: [FileModule, FabricModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [AuthModule], // Import other modules if needed
 })
 export class AppModule {}
