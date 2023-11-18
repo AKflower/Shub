@@ -140,7 +140,7 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const addFolder = (folderName: string) => {
     setShowFolder([...showFolder, 
       {
-        id: 12,
+        id: showFolder.length + 1,
         name: folderName,
         date: '10 days ago',
       }
