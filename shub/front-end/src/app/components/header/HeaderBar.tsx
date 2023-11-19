@@ -28,6 +28,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Share from '../prompts/Share';
 import Rename from '../prompts/Rename';
+import Copy from '../prompts/Copy';
 
 const cx = classNames.bind(styles);
 
@@ -50,6 +51,7 @@ const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
 const [showShare, setShowShare] = useState("");
 const [showRename, setShowRename] = useState("");
+const [showCopy, setShowCopy] = useState("");
 
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
@@ -112,7 +114,11 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           icon={<ContentCopyIcon/>}
           label='Copy'
           counter={0}
-          onAction={()=>{}}
+          onAction={()=>{
+            setShowCopy('show')
+            toggleCurrentPromptName()
+            }
+          } 
         />
 
         <Action 
@@ -218,6 +224,10 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
         <Rename />
       )}
 
+      {showCopy && (
+        <Copy />
+      )}
+
       {children && (
         <Action
                   id={cx('more')} 
@@ -240,6 +250,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showNewDir){toggleShowNewDir()}
             if(showShare){setShowShare('')}
             if(showRename){setShowRename('')}
+            if(showCopy){setShowCopy('')}
           }
         }
       />
