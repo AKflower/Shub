@@ -8,6 +8,9 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 // import { logoURL } from '@/utils/constants';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
@@ -36,6 +39,7 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   const openSidebar = () => {
 //     dispatch({ type: 'showHover', payload: 'sidebar' });
 //   };
+const [option, setOption] = useState("1s");
 const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
@@ -65,6 +69,25 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
       </div>
         
       <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
+      {option && (
+        <> 
+        <Action 
+          icon={<ShareIcon/>}
+          label='Share'
+          counter={0}
+          onAction={()=>{}}
+          className=''
+        />
+        <Action 
+          icon={<EditIcon/>}
+          label='Rename'
+          counter={0}
+          onAction={()=>{}}
+          className=''
+        />
+        </>
+        )
+      }
       <Action 
           icon={showView === 'grid' ? <GridViewIcon/> : showView === 'list' ? <ViewListIcon/> : <ViewModuleIcon/>}
           label='Switch View'

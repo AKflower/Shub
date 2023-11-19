@@ -127,6 +127,8 @@ interface ShubContextProps {
     addFolder: (folderName: string) => void;
     showFile: any;
     addFile: (fileName: string) => void;
+    showShare: string;
+    toggleShowShare: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -173,6 +175,11 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const toggleShowNewDir = () => {
     setShowNewDir(showNewDir == '' ? 'more' : '');
   }; 
+
+  const [showShare, setShowShare] = useState('');
+  const toggleShowShare = () => {
+    setShowShare(showNewDir == '' ? 'more' : '');
+  }; 
   
 
   const value: ShubContextProps = {
@@ -185,7 +192,9 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     showFolder,
     addFolder,
     showFile,
-    addFile
+    addFile,
+    showShare,
+    toggleShowShare
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;
