@@ -39,6 +39,13 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+body {
+  font-family: "Roboto", sans-serif;
+  padding-top: 4em;
+  background-color: #fafafa;
+  color: #333333;
+}
+
 .input {
   border-radius: .1em;
   padding: .5em 1em;

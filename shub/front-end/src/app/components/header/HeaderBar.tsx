@@ -11,6 +11,8 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ShareIcon from '@mui/icons-material/Share';
 import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ForwardIcon from '@mui/icons-material/Forward';
+import DeleteIcon from '@mui/icons-material/Delete';
 // import { logoURL } from '@/utils/constants';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
@@ -24,6 +26,7 @@ import NewFile from '../prompts/NewFile';
 import NewDir from '../prompts/NewDir';
 import Image from 'next/image';
 import Link from 'next/link';
+import Share from '../prompts/Share';
 
 const cx = classNames.bind(styles);
 
@@ -41,14 +44,15 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   const openSidebar = () => {
 //     dispatch({ type: 'showHover', payload: 'sidebar' });
 //   };
-const [option, setOption] = useState("1s");
 const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
+const [showShare, setShowShare] = useState("");
+
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
 const isLogin = (pathname=='/') //check login page ? not render : render
-const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir } = useShub();
+const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir, option } = useShub();
 
 
   return (
@@ -84,16 +88,41 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           icon={<ShareIcon/>}
           label='Share'
           counter={0}
-          onAction={()=>{}}
-          className=''
+          onAction={()=>{
+            setShowShare('show')
+            toggleCurrentPromptName()
+            }
+          } 
         />
+
         <Action 
           icon={<EditIcon/>}
           label='Rename'
           counter={0}
           onAction={()=>{}}
-          className=''
         />
+
+        <Action 
+          icon={<ContentCopyIcon/>}
+          label='Copy'
+          counter={0}
+          onAction={()=>{}}
+        />
+
+        <Action 
+          icon={<ForwardIcon/>}
+          label='Move file'
+          counter={0}
+          onAction={()=>{}}
+        />
+
+        <Action 
+          icon={<DeleteIcon/>}
+          label='Delete'
+          counter={0}
+          onAction={()=>{}}
+        />
+
         </>
         )
       }
@@ -118,8 +147,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           onAction={()=>{
             setShowDownload('show')
             toggleCurrentPromptName()
-          }
-          
+            }
           } 
 
         />
@@ -167,11 +195,17 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
       {showUpload && (
         <Upload />
       )}
+
       {showNewFile && (
         <NewFile />
       )}
+
       {showNewDir && (
         <NewDir />
+      )}
+
+      {showShare && (
+        <Share />
       )}
 
       {children && (
@@ -194,6 +228,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showUpload){setShowUpload('')}
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
+            if(showShare){setShowShare('')}
           }
         }
       />

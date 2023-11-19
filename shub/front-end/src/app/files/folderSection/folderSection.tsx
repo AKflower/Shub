@@ -2,6 +2,8 @@
 import styles from './folderSection.module.scss'
 import Card from '../card/card'
 import { useState } from 'react';
+import { useShub } from '@/app/Provider/Provider';
+
 
 
 interface FolderProps {
@@ -11,6 +13,8 @@ interface FolderProps {
     date?: string
 }
 export default function FolderSection ({folders} : {folders:FolderProps[]})  {
+    const { toggleOption } = useShub();
+
     const [selected,setSelected] = useState(0);
     const handleSelect = (id:number) => {
         console.log('Hi');
@@ -29,7 +33,10 @@ export default function FolderSection ({folders} : {folders:FolderProps[]})  {
                 <div className="grid grid-cols-4 gap-3">
                     {folders.map((folder) => (
                         <div  key={folder.id}
-                        onClick={() => handleSelect(folder.id)}
+                        onClick={() => {
+                            toggleOption()
+                            handleSelect(folder.id)}
+                        }
                         onDoubleClick={() => open(folder.children)}
                         >
                             <Card type="folder" key={folder.id} name={folder.name} date={folder.date} selected={selected==folder.id}/>
