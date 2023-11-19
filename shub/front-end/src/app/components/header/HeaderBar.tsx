@@ -30,6 +30,7 @@ import Share from '../prompts/Share';
 import Rename from '../prompts/Rename';
 import Copy from '../prompts/Copy';
 import Move from '../prompts/Move';
+import Delete from '../prompts/Delete';
 
 const cx = classNames.bind(styles);
 
@@ -54,6 +55,7 @@ const [showShare, setShowShare] = useState("");
 const [showRename, setShowRename] = useState("");
 const [showCopy, setShowCopy] = useState("");
 const [showMove, setShowMove] = useState("");
+const [showDelete, setShowDelete] = useState("");
 
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
@@ -138,7 +140,11 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           icon={<DeleteIcon/>}
           label='Delete'
           counter={0}
-          onAction={()=>{}}
+          onAction={()=>{
+            setShowDelete('show')
+            toggleCurrentPromptName()
+            }
+          } 
         />
 
         </>
@@ -238,6 +244,10 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
         <Move />
       )}
 
+      {showDelete && (
+        <Delete />
+      )}
+
       {children && (
         <Action
                   id={cx('more')} 
@@ -262,6 +272,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showRename){setShowRename('')}
             if(showCopy){setShowCopy('')}
             if(showMove){setShowMove('')}
+            if(showDelete){setShowDelete('')}
           }
         }
       />
