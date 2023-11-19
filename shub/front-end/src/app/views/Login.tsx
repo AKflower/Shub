@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
+import fontLogo from '../../../public/fonts/fonts';
 
 // import images from '../assets/img';
 // import * as auth from '@/utils/auth';
@@ -21,6 +22,7 @@ const cx = classNames.bind(styles);
 interface Props {
   // Add any props if needed
 }
+
 
 const Login: React.FC<Props> = () => {
   const [createMode, setCreateMode] = useState(false);
@@ -117,12 +119,15 @@ let signup = '1'
   const toggleMode = () => {
     setCreateMode(!createMode);
   };
-
+  
   return (
     <div id={cx('login')} className={recaptcha ? cx('recaptcha') : ''}>
       <form onSubmit={submit}>
-        <Image src="/images/logo.png" alt="Shub" width={400} height={400}/>
-        <h1>{name}</h1>
+        <Image src="/images/logo.png" alt="Shub" width={200} height={200}/>
+        <h1 className={fontLogo.className}>
+          
+          
+          {name}</h1>
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
 
         <input

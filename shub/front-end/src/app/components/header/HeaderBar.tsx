@@ -19,6 +19,8 @@ import { usePathname } from 'next/navigation'
 import { useShub } from '@/app/Provider/Provider';
 import NewFile from '../prompts/NewFile';
 import NewDir from '../prompts/NewDir';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const cx = classNames.bind(styles);
 
@@ -50,7 +52,14 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
       {!isLogin && 
       <header>
       <div className={cx('flex')} >
-        {showLogo !== undefined && <img src='/file.png' />}
+        {showLogo !== undefined && 
+        <Link href='/files'>
+          <div className={cx('logo')}>
+            <Image src='/images/logo.png' alt='Shub' width={40} height={40}/>
+          </div>
+        </Link>
+        
+        }
       {showMenu !== undefined && (
         <Action
                   icon="menu"
