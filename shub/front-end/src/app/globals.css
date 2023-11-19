@@ -39,33 +39,7 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-body {
-  font-family: "Roboto", sans-serif;
-  padding-top: 4em;
-  background-color: #fafafa;
-  color: #333333;
-}
 
-.input {
-  border-radius: .1em;
-  padding: .5em 1em;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: .2s ease all;
-  color: #333;
-  margin: 0;
-}
-
-.input:hover,
-.input:focus {
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-.input--block {
-  margin-bottom: .5em;
-  display: block;
-  width: 100%;
-}
 
 body {
   font-family: "Roboto", sans-serif;
@@ -76,28 +50,6 @@ body {
 main {
   padding-top: 3em;
   padding-bottom: 3em;
-}
-.button {
-  outline: 0;
-  border: 0;
-  padding: .5em 1em;
-  border-radius: .1em;
-  cursor: pointer;
-  background: var(--blue);
-  color: white;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-  transition: .1s ease all;
-}
-
-.button:hover {
-  background-color: var(--dark-blue);
-}
-
-.button--block {
-  margin: 0 0 0.5em;
-  display: block;
-  width: 100%;
 }
 
 

@@ -1,19 +1,18 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-
 import classNames from 'classnames/bind';
 import styles from './Copy.module.scss'
+import FileList from './FileList';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '@/redux/store';
 // import { useHistory } from 'react-router-dom';
-
-import FileList from './FileList';
 // import { files as api } from '@/api';
 // import buttons from '@/utils/buttons';
 // import * as upload from '@/utils/upload';
 
 const cx = classNames.bind(styles);
+
 interface CopyProps {}
 
 const Copy: React.FC<CopyProps> = () => {

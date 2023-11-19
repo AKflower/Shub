@@ -1,106 +1,115 @@
 import { FC, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { RootState } from '@/redux/store';
-import url from "@/utils/url";
-import { files as api } from "@/api";
+import classNames from 'classnames/bind';
+import styles from './Rename.module.scss'
+// import { useHistory } from 'react-router-dom';
+// import { RootState } from '@/redux/store';
+// import url from "@/utils/url";
+// import { files as api } from "@/api";
+
+const cx = classNames.bind(styles);
 
 interface RenameProps { }
 
 const Rename: React.FC<RenameProps> = () => {
-    const history = useHistory();
-    const dispatch = useDispatch();
-    const [name, setName] = useState<string>("");
+    // const history = useHistory();
+    // const dispatch = useDispatch();
+    // const [name, setName] = useState<string>("");
 
-    setName(oldName());
+    // setName(oldName());
 
-    const { req, selected, selectedCount, isListing } = useSelector((state: RootState) => ({
-        req: state.req,
-        selected: state.selected,
-        selectedCount: state.selectedCount,
-        isListing: state.isListing,
-    }));
+    // const { req, selected, selectedCount, isListing } = useSelector((state: RootState) => ({
+    //     req: state.req,
+    //     selected: state.selected,
+    //     selectedCount: state.selectedCount,
+    //     isListing: state.isListing,
+    // }));
 
-    const Cancel = () => {
-        dispatch({ type: "CLOSE_HOVER" });
-    }
+    // const Cancel = () => {
+    //     dispatch({ type: "CLOSE_HOVER" });
+    // }
 
-    const oldName = () => {
-        if (!isListing) {
-            return req.name;
-        }
+    // const oldName = () => {
+    //     if (!isListing) {
+    //         return req.name;
+    //     }
 
-        if (selectedCount === 0 || selectedCount > 1) {
-            return;
-        }
+    //     if (selectedCount === 0 || selectedCount > 1) {
+    //         return;
+    //     }
 
-        return req.items[selected[0]].name;
-    }
+    //     return req.items[selected[0]].name;
+    // }
 
-    const submit = async () => {
-        let oldLink = "";
-        let newLink = "";
+    // const submit = async () => {
+    //     let oldLink = "";
+    //     let newLink = "";
 
-        if (!isListing) {
-            oldLink = req.url;
-        } else {
-            oldLink = req.items[selected[0]].url;
-        }
+    //     if (!isListing) {
+    //         oldLink = req.url;
+    //     } else {
+    //         oldLink = req.items[selected[0]].url;
+    //     }
 
-        newLink = url.removeLastDir(oldLink) + "/" + encodeURIComponent(name);
+    //     newLink = url.removeLastDir(oldLink) + "/" + encodeURIComponent(name);
 
-        try {
-            await api.move([{ from: oldLink, to: newLink }]);
-            if (!isListing) {
-                history.push({ path: newLink });
-                return;
-            }
+    //     try {
+    //         await api.move([{ from: oldLink, to: newLink }]);
+    //         if (!isListing) {
+    //             history.push({ path: newLink });
+    //             return;
+    //         }
 
-            dispatch({ type: "SET_REALOAD", payload: true });
-        } catch (e) {
-            console.error(e);
-        }
+    //         dispatch({ type: "SET_REALOAD", payload: true });
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
 
-        dispatch({ type: "CLOSE_HOVER" });
-    }
+    //     dispatch({ type: "CLOSE_HOVER" });
+    // }
 
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            submit();
-        }
-    };
+    // const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (event.key === 'Enter') {
+    //         submit();
+    //     }
+    // };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    };
+    // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setName(event.target.value);
+    // };
 
     return (
-        <div className='card floating'>
-            <div className='card-title'>
+        <div className={cx('card','floating')}>
+            <div className={cx('card-title')}>
                 <h2>Prompts Rename</h2>
             </div>
 
-            <div className='card-content'>
-                <p>Prompts Rename Message {oldName()}</p>
+            <div className={cx("card-content")}>
+                <p>Prompts Rename Message 
+                    {/* {oldName()} */}
+                </p>
                 <input
-                    className='input input--block'
+                    className={cx("input",'input--block')}
                     type="text"
-                    onKeyPress={handleKeyPress}
-                    onChange={handleInputChange}
-                    name={name}></input>
+                    // onKeyPress={handleKeyPress}
+                    // onChange={handleInputChange}
+                    // name={name}
+                    >
+                
+                </input>
             </div>
 
-            <div className='card-action'>
+            <div className={cx("card-action")}>
                 <button
-                    className='button button--flat button-grey'
-                    onClick={() => { dispatch({ type: "CLOSE_HOVER" }) }}
+                    className={cx('button','button--flat',"button--grey")}
+                    // onClick={() => { dispatch({ type: "CLOSE_HOVER" }) }}
                     aria-label='cancel'
                     title='cancel'>
                     Cancel
                 </button>
                 <button
-                    onClick={submit}
-                    className='bbutton button--flat'
+                    // onClick={submit}
+                    className={cx('button','button--flat')}
                     type='submit'
                     aria-label='rename'
                     title='rename'>

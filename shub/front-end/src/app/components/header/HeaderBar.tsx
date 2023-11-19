@@ -27,6 +27,7 @@ import NewDir from '../prompts/NewDir';
 import Image from 'next/image';
 import Link from 'next/link';
 import Share from '../prompts/Share';
+import Rename from '../prompts/Rename';
 
 const cx = classNames.bind(styles);
 
@@ -48,6 +49,7 @@ const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
 const [showShare, setShowShare] = useState("");
+const [showRename, setShowRename] = useState("");
 
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
@@ -99,7 +101,11 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           icon={<EditIcon/>}
           label='Rename'
           counter={0}
-          onAction={()=>{}}
+          onAction={()=>{
+            setShowRename('show')
+            toggleCurrentPromptName()
+            }
+          } 
         />
 
         <Action 
@@ -207,6 +213,10 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
       {showShare && (
         <Share />
       )}
+      
+      {showRename && (
+        <Rename />
+      )}
 
       {children && (
         <Action
@@ -229,6 +239,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
             if(showShare){setShowShare('')}
+            if(showRename){setShowRename('')}
           }
         }
       />
