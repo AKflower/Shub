@@ -1,7 +1,12 @@
 .material-icons {
-    font-size: 1.5rem;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  height: 2.5em;
+  width: 2.5em;
+   
+   
   }
   .action {
+    
     display: inline-block;
     cursor: pointer;
     transition: 0.2s ease all;
@@ -10,7 +15,7 @@
     color: #546e7a;
     border-radius: 50%;
     background: transparent;
-    padding: 0;
+    padding: 0em;
     box-shadow: none;
     vertical-align: middle;
     text-align: left;

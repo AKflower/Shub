@@ -32,7 +32,8 @@ const Action: FC<ActionProps> = ({ id, className, icon, label, counter, show, on
 
   return (
     <button id={id} onClick={handleClick} aria-label={label} title={label} className={cx("action",className)}>
-      <i className={cx("material-icons")}>{icon}</i>
+      <div className={cx("material-icons")}>{icon}</div>
+      {/* <i className={cx("material-icons")}></i> */}
       <span>{label}</span>
       {counter > 0 && <span className={cx("counter")}>{counter}</span>}
     </button>

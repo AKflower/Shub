@@ -5,6 +5,7 @@ const nextConfig = {
     //       '/': { page: '/file' }
     //     }
     // }
+    plugins: ['@next/bundle-analyzer', '@next/font'],
 }
 
 module.exports = nextConfig
