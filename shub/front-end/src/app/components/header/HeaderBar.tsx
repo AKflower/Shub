@@ -29,6 +29,7 @@ import Link from 'next/link';
 import Share from '../prompts/Share';
 import Rename from '../prompts/Rename';
 import Copy from '../prompts/Copy';
+import Move from '../prompts/Move';
 
 const cx = classNames.bind(styles);
 
@@ -52,6 +53,7 @@ const [showUpload, setShowUpload] = useState("");
 const [showShare, setShowShare] = useState("");
 const [showRename, setShowRename] = useState("");
 const [showCopy, setShowCopy] = useState("");
+const [showMove, setShowMove] = useState("");
 
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
@@ -125,7 +127,11 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           icon={<ForwardIcon/>}
           label='Move file'
           counter={0}
-          onAction={()=>{}}
+          onAction={()=>{
+            setShowMove('show')
+            toggleCurrentPromptName()
+            }
+          } 
         />
 
         <Action 
@@ -228,6 +234,10 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
         <Copy />
       )}
 
+      {showMove && (
+        <Move />
+      )}
+
       {children && (
         <Action
                   id={cx('more')} 
@@ -251,6 +261,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showShare){setShowShare('')}
             if(showRename){setShowRename('')}
             if(showCopy){setShowCopy('')}
+            if(showMove){setShowMove('')}
           }
         }
       />
