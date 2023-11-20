@@ -126,6 +126,7 @@ interface ShubContextProps {
     showFolder: any;
     addFolder: (folderName: string) => void;
     delFolder: (id: number) => void;
+    renameFolder: (id: number, newName: string) => void;
     showFile: any;
     addFile: (fileName: string) => void;
     showShare: string;
@@ -137,6 +138,8 @@ interface ShubContextProps {
     handleSelect: (id: number) => void;
     showDelete: string;
     toggleShowDelete: () => void;
+    showRename: string;
+    toggleShowRename: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -161,6 +164,10 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setShowFolder([...showFolder])
     setSelected(0);
     hideOption()
+  }
+  const renameFolder = (id: number, newName: string) => {
+    showFolder[id - 1].name = newName;
+    setShowFolder([...showFolder])
   }
 
   const [showFile, setShowFile] = useState(files);
@@ -220,9 +227,11 @@ const toggleShowDelete = () => {
   setShowDelete(showDelete == '' ? 'more' : '');
 };
 
-
+const [showRename, setShowRename] = useState("");
+const toggleShowRename = () => {
+  setShowRename(showRename == '' ? 'more' : '');
+};
   
-
   const value: ShubContextProps = {
     currentPromptName,
     toggleCurrentPromptName,
@@ -233,6 +242,7 @@ const toggleShowDelete = () => {
     showFolder,
     addFolder,
     delFolder,
+    renameFolder,
     showFile,
     addFile,
     showShare,
@@ -243,7 +253,9 @@ const toggleShowDelete = () => {
     selected,
     handleSelect,
     showDelete,
-    toggleShowDelete
+    toggleShowDelete,
+    showRename,
+    toggleShowRename,
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

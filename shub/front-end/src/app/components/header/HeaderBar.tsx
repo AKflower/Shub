@@ -52,14 +52,13 @@ const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
 const [showUpload, setShowUpload] = useState("");
 const [showShare, setShowShare] = useState("");
-const [showRename, setShowRename] = useState("");
 const [showCopy, setShowCopy] = useState("");
 const [showMove, setShowMove] = useState("");
 
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
 const isLogin = (pathname=='/') //check login page ? not render : render
-const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir, option, showDelete, toggleShowDelete } = useShub();
+const { currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir, option, showDelete, toggleShowDelete, showRename, toggleShowRename } = useShub();
 
 
   return (
@@ -107,7 +106,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           label='Rename'
           counter={0}
           onAction={()=>{
-            setShowRename('show')
+            toggleShowRename()
             toggleCurrentPromptName()
             }
           } 
@@ -268,7 +267,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
             if(showShare){setShowShare('')}
-            if(showRename){setShowRename('')}
+            if(showRename){toggleShowRename()}
             if(showCopy){setShowCopy('')}
             if(showMove){setShowMove('')}
             if(showDelete){toggleShowDelete()}

@@ -2,6 +2,7 @@ import { FC, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './Rename.module.scss'
+import { useShub } from '@/app/Provider/Provider';
 // import { useHistory } from 'react-router-dom';
 // import { RootState } from '@/redux/store';
 // import url from "@/utils/url";
@@ -77,6 +78,28 @@ const Rename: React.FC<RenameProps> = () => {
     // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //     setName(event.target.value);
     // };
+    const [name, setName] = useState<string>("");
+    const { selected, toggleCurrentPromptName, toggleShowRename, showFolder, renameFolder } = useShub();
+    const toggle = () => {
+        toggleCurrentPromptName()
+        toggleShowRename()
+      }
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            submit();
+        }
+    }; 
+    
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
+    };
+
+    const submit = () => {
+        renameFolder(selected, name)
+        toggleCurrentPromptName()
+        toggleShowRename()
+    }
+
 
     return (
         <div className={cx('card','floating')}>
@@ -85,15 +108,15 @@ const Rename: React.FC<RenameProps> = () => {
             </div>
 
             <div className={cx("card-content")}>
-                <p>Insert a new name for
+                <p>Insert a new name for {showFolder[selected - 1].name}
                     {/* {oldName()} */}
                 </p>
                 <input
                     className={cx("input",'input--block')}
                     type="text"
-                    // onKeyPress={handleKeyPress}
-                    // onChange={handleInputChange}
-                    // name={name}
+                    onKeyDown={handleKeyPress}
+                    onChange={handleInputChange}
+                    name={name}
                     >
                 
                 </input>
@@ -102,13 +125,13 @@ const Rename: React.FC<RenameProps> = () => {
             <div className={cx("card-action")}>
                 <button
                     className={cx('button','button--flat',"button--grey")}
-                    // onClick={() => { dispatch({ type: "CLOSE_HOVER" }) }}
+                    onClick={toggle}
                     aria-label='cancel'
                     title='cancel'>
                     Cancel
                 </button>
                 <button
-                    // onClick={submit}
+                    onClick={submit}
                     className={cx('button','button--flat')}
                     type='submit'
                     aria-label='rename'
