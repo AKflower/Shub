@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FC } from 'react';
 import classNames from 'classnames/bind';
 import styles from './NewFile.module.scss'
+import { useShub } from '@/app/Provider/Provider';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { useRouter } from 'next/router';
 // import { files as api } from '@/api';
@@ -46,44 +47,63 @@ const NewFile: FC<NewFileProps> = () => {
 
 //     dispatch({ type: 'closeHovers' });
 //   };
+const [name, setName] = useState<string>("");
+
+const { addFile, toggleCurrentPromptName, toggleShowNewFile } = useShub();
+
+const submit = () => {
+  addFile(name)
+    toggleCurrentPromptName()
+    toggleShowNewFile()
+}
+
+const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+        submit();
+    }
+};
+
+const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+};
 
   return (
     <div className={cx('card','floating')}>
       <div className={cx('card-title')}>
-        <h2>{"newFile"}</h2>
+        <h2>New File</h2>
       </div>
 
       <div className={cx("card-content")}>
-        <p>{"Translate Function for $t('prompts.newFileMessage')"}</p>
+        <p>Write the name of the new file.</p>
         <input
-          className={cx('input','input--block')}
-          // Add the necessary logic for focusing on input (if needed)
-          onKeyUp={(event) => {
-            if (event.key === 'Enter') {
-            //   submit(event);
-            }
-          }}
-        //   value={name}
-        //   onChange={(event) => setName(event.target.value.trim())}
-        />
+                    className={cx('input','input--block')}
+                    type='text'
+                    onKeyDown={handleKeyPress}
+                    onChange={handleInputChange}
+                    name={name}
+                />
       </div>
 
       <div className={cx("card-action")}>
         <button
           className={cx('button','button--flat',"button--grey")}
-        //   onClick={() => dispatch({ type: 'closeHovers' })}
-          aria-label={"Translate Function for $t('buttons.cancel')"}
-          title={"Translate Function for $t('buttons.cancel')"}
+          onClick={() => {
+            toggleCurrentPromptName()
+            toggleShowNewFile()
+            }
+        }
+          aria-label="Cancel"
+          title="Cancel"
         >
-          {"cancel"}
+            Cancel
         </button>
         <button
           className={cx('button','button--flat')}
-        //   onClick={submit}
-          aria-label={"Translate Function for $t('buttons.create')"}
-          title={"Translate Function for $t('buttons.create')"}
+          onClick={submit}
+          aria-label="Create"
+          title="Create"
         >
-          {"create"}
+          Create
         </button>
       </div>
     </div>
@@ -92,7 +112,7 @@ const NewFile: FC<NewFileProps> = () => {
 
 export default NewFile;
 
-interface RootState {
-  isFiles: boolean; // Replace with the actual type of isFiles in your store
-  isListing: boolean; // Replace with the actual type of isListing in your store
-}
+// interface RootState {
+//   isFiles: boolean; // Replace with the actual type of isFiles in your store
+//   isListing: boolean; // Replace with the actual type of isListing in your store
+// }

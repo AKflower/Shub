@@ -5,7 +5,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useState } from 'react';
 
 
-export default function Card ({type,key, name,size,date, selected}: {type:string, key:number, name:string,size?:string,date?:string, selected?:boolean}) {
+export default function Card ({type, name,size,date, selected}: {type:string, key:number, name:string,size?:string,date?:string, selected?:boolean}) {
     
     const [select,setSelect] = useState(false);
     

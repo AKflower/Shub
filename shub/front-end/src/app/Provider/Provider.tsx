@@ -130,7 +130,8 @@ interface ShubContextProps {
     showShare: string;
     toggleShowShare: () => void;
     option: string;
-    toggleOption: () => void;
+    showOption: () => void;
+    hideOption: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -184,8 +185,11 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   }; 
 
   const [option, setOption] = useState('');
-  const toggleOption = () => {
-    setOption(option === '' ? 'more' : '');
+  const showOption = () => {
+    setOption('more');
+  }
+  const hideOption = () => {
+    setOption('');
   }
 
   
@@ -204,7 +208,8 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     showShare,
     toggleShowShare,
     option,
-    toggleOption
+    showOption,
+    hideOption
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

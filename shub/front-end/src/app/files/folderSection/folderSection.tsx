@@ -13,15 +13,19 @@ interface FolderProps {
     date?: string
 }
 export default function FolderSection ({folders} : {folders:FolderProps[]})  {
-    const { toggleOption } = useShub();
+    const { showOption, hideOption } = useShub();
 
     const [selected,setSelected] = useState(0);
     const handleSelect = (id:number) => {
         console.log('Hi');
         if (id==selected) {
             setSelected(0);
+            hideOption()
         }
-        else setSelected(id);
+        else {
+            setSelected(id);
+            showOption()
+        }
     }
     const open = (children:Array<string>) => {
         
@@ -34,9 +38,9 @@ export default function FolderSection ({folders} : {folders:FolderProps[]})  {
                     {folders.map((folder) => (
                         <div  key={folder.id}
                         onClick={() => {
-                            toggleOption()
-                            handleSelect(folder.id)}
-                        }
+                            handleSelect(folder.id)
+                            
+                        }}
                         onDoubleClick={() => open(folder.children)}
                         >
                             <Card type="folder" key={folder.id} name={folder.name} date={folder.date} selected={selected==folder.id}/>
