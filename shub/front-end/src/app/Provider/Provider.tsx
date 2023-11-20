@@ -160,7 +160,8 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     ])
   }
   const delFolder = (id: number) => {
-    showFolder.splice(id - 1, 1)
+    const foundFolder = showFolder.find((el) => el.id === id);
+    if(foundFolder) showFolder.splice(showFolder.indexOf(foundFolder), 1)
     setShowFolder([...showFolder])
     setSelected(0);
     hideOption()
