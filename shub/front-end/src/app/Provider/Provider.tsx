@@ -159,6 +159,8 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const delFolder = (id: number) => {
     showFolder.splice(id - 1, 1)
     setShowFolder([...showFolder])
+    setSelected(0);
+    hideOption()
   }
 
   const [showFile, setShowFile] = useState(files);

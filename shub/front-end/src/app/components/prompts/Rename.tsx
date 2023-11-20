@@ -81,11 +81,11 @@ const Rename: React.FC<RenameProps> = () => {
     return (
         <div className={cx('card','floating')}>
             <div className={cx('card-title')}>
-                <h2>Prompts Rename</h2>
+                <h2>Rename</h2>
             </div>
 
             <div className={cx("card-content")}>
-                <p>Prompts Rename Message 
+                <p>Insert a new name for
                     {/* {oldName()} */}
                 </p>
                 <input
