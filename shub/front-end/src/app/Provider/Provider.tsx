@@ -166,7 +166,11 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     hideOption()
   }
   const renameFolder = (id: number, newName: string) => {
-    showFolder[id - 1].name = newName;
+    const foundFolder = showFolder.find((el) => el.id === id);
+
+    if (foundFolder) {
+      foundFolder.name = newName;
+    }
     setShowFolder([...showFolder])
   }
 

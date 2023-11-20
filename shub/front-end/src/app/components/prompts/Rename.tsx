@@ -99,7 +99,7 @@ const Rename: React.FC<RenameProps> = () => {
         toggleCurrentPromptName()
         toggleShowRename()
     }
-
+    const oldName = showFolder.find((el: { id: number; })  => el.id == selected)
 
     return (
         <div className={cx('card','floating')}>
@@ -108,7 +108,7 @@ const Rename: React.FC<RenameProps> = () => {
             </div>
 
             <div className={cx("card-content")}>
-                <p>Insert a new name for {showFolder[selected - 1].name}
+                <p>Insert a new name for {oldName.name}
                     {/* {oldName()} */}
                 </p>
                 <input
