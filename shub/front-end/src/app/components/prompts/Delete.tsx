@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Delete.module.scss'
+import { useShub } from '@/app/Provider/Provider';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '@/store';
 // import { useRouter } from 'next/router';
@@ -71,17 +72,32 @@ const Delete: React.FC<DeleteProps> = () => {
   //     if (isListing) dispatch({ type: 'SET_RELOAD', payload: true });
   //   }
   // };
+  const { selected, delFolder, toggleCurrentPromptName, toggleShowDelete } = useShub();
+  const toggle = () => {
+    toggleCurrentPromptName()
+    toggleShowDelete()
+  }
+  const submit = () => {
+    delFolder(selected)
+    toggle()
+  }
 
   let selectedCount = 1
 
   return (
     <div className={cx('card','floating')}>
       <div className={cx("card-content")}>
-        <p>{selectedCount === 1 ? 'Prompts delete message single' : `Prompts delete message multiple ${selectedCount}`}</p>
+        <p>
+          {/* {selectedCount === 1 ? 'Prompts delete message single' : `Prompts delete message multiple ${selectedCount}`} */}
+          Are you sure you want to delete this file/folder?
+
+
+        </p>
       </div>
       <div className={cx("card-action")}>
         <button
-          // onClick={closeHovers}
+          onClick={() => toggle()
+        }
           className={cx('button','button--flat',"button--grey")}
           aria-label="Cancel"
           title="Cancel"
@@ -89,7 +105,7 @@ const Delete: React.FC<DeleteProps> = () => {
           Cancel
         </button>
         <button
-          // onClick={submit}
+          onClick={() => submit()}
           className={cx('button','button--flat',"button--red")}
           aria-label="Delete"
           title="Delete"

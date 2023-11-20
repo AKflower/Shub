@@ -55,12 +55,11 @@ const [showShare, setShowShare] = useState("");
 const [showRename, setShowRename] = useState("");
 const [showCopy, setShowCopy] = useState("");
 const [showMove, setShowMove] = useState("");
-const [showDelete, setShowDelete] = useState("");
 
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
 const isLogin = (pathname=='/') //check login page ? not render : render
-const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir, option } = useShub();
+const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir, option, showDelete, toggleShowDelete } = useShub();
 
 
   return (
@@ -141,7 +140,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
           label='Delete'
           counter={0}
           onAction={()=>{
-            setShowDelete('show')
+            toggleShowDelete()
             toggleCurrentPromptName()
             }
           } 
@@ -272,7 +271,7 @@ const {currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile
             if(showRename){setShowRename('')}
             if(showCopy){setShowCopy('')}
             if(showMove){setShowMove('')}
-            if(showDelete){setShowDelete('')}
+            if(showDelete){toggleShowDelete()}
           }
         }
       />

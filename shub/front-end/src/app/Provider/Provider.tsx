@@ -125,6 +125,7 @@ interface ShubContextProps {
     toggleShowNewDir: () => void;
     showFolder: any;
     addFolder: (folderName: string) => void;
+    delFolder: (id: number) => void;
     showFile: any;
     addFile: (fileName: string) => void;
     showShare: string;
@@ -132,6 +133,10 @@ interface ShubContextProps {
     option: string;
     showOption: () => void;
     hideOption: () => void;
+    selected: number;
+    handleSelect: (id: number) => void;
+    showDelete: string;
+    toggleShowDelete: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -150,6 +155,10 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
         date: '10 days ago',
       }
     ])
+  }
+  const delFolder = (id: number) => {
+    showFolder.splice(id - 1, 1)
+    setShowFolder([...showFolder])
   }
 
   const [showFile, setShowFile] = useState(files);
@@ -192,6 +201,24 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setOption('');
   }
 
+const [selected, setSelected] = useState(0);
+const handleSelect = (id:number) => {
+  if (id==selected) {
+      setSelected(0);
+      hideOption()
+  }
+  else {
+      setSelected(id);
+      showOption()
+  }
+}
+
+const [showDelete, setShowDelete] = useState("");
+const toggleShowDelete = () => {
+  setShowDelete(showDelete == '' ? 'more' : '');
+};
+
+
   
 
   const value: ShubContextProps = {
@@ -203,13 +230,18 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     toggleShowNewDir,
     showFolder,
     addFolder,
+    delFolder,
     showFile,
     addFile,
     showShare,
     toggleShowShare,
     option,
     showOption,
-    hideOption
+    hideOption,
+    selected,
+    handleSelect,
+    showDelete,
+    toggleShowDelete
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

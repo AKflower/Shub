@@ -2,6 +2,7 @@
 import styles from './fileSection.module.scss'
 import Card from '../card/card'
 import { useState } from 'react';
+import { useShub } from '@/app/Provider/Provider';
 
 interface FileProps {
     id: number,
@@ -12,13 +13,20 @@ interface FileProps {
 
 
 export default function FileSection ({files} : {files:FileProps[]}) {
+    const { showOption, hideOption } = useShub();
+
     const [selected,setSelected] = useState(0);
     const handleSelect = (id:number) => {
         console.log('Hi');
         if (id==selected) {
             setSelected(0);
+            hideOption()
+
         }
-        else setSelected(id);
+        else {
+            showOption()
+            setSelected(id);
+        }
     }
     
 
