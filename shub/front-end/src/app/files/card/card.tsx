@@ -8,7 +8,6 @@ import { useState } from 'react';
 export default function Card ({type, name,size,date, selected}: {type:string, key:number, name:string,size?:string,date?:string, selected?:boolean}) {
     
     const [select,setSelect] = useState(false);
-    
     const handleSelect = () => {
 
         setSelect(!select);
@@ -29,7 +28,7 @@ export default function Card ({type, name,size,date, selected}: {type:string, ke
                 <p className={styles.name}>{name}</p>
                 {type=='folder' ? <p className={styles.size}>---</p> : <p className={styles.size}>{size}</p>}
                 
-                <p className={styles.date}>{date}</p>
+                <p className={styles.date}>{date?.slice(0, date.indexOf('T'))}</p>
             </div>
         </div>
     )

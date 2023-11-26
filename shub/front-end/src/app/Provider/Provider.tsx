@@ -1,6 +1,7 @@
 "use client"
-import React, { useState, createContext, ReactNode, useContext } from "react";
-const folders = [
+import axios from "axios";
+import React, { useState, createContext, ReactNode, useContext, useEffect } from "react";
+const folder = [
   {
     id: 1,
     name: 'ppl',
@@ -149,7 +150,11 @@ interface ShubProviderProps {
 }
 
 export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
-  const [showFolder, setShowFolder] = useState(folders);
+ 
+  
+  
+
+  const [showFolder, setShowFolder] = useState(folder);
   const addFolder = (folderName: string) => {
     setShowFolder([...showFolder, 
       {
@@ -158,7 +163,7 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
         date: '10 days ago',
       }
     ])
-  }
+  } 
   const delFolder = (id: number) => {
     const foundFolder = showFolder.find((el) => el.id === id);
     if(foundFolder) showFolder.splice(showFolder.indexOf(foundFolder), 1)
@@ -238,6 +243,7 @@ const toggleShowRename = () => {
 };
   
   const value: ShubContextProps = {
+
     currentPromptName,
     toggleCurrentPromptName,
     showNewFile,
@@ -261,6 +267,7 @@ const toggleShowRename = () => {
     toggleShowDelete,
     showRename,
     toggleShowRename,
+    
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

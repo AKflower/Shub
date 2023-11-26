@@ -12,7 +12,17 @@ interface FolderProps {
     children: Array<string>,
     date?: string
 }
-export default function FolderSection ({folders} : {folders:FolderProps[]})  {
+
+interface FoldersProps {
+    folder_id: number,
+    folder_name: string,
+    parent_folder_id: number,
+    user_id: number,
+    created_at: string,
+    updated_at: string,
+}
+
+export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
     const { selected, handleSelect } = useShub();
 
     
@@ -25,14 +35,14 @@ export default function FolderSection ({folders} : {folders:FolderProps[]})  {
                 <h3 className={styles.title}>Folders</h3>
                 <div className="grid grid-cols-4 gap-3">
                     {folders.map((folder) => (
-                        <div  key={folder.id}
+                        <div  key={folder.folder_id}
                         onClick={() => {
-                            handleSelect(folder.id)
+                            handleSelect(folder.folder_id)
                             
                         }}
-                        onDoubleClick={() => open(folder.children)}
+                        // onDoubleClick={() => open(folder.children)}
                         >
-                            <Card type="folder" key={folder.id} name={folder.name} date={folder.date} selected={selected==folder.id}/>
+                            <Card type="folder" key={folder.folder_id} name={folder.folder_name} date={folder.updated_at} selected={selected==folder.folder_id}/>
 
                         </div>
                         
