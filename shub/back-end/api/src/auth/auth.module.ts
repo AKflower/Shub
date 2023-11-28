@@ -12,7 +12,7 @@ import { UsersModule } from 'src/users/users.module';
     UsersModule,
     JwtModule.register({
       secret: 'dung170202', // Replace with your secret key
-      signOptions: { expiresIn: '1h' }, // Adjust the expiration time as needed
+      signOptions: { expiresIn: '24h' }, // Adjust the expiration time as needed
     }),
   ],
   controllers: [AuthController],

@@ -91,6 +91,7 @@ interface ShubContextProps {
     handleChange: () => void;
     dSelected: number;
     handleDSelected: (id: number) => void;
+    resetSelect: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -166,6 +167,9 @@ const handleSelect = (id:number) => {
       showOption()
   }
 }
+const resetSelect = () => {
+  setSelected(0)
+}
 
 const [showDelete, setShowDelete] = useState("");
 const toggleShowDelete = () => {
@@ -209,6 +213,7 @@ const handleNavigation = (name: string) => {
     handleChange,
     dSelected,
     handleDSelected,
+    resetSelect
     
   };
 

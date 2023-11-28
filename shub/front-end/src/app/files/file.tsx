@@ -11,14 +11,10 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 export default function File () {
     const router = useRouter();
-    const { showFile, change } = useShub();
+    const { showFile, change, resetSelect, hideOption } = useShub();
     const [show, setShow] = useState('');
+    const [folder, setFolder] = useState([]);
     const pathname = usePathname()
-    const test = localStorage.getItem('folders')
-    let folders
-    if (test) {
-        folders = JSON.parse(test) 
-    }
     
     useEffect(() => {
         if (pathname != '/files') {
@@ -37,18 +33,22 @@ export default function File () {
                 },
                 });
 
+            setFolder(res.data)
             const folders = JSON.stringify(res.data);
             localStorage.setItem('folders', folders)
         }
         fetchData()
+        resetSelect()
+        hideOption()
     },[change])
       
     return (
         <div className={styles.container}>
             {show &&(<button onClick={() => {
                 router.push(pathname.slice(0, pathname.lastIndexOf('/')))
+              
             }}><ArrowBackIosNewIcon /></button>)}
-            <FolderSection folders={folders}/>
+            <FolderSection folders={folder}/>
             <FileSection files={showFile}/>
         </div>
     )

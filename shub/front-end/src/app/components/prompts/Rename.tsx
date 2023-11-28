@@ -44,7 +44,8 @@ const Rename: React.FC<RenameProps> = () => {
           .catch(error => {
             console.error('Error creating folder:', error);
           });
-          handleChange()
+        
+        handleChange()
         toggleCurrentPromptName()
         toggleShowRename()
     }

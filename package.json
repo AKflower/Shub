@@ -1,6 +1,10 @@
 {
   "dependencies": {
     "@grpc/grpc-js": "^1.9.7",
-    "class-validator": "^0.14.0"
+    "class-validator": "^0.14.0",
+    "next": "^14.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.19.0"
   }
 }
