@@ -1,16 +1,9 @@
-// components/Delete.tsx
-
 import React, { useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Delete.module.scss'
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { RootState } from '@/store';
-// import { useRouter } from 'next/router';
 
-// import { files as api } from '@/api';
-// import buttons from '@/utils/buttons';
 
 const cx = classNames.bind(styles);
 
@@ -18,9 +11,8 @@ interface DeleteProps {}
 
 const Delete: React.FC<DeleteProps> = () => {
 
-  const { selected, delFolder, toggleCurrentPromptName, toggleShowDelete } = useShub();
+  const { selected, toggleShowDelete, handleChange } = useShub();
   const toggle = () => {
-    toggleCurrentPromptName()
     toggleShowDelete()
   }
   const submit = () => {
@@ -38,10 +30,11 @@ const Delete: React.FC<DeleteProps> = () => {
           .catch(error => {
             console.error('Error creating folder:', error);
           });
+          handleChange()
     toggle()
   }
 
-  let selectedCount = 1
+  // let selectedCount = 1  
 
   return (
     <div className={cx('card','floating')}>

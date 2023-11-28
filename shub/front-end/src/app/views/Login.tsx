@@ -6,24 +6,12 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import fontLogo from '../../../public/fonts/fonts';
-import { useShub } from '../Provider/Provider';
-
-// import images from '../assets/img';
-// import * as auth from '@/utils/auth';
-// import {
-//   name,
-//   logoURL,
-//   recaptcha,
-//   recaptchaKey,
-//   signup,
-// } from '@/utils/constants';
 
 const cx = classNames.bind(styles);
 
 interface Props {
   // Add any props if needed
 }
-
 
 const Login: React.FC<Props> = () => {
   const [createMode, setCreateMode] = useState(false);
@@ -44,10 +32,8 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
       // Handle signup logic
     } else {
       const response = await axios.post('http://localhost:3001/auth/login', { username, password });
-      console.log(response.data.token)
       localStorage.setItem('token', response.data.access_token);
       localStorage.setItem('user_id', response.data.user_id);
-      
       router.push('/files');
     }
   } catch (e) {

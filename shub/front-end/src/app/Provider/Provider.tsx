@@ -1,58 +1,7 @@
 "use client"
 import axios from "axios";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState, createContext, ReactNode, useContext, useEffect } from "react";
-const folder = [
-  {
-    id: 1,
-    name: 'ppl',
-    date: '10 days ago',
-  },
-  {
-    id: 2,
-    name: 'Folder 31',
-    date: '10 days ago',
-  },
-  {
-    id: 3,
-    name: 'Folder 44',
-    date: '10 days ago',
-  },
-  {
-    id: 4,
-    name: 'Folder 12',
-    date: '10 days ago',
-  },
-  {
-    id: 5,
-    name: 'Folder 88',
-    date: '10 days ago',
-  },
-  {
-    id: 6,
-    name: 'Folder 56',
-    date: '10 days ago',
-  },
-  {
-    id: 7,
-    name: 'Folder 73',
-    date: '10 days ago',
-  },
-  {
-    id: 8,
-    name: 'Folder 5',
-    date: '10 days ago',
-  },
-  {
-    id: 9,
-    name: 'Folder 91',
-    date: '10 days ago',
-  },
-  {
-    id: 10,
-    name: 'Folder 23',
-    date: '10 days ago',
-  },
-];
 
 const files = [
   {
@@ -124,10 +73,6 @@ interface ShubContextProps {
     toggleShowNewFile: () => void;
     showNewDir: string;
     toggleShowNewDir: () => void;
-    showFolder: any;
-    addFolder: (folderName: string) => void;
-    delFolder: (id: number) => void;
-    renameFolder: (id: number, newName: string) => void;
     showFile: any;
     addFile: (fileName: string) => void;
     showShare: string;
@@ -141,6 +86,11 @@ interface ShubContextProps {
     toggleShowDelete: () => void;
     showRename: string;
     toggleShowRename: () => void;
+    handleNavigation: (name: string) => void;
+    change: number;
+    handleChange: () => void;
+    dSelected: number;
+    handleDSelected: (id: number) => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -150,36 +100,14 @@ interface ShubProviderProps {
 }
 
 export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
- 
-  
-  
+  const router = useRouter();
+  const pathname = usePathname()
 
-  const [showFolder, setShowFolder] = useState(folder);
-  const addFolder = (folderName: string) => {
-    setShowFolder([...showFolder, 
-      {
-        id: showFolder.length + 1,
-        name: folderName,
-        date: '10 days ago',
-      }
-    ])
-  } 
-  const delFolder = (id: number) => {
-    const foundFolder = showFolder.find((el) => el.id === id);
-    if(foundFolder) showFolder.splice(showFolder.indexOf(foundFolder), 1)
-    setShowFolder([...showFolder])
-    setSelected(0);
-    hideOption()
+  const [change, setChange] = useState(0);
+  const handleChange= () =>{
+    setChange(change+1)
   }
-  const renameFolder = (id: number, newName: string) => {
-    const foundFolder = showFolder.find((el) => el.id === id);
-
-    if (foundFolder) {
-      foundFolder.name = newName;
-    }
-    setShowFolder([...showFolder])
-  }
-
+  
   const [showFile, setShowFile] = useState(files);
   const addFile = (fileName: string) => {
     setShowFile([...showFile, 
@@ -200,11 +128,13 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const [showNewFile, setShowNewFile] = useState('');
   const toggleShowNewFile = () => {
     setShowNewFile(showNewFile == '' ? 'more' : '');
+    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   };  
 
   const [showNewDir, setShowNewDir] = useState('');
   const toggleShowNewDir = () => {
     setShowNewDir(showNewDir == '' ? 'more' : '');
+    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   }; 
 
   const [showShare, setShowShare] = useState('');
@@ -220,6 +150,11 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setOption('');
   }
 
+const [dSelected, setDSelected] = useState(0);
+const handleDSelected = (id:number) => {
+  setDSelected(id)
+}
+
 const [selected, setSelected] = useState(0);
 const handleSelect = (id:number) => {
   if (id==selected) {
@@ -234,12 +169,18 @@ const handleSelect = (id:number) => {
 
 const [showDelete, setShowDelete] = useState("");
 const toggleShowDelete = () => {
-  setShowDelete(showDelete == '' ? 'more' : '');
+    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    setShowDelete(showDelete == '' ? 'more' : '');
 };
 
 const [showRename, setShowRename] = useState("");
 const toggleShowRename = () => {
   setShowRename(showRename == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const handleNavigation = (name: string) => {
+  router.push(`${pathname}/${name}`);
 };
   
   const value: ShubContextProps = {
@@ -250,10 +191,6 @@ const toggleShowRename = () => {
     toggleShowNewFile,
     showNewDir,
     toggleShowNewDir,
-    showFolder,
-    addFolder,
-    delFolder,
-    renameFolder,
     showFile,
     addFile,
     showShare,
@@ -267,6 +204,11 @@ const toggleShowRename = () => {
     toggleShowDelete,
     showRename,
     toggleShowRename,
+    handleNavigation,
+    change,
+    handleChange,
+    dSelected,
+    handleDSelected,
     
   };
 

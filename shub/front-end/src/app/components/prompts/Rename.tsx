@@ -12,7 +12,7 @@ interface RenameProps { }
 const Rename: React.FC<RenameProps> = () => {
    
     const [name, setName] = useState<string>("");
-    const { selected, toggleCurrentPromptName, toggleShowRename, showFolder, renameFolder } = useShub();
+    const { selected, toggleCurrentPromptName, toggleShowRename, handleChange } = useShub();
     const toggle = () => {
         toggleCurrentPromptName()
         toggleShowRename()
@@ -44,6 +44,7 @@ const Rename: React.FC<RenameProps> = () => {
           .catch(error => {
             console.error('Error creating folder:', error);
           });
+          handleChange()
         toggleCurrentPromptName()
         toggleShowRename()
     }

@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './NewDir.module.scss'
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
+import { usePathname } from 'next/navigation';
 
 const cx = classNames.bind(styles);
 
@@ -12,34 +13,33 @@ interface NewDirProps {
     base?: string;
 }
 
-const NewDir: React.FC<NewDirProps> = ({ redirect, base }) => {
-    
+const NewDir: React.FC<NewDirProps> = () => {
+    const pathname = usePathname()
     const [name, setName] = useState<string>("");
-    
-
-    const { addFolder, toggleCurrentPromptName, toggleShowNewDir } = useShub();
+    const {  toggleCurrentPromptName, toggleShowNewDir, handleChange } = useShub();
 
     const submit = () => {
         const token = localStorage.getItem('token');
-        const folderData = {
-            folder_name: name,
-            parent_folder_id: null,
-            user_id: localStorage.getItem('user_id'), 
-          };
-        axios.post(`http://localhost:3001/folders`, folderData,{
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`, 
-            },
-          })
-        .then(response => {
-            console.log('Folder created:', response.data);
-          })
-          .catch(error => {
-            console.error('Error creating folder:', error);
-          });
-        toggleCurrentPromptName()
-        toggleShowNewDir()
+            const folderData = {
+                folder_name: name,
+                folder_path: pathname.replaceAll('/','+'),
+                user_id: localStorage.getItem('user_id'), 
+              };
+            axios.post(`http://localhost:3001/folders`, folderData,{
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`, 
+                },
+              })
+            .then(response => {
+                console.log('Folder created:', response.data);
+              })
+              .catch(error => {
+                console.error('Error creating folder:', error);
+              });
+            handleChange()
+            toggleCurrentPromptName()
+            toggleShowNewDir()
     }
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,7 +51,6 @@ const NewDir: React.FC<NewDirProps> = ({ redirect, base }) => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
-
 
     return (
         <div className={cx('card','floating')}>
@@ -93,7 +92,6 @@ const NewDir: React.FC<NewDirProps> = ({ redirect, base }) => {
             </div>
         </div>
     )
-
 }
 
 export default NewDir;
