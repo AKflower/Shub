@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { FoldersService } from './folders.service';
 import { Folders } from './folders.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -23,6 +23,15 @@ export class FoldersController {
   @UseGuards(JwtAuthGuard)
   findAllByUserId(@Param('userId') userId: string): Promise<Folders[]> {
     return this.foldersService.findAllByUserId(+userId);
+  }
+
+  @Get(':userId/:folderPath')
+  @UseGuards(JwtAuthGuard)
+  async findByUserIdAndPath(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('folderPath') folderPath: string,
+  ) {
+      return  this.foldersService.findByUserIdAndPath(userId, folderPath);
   }
 
   @Post()

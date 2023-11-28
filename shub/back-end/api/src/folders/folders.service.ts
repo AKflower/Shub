@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Folders } from './folders.entity';
 
 @Injectable()
@@ -26,6 +26,15 @@ export class FoldersService {
 
   async findAllByUserId(userId: number): Promise<Folders[]> {
     return this.folderRepository.find({ where: { user_id: userId } });
+  }
+
+  async findByUserIdAndPath(userId: number, folderPath: string): Promise<Folders[]> {
+    return this.folderRepository.find({
+      where: {
+        user_id: userId,
+        folder_path: folderPath,
+      },
+    });
   }
 
   async create(folderData: Partial<Folders>): Promise<Folders> {

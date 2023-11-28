@@ -9,8 +9,8 @@ export class Folders {
   @Column()
   folder_name: string;
 
-  @Column({ nullable: true })
-  parent_folder_id: number;
+  @Column()
+  folder_path: string;
 
   @Column()
   user_id: number;

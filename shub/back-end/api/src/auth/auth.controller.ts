@@ -22,6 +22,9 @@ export class AuthController {
     // If the user is valid, generate a JWT token
     const token = this.jwtService.sign({ username: user.username, sub: user.userId });
 
-    return { access_token: token };
+    return { 
+      user_id: user.user_id,
+      access_token: token 
+    };
   }
 }
