@@ -3,52 +3,52 @@ import React, { useState, createContext, ReactNode, useContext } from "react";
 const folders = [
   {
     id: 1,
-    name: 'ppl',
+    name: 'PPL',
     date: '10 days ago',
   },
   {
     id: 2,
-    name: 'Folder 31',
-    date: '10 days ago',
+    name: 'Operating System',
+    date: '1 days ago',
   },
   {
     id: 3,
-    name: 'Folder 44',
-    date: '10 days ago',
+    name: 'TOEIC',
+    date: '8 days ago',
   },
   {
     id: 4,
-    name: 'Folder 12',
-    date: '10 days ago',
+    name: 'IELTS',
+    date: '3 days ago',
   },
   {
     id: 5,
-    name: 'Folder 88',
-    date: '10 days ago',
+    name: 'HSK',
+    date: '3 days ago',
   },
   {
     id: 6,
-    name: 'Folder 56',
+    name: 'Blue Block',
     date: '10 days ago',
   },
   {
     id: 7,
-    name: 'Folder 73',
+    name: 'Math',
     date: '10 days ago',
   },
   {
     id: 8,
-    name: 'Folder 5',
+    name: 'Currency',
     date: '10 days ago',
   },
   {
     id: 9,
-    name: 'Folder 91',
+    name: 'Transaction',
     date: '10 days ago',
   },
   {
     id: 10,
-    name: 'Folder 23',
+    name: 'Teams',
     date: '10 days ago',
   },
 ];
