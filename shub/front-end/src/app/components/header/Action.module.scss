@@ -1,0 +1,79 @@
+.material-icons {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  height: 2.5em;
+  width: 2.5em;
+   
+   
+  }
+  .action {
+    
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.2s ease all;
+    border: 0;
+    margin: 0;
+    color: #546e7a;
+    border-radius: 50%;
+    background: transparent;
+    padding: 0em;
+    box-shadow: none;
+    vertical-align: middle;
+    text-align: left;
+    position: relative;
+  }
+  
+  .action.disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+  
+  .action i {
+    padding: 0.4em;
+    transition: 0.1s ease-in-out all;
+    border-radius: 50%;
+  }
+  
+  .action:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .action ul {
+    position: absolute;
+    top: 0;
+    color: #7d7d7d;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    display: flex;
+  }
+  
+  .action ul li {
+    line-height: 1;
+    padding: 0.7em;
+    transition: 0.1s ease background-color;
+  }
+  
+  .action ul li:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  .action .counter {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.75em;
+    width: 1.8em;
+    height: 1.8em;
+    text-align: center;
+    line-height: 1.55em;
+    font-weight: bold;
+    border: 2px solid white;
+  }
+  .action span{
+    display: none;
+  }

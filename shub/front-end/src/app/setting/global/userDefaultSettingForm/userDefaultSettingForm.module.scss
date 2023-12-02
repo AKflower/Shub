@@ -1,0 +1,47 @@
+.container {
+    width: 100%;
+    
+    background-color: #fff;
+    .title {
+        width: 100%;
+        padding: 1em 1em 0.5em 1em;
+        font-weight: 500;
+        font-size: 25px;
+    }
+    .content {
+        padding: 1em 0 2em 1.5em;
+        .choose {
+            .chooseTitle {
+                margin: 0 1em 0 0;
+            }
+        }
+        .small {
+            padding: 1em 1em 1em 0;
+            font-size: .8em;
+        }
+        .input {
+            margin: 0 0 0 0;
+            width: 95%;
+            border: 1px solid;
+            border-radius: 4px;
+        }
+        .subtitle {
+            padding: 1em 0 0em 0em;
+            font-size: .8em;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.57);
+        }
+        .midTitle {
+            padding: 1em 0 0 0;
+        }
+        .language {
+            // margin: 1em 0 0 0;
+            width: 95%;
+        }
+
+    }
+    .footer {
+        float: right;
+        padding: 0.5em 2.5em 1em 0;
+    }
+}

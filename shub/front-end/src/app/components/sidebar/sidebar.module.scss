@@ -1,0 +1,66 @@
+.title {
+    margin-left: 1em;
+}
+.nav {
+    display: block;
+    position: fixed;
+    width: 14em;
+    top: 5em;
+    left: 0;
+    z-index: 999;
+    .container {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        
+    }
+    .action {
+        vertical-align: middle;
+        color:#546e7a;
+        
+    }
+    .action:hover {
+        // background-color: #8e9294;
+        background:rgba(0, 0, 0, 0.05);
+    }
+  }
+    
+  
+
+.action {
+    width: 100%;
+    color:#546e7a;
+    display: flex;
+    border-radius: 0;
+    font-size: 1.1em;
+    padding: 1em 1em 1em 2em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+  }
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    animation: .1s show forwards;
+  }
+  @keyframes show {
+    0% {
+      visibility: hidden;
+      opacity: 0;
+  }
+  1% {
+    visibility: visible;
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+    }

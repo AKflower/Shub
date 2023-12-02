@@ -1,0 +1,186 @@
+.card {
+    position: relative;
+    margin: 0 0 1rem 0;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    overflow: auto;
+
+    .card-title {
+        padding: 1.5em 1em 1em;
+        display: flex;
+      }
+    
+      .card-title>*:first-child {
+        margin-right: auto;
+      }
+      &>div {
+        padding: 1em 1em;
+      }
+
+      &>div:first-child {
+        padding-top: 1.5em;
+      }
+
+      &>div:last-child {
+        padding-bottom: 1.5em;
+      }
+      .card-action {
+        text-align: right;
+      }
+      h2 {
+        font-weight: 500;
+      }
+      h3 {
+        color: rgba(0, 0, 0, 0.53);
+        font-size: 1em;
+        font-weight: 500;
+        margin: 2em 0 1em;
+      }
+
+      code {
+        word-wrap: break-word;
+      }
+  }
+
+  .card .card-title * {
+    margin: 0;
+  }
+
+  .card.floating {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    max-width: 25em;
+    width: 90%;
+    max-height: 95%;
+    animation: .1s show forwards;
+    
+  }
+
+  .card>*>*:first-child {
+    margin-top: 0;
+  }
+  
+  .card>*>*:last-child {
+    margin-bottom: 0;
+  }
+
+  .button {
+    outline: 0;
+    border: 0;
+    padding: .5em 1em;
+    border-radius: .1em;
+    cursor: pointer;
+    background: var(--blue);
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    transition: .1s ease all;
+  }
+  
+  .button:hover {
+    background-color: var(--dark-blue);
+  }
+
+  .button--flat {
+    color: var(--dark-blue);
+    background: transparent;
+    box-shadow: 0 0 0;
+    border: 0;
+    text-transform: uppercase;
+  }
+  
+  .button--flat:hover {
+    background: var(--moon-grey);
+  }
+
+  .button--flat.button--grey {
+    color: #6f6f6f;
+  }
+
+  .card#share ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .card#share ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card#share ul li a {
+    color: var(--blue);
+    cursor: pointer;
+    margin-right: auto;
+  }
+  
+  .card#share ul li .action i {
+    font-size: 1em;
+  }
+  
+  .card#share ul li input,
+  .card#share ul li select {
+    padding: .2em;
+    margin-right: .5em;
+    border: 1px solid #dadada;
+  }
+  
+  .card#share .action.copy-clipboard::after {
+    content: 'Copied!';
+    position: absolute;
+    left: -25%;
+    width: 150%;
+    font-size: .6em;
+    text-align: center;
+    background: #44a6f5;
+    color: #fff;
+    padding: .5em .2em;
+    border-radius: .4em;
+    top: -2em;
+    transition: .1s ease opacity;
+    opacity: 0;
+  }
+  
+  .card#share .action.copy-clipboard.active::after {
+    opacity: 1;
+  }
+  
+  .card#share .input-group {
+    display: flex;
+  }
+  
+  .card#share .input-group * {
+    border: none;
+  }
+  
+  .card#share .input-group input {
+    flex: 1;
+  }
+
+  
+
+  .input {
+    border-radius: .1em;
+    padding: .5em 1em;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: .2s ease all;
+    color: #333;
+    margin: 0;
+  }
+  
+  .input:hover,
+  .input:focus {
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  .input--block {
+    margin-bottom: .5em;
+    display: block;
+    width: 100%;
+  }

@@ -1,0 +1,23 @@
+.container {
+
+    background-color: #fff;
+    width: 50%;
+    .title {
+        font-size: 25px;
+        font-weight: 500;
+        padding: 1em;
+    }
+    .content {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 3em;
+        color: rgba(0, 0, 0, 0.3);
+        .message {
+            font-size:2em;
+            font-weight: 500;
+        }
+    }
+
+}

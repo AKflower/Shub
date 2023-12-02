@@ -1,0 +1,33 @@
+.nav {
+    padding-bottom: 1em;
+    .container {
+        border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        
+        .list {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            color: rgb(84, 110, 122);
+            font-weight: 500;
+            padding: 0;
+            margin: 0 0 -2px 0;
+            font-size: .8em;
+            text-align: center;
+            .item {
+                padding: 1.5em;
+                
+                
+            }
+            .itemActive {
+                color:#2196f3;
+                background-color: #aed6f6;
+                border-color:#2196f3;
+                padding: 1.5em;
+                border-bottom: 2px solid;
+                transition: .1s ease-in-out all;
+                
+                
+            }
+        }
+    }
+}

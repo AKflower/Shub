@@ -1,0 +1,78 @@
+.container {
+    cursor: pointer;
+
+    background-color: #fff;
+    display: flex;
+    padding: 1em;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    &:hover {
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    }
+    .img {
+        .imgFolder{
+            color:#2196f3;
+        }
+        .imgFile {
+            color:#6F6F6F;
+        }
+        
+    }
+   
+    .content {
+        padding: 0 0 0 1.5em;
+
+        .name {
+            font-weight: 500;
+            user-select: none;
+        }
+        .size {
+            color: #6F6F6F;
+        user-select: none;
+
+        }
+        .date {
+            color: #6F6F6F;
+        user-select: none;
+
+        }
+    }
+
+}
+.containerSelect{
+    cursor: pointer;
+    background-color: #2196f3;
+    display: flex;
+    padding: 1em;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .img {
+        .imgFolder{
+            color:#fff;
+        }
+        .imgFile {
+            color:#fff;
+        }
+        
+    }
+    .content {
+        padding: 0 0 0 1.5em;
+        .name {
+            font-weight: 500;
+            color: #fff;
+    user-select: none;
+            
+        }
+        .size {
+            color: #fff;
+    user-select: none;
+
+        }
+        .date {
+            color: #fff;
+    user-select: none;
+
+        }
+    }
+
+}

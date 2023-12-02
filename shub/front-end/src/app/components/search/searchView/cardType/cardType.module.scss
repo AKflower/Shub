@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 10em;
+    background-color: #2196f3;
+    .img {
+        color: #fff;
+        padding: 1em;
+    }
+    .name {
+        padding: 0 1em 1em 1em;
+        color: #fff;
+        font-weight: 500;
+    }
+}
