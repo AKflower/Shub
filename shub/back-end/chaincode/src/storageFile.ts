@@ -36,8 +36,6 @@ export class StorageFileContract extends Contract {
             throw new Error(`The file ${id} already exists`);
 
         }
-        
-        
         const newfile = {
             ID: id,
             Owner: owner,
@@ -84,6 +82,15 @@ export class StorageFileContract extends Contract {
         }
         return JSON.stringify(allResults);
     }
+    @Transaction()
+    public async DeleteFile(ctx: Context, id: string): Promise<void> {
+        const exists = await this.FileExists(ctx, id);
+        if (!exists) {
+            throw new Error(`The asset ${id} does not exist`);
+        }
+        return ctx.stub.deleteState(id);
+    }
+    
 }
    
     

@@ -74,6 +74,13 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
+    async DeleteFile(ctx, id) {
+        const exists = await this.FileExists(ctx, id);
+        if (!exists) {
+            throw new Error(`The asset ${id} does not exist`);
+        }
+        return ctx.stub.deleteState(id);
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
@@ -107,6 +114,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetAllFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "DeleteFile", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageUploadShare', description: 'Smart contract for Upload and share file' })
 ], StorageFileContract);

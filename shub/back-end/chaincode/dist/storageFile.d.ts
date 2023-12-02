@@ -5,4 +5,5 @@ export declare class StorageFileContract extends Contract {
     GetFile(ctx: Context, id: string): Promise<string>;
     FileExists(ctx: Context, id: string): Promise<boolean>;
     GetAllFile(ctx: Context): Promise<string>;
+    DeleteFile(ctx: Context, id: string): Promise<void>;
 }

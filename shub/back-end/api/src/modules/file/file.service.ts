@@ -34,7 +34,7 @@ export class FileService {
     return files;
     
 }
-  async getFile(contract: Contract, id: string): Promise<void> {
+  async getFile(contract: Contract, id: string): Promise<File> {
     console.log('\n ---> Submit Transaction: getfile');
     const resultBytes= await contract.submitTransaction('GetFile',id);
     const utf8Decoder = new TextDecoder();
@@ -42,6 +42,7 @@ export class FileService {
     const result = JSON.parse(resultJson);
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
+    return result;
   }
   async upload(contract: Contract, newfileDTO: FileDTO): Promise<File> {
     console.log('\n --> Submit Transaction: upload');
@@ -50,6 +51,17 @@ export class FileService {
 
     console.log('*** Transaction committed successfully');
     return newfile;
+  }
+  async delete(contract: Contract, id: string) : Promise<File> {
+    
+    const resultBytes= await contract.submitTransaction('GetFile',id);
+    const utf8Decoder = new TextDecoder();
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    console.log('aloooooo');
+    await contract.submitTransaction('DeleteFile', id);
+
+    return result;
   }
 
 }
