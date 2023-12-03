@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { FoldersModule } from './folders/folders.module';
 import { AuthModule } from './auth/auth.module';
+import { IPFSModule } from './ipfs/ipfs.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -20,7 +22,9 @@ import { AuthModule } from './auth/auth.module';
     ),
     UsersModule,
     FoldersModule,
-    AuthModule
+    AuthModule,
+    IPFSModule,
+    FilesModule
     // Import other modules as needed
   ],
 })

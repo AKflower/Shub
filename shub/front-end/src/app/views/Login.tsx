@@ -43,7 +43,7 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
 let name = 'Shub'
 // let error
 // let username = 'username'
-let signup = '1'
+let signup = ''
   const toggleMode = () => {
     setCreateMode(!createMode);
   };

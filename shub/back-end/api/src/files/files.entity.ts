@@ -1,9 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Users } from '../users/users.entity';
-import { Folders } from '../folders/folders.entity';
 
 @Entity()
-export class File {
+export class Files {
   @PrimaryGeneratedColumn()
   file_id: number;
 
@@ -14,7 +13,10 @@ export class File {
   file_path: string;
 
   @Column()
-  folder_id: number;
+  file_data: string;
+
+  @Column()
+  file_type: string;
 
   @Column()
   user_id: number;
@@ -29,7 +31,4 @@ export class File {
   @JoinColumn({ name: 'user_id' })
   user: Users;
 
-  @ManyToOne(() => Folders)
-  @JoinColumn({ name: 'folder_id' })
-  folder: Folders;
 }
