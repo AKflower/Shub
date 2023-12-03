@@ -3,83 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './Rename.module.scss'
 import { useShub } from '@/app/Provider/Provider';
-// import { useHistory } from 'react-router-dom';
-// import { RootState } from '@/redux/store';
-// import url from "@/utils/url";
-// import { files as api } from "@/api";
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
 interface RenameProps { }
 
 const Rename: React.FC<RenameProps> = () => {
-    // const history = useHistory();
-    // const dispatch = useDispatch();
-    // const [name, setName] = useState<string>("");
-
-    // setName(oldName());
-
-    // const { req, selected, selectedCount, isListing } = useSelector((state: RootState) => ({
-    //     req: state.req,
-    //     selected: state.selected,
-    //     selectedCount: state.selectedCount,
-    //     isListing: state.isListing,
-    // }));
-
-    // const Cancel = () => {
-    //     dispatch({ type: "CLOSE_HOVER" });
-    // }
-
-    // const oldName = () => {
-    //     if (!isListing) {
-    //         return req.name;
-    //     }
-
-    //     if (selectedCount === 0 || selectedCount > 1) {
-    //         return;
-    //     }
-
-    //     return req.items[selected[0]].name;
-    // }
-
-    // const submit = async () => {
-    //     let oldLink = "";
-    //     let newLink = "";
-
-    //     if (!isListing) {
-    //         oldLink = req.url;
-    //     } else {
-    //         oldLink = req.items[selected[0]].url;
-    //     }
-
-    //     newLink = url.removeLastDir(oldLink) + "/" + encodeURIComponent(name);
-
-    //     try {
-    //         await api.move([{ from: oldLink, to: newLink }]);
-    //         if (!isListing) {
-    //             history.push({ path: newLink });
-    //             return;
-    //         }
-
-    //         dispatch({ type: "SET_REALOAD", payload: true });
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-
-    //     dispatch({ type: "CLOSE_HOVER" });
-    // }
-
-    // const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (event.key === 'Enter') {
-    //         submit();
-    //     }
-    // };
-
-    // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setName(event.target.value);
-    // };
+   
     const [name, setName] = useState<string>("");
-    const { selected, toggleCurrentPromptName, toggleShowRename, showFolder, renameFolder } = useShub();
+    const { selected, toggleCurrentPromptName, toggleShowRename, handleChange } = useShub();
     const toggle = () => {
         toggleCurrentPromptName()
         toggleShowRename()
@@ -95,11 +28,37 @@ const Rename: React.FC<RenameProps> = () => {
     };
 
     const submit = () => {
-        renameFolder(selected, name)
+        const token = localStorage.getItem('token');
+        const folderData = {
+            folder_name: name,
+        };
+        axios.put(`http://localhost:3001/folders/${selected}`, folderData,{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`, 
+            },
+          })
+        .then(response => {
+            console.log('Folder created:', response.data);
+          })
+          .catch(error => {
+            console.error('Error creating folder:', error);
+          });
+        
+        handleChange()
         toggleCurrentPromptName()
         toggleShowRename()
     }
-    const oldName = showFolder.find((el: { id: number; })  => el.id == selected)
+    const [oldName, setOldName] = useState<string>("");
+    useEffect(() => {
+        const foldersString = localStorage.getItem('folders');
+        if (foldersString) {
+            const folders = JSON.parse(foldersString);
+            let oldName = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
+            setOldName(oldName.folder_name);
+          }
+    },[name])
+
 
     return (
         <div className={cx('card','floating')}>
@@ -108,7 +67,7 @@ const Rename: React.FC<RenameProps> = () => {
             </div>
 
             <div className={cx("card-content")}>
-                <p>Insert a new name for {oldName.name}
+                <p>Insert a new name for {oldName}
                     {/* {oldName()} */}
                 </p>
                 <input

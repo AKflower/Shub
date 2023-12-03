@@ -29,7 +29,7 @@
   }
 }
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -37,7 +37,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */
 
 
 
@@ -48,7 +48,7 @@ body {
   color: #333333;
 }
 main {
-  padding-top: 3em;
+  padding-top: 1em;
   padding-bottom: 3em;
 }
 

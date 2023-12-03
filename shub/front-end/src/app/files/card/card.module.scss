@@ -1,5 +1,6 @@
 .container {
     cursor: pointer;
+
     background-color: #fff;
     display: flex;
     padding: 1em;
@@ -20,15 +21,20 @@
    
     .content {
         padding: 0 0 0 1.5em;
+
         .name {
             font-weight: 500;
-            
+            user-select: none;
         }
         .size {
             color: #6F6F6F;
+        user-select: none;
+
         }
         .date {
             color: #6F6F6F;
+        user-select: none;
+
         }
     }
 
@@ -54,13 +60,18 @@
         .name {
             font-weight: 500;
             color: #fff;
+    user-select: none;
             
         }
         .size {
             color: #fff;
+    user-select: none;
+
         }
         .date {
             color: #fff;
+    user-select: none;
+
         }
     }
 

@@ -7,22 +7,11 @@ import Image from 'next/image';
 import axios from 'axios';
 import fontLogo from '../../../public/fonts/fonts';
 
-// import images from '../assets/img';
-// import * as auth from '@/utils/auth';
-// import {
-//   name,
-//   logoURL,
-//   recaptcha,
-//   recaptchaKey,
-//   signup,
-// } from '@/utils/constants';
-
 const cx = classNames.bind(styles);
 
 interface Props {
   // Add any props if needed
 }
-
 
 const Login: React.FC<Props> = () => {
   const [createMode, setCreateMode] = useState(false);
@@ -32,67 +21,6 @@ const Login: React.FC<Props> = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const router = useRouter();
 
-
-//   useEffect(() => {
-//     if (!recaptcha) return;
-
-//     window.grecaptcha.ready(function () {
-//       window.grecaptcha.render('recaptcha', {
-//         sitekey: recaptchaKey,
-//       });
-//     });
-//   }, []);
-
-//   const toggleMode = () => {
-//     setCreateMode(!createMode);
-//   };
-
-//   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault();
-//     event.stopPropagation();
-
-//     let redirect = '/files/'; // default redirect path
-//     const queryString = window.location.search;
-//     const urlParams = new URLSearchParams(queryString);
-//     const redirectParam = urlParams.get('redirect');
-//     if (redirectParam) {
-//       redirect = redirectParam;
-//     }
-
-//     let captcha = '';
-//     if (recaptcha) {
-//       captcha = window.grecaptcha.getResponse();
-
-//       if (captcha === '') {
-//         setError('Wrong credentials');
-//         return;
-//       }
-//     }
-
-//     if (createMode) {
-//       if (password !== passwordConfirm) {
-//         setError('Passwords do not match');
-//         return;
-//       }
-//     }
-
-//     try {
-//       if (createMode) {
-//         await auth.signup(username, password);
-//       }
-
-//       await auth.login(username, password, captcha);
-//       // Use Next.js router for navigation
-//       // Replace this with your actual route logic
-//       // e.g., router.push(redirect);
-//     } catch (e) {
-//       if (e.message === '409') {
-//         setError('Username is already taken');
-//       } else {
-//         setError('Wrong credentials');
-//       }
-//     }
-//   };
 
 let recaptcha = ''
 const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,12 +32,12 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
       // Handle signup logic
     } else {
       const response = await axios.post('http://localhost:3001/auth/login', { username, password });
-
-      console.log(response.data); 
+      localStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('user_id', response.data.user_id);
       router.push('/files');
     }
   } catch (e) {
-    setError('An error occurred');
+    setError('An error occurred');  
   }
 };
 let name = 'Shub'
