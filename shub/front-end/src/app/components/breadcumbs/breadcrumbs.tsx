@@ -20,7 +20,7 @@ const Breadcrumbs =() => {
   let parts = pathname.split("/").filter(Boolean);
   let routes = parts.map((part,index) => {
     
-      let name = part;
+      let name = decodeURIComponent(part);
       let path = `/${parts.slice(0,index+1).join("/")}`
       return {name,path};
   
