@@ -6,6 +6,7 @@ import Sidebar from './components/sidebar/sidebar'
 import Search from './components/search/search'
 import HeaderBar from './components/header/HeaderBar'
 import { ShubProvider } from './Provider/Provider'
+import Breadcrumbs from './components/breadcumbs/breadcrumbs'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -28,6 +29,7 @@ export default function RootLayout({
       <HeaderBar showLogo showMenu>
       <Search/>
       </HeaderBar>
+      
       <Sidebar />
       <main className='ml-60 mr-3 h-max'>
       {children}

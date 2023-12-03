@@ -7,10 +7,14 @@ import { useShub } from '../Provider/Provider';
 import axios from 'axios';
 import { usePathname, useRouter } from 'next/navigation'; 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+<<<<<<< HEAD
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
+=======
+import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
+>>>>>>> 85a0db823cdd74ae4acf9c406bd043a81af71b76
 
 export default function File () {
     const router = useRouter();
@@ -65,6 +69,7 @@ export default function File () {
    
       
     return (
+<<<<<<< HEAD
         <div className={cx('container')}>
             {show &&(<button onClick={() => {
                 router.push(pathname.slice(0, pathname.lastIndexOf('/')))
@@ -80,6 +85,16 @@ export default function File () {
                 <div className={cx('message')}>It feels lonely here...</div>
                 
             </div>)}
+=======
+        <div className={styles.container}>
+            <Breadcrumbs />
+            {/* {show &&(<button onClick={() => {
+                router.push(pathname.slice(0, pathname.lastIndexOf('/')))
+              
+            }}><ArrowBackIosNewIcon /></button>)} */}
+            <FolderSection folders={folder}/>
+            <FileSection files={showFile}/>
+>>>>>>> 85a0db823cdd74ae4acf9c406bd043a81af71b76
         </div>
     )
 }
