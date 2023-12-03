@@ -8,6 +8,7 @@ import { useShub } from '../Provider/Provider';
 import axios from 'axios';
 import { usePathname, useRouter } from 'next/navigation'; 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 
 export default function File () {
     const router = useRouter();
@@ -44,10 +45,11 @@ export default function File () {
       
     return (
         <div className={styles.container}>
-            {show &&(<button onClick={() => {
+            <Breadcrumbs />
+            {/* {show &&(<button onClick={() => {
                 router.push(pathname.slice(0, pathname.lastIndexOf('/')))
               
-            }}><ArrowBackIosNewIcon /></button>)}
+            }}><ArrowBackIosNewIcon /></button>)} */}
             <FolderSection folders={folder}/>
             <FileSection files={showFile}/>
         </div>
