@@ -2,17 +2,21 @@ import { MinLength, IsNotEmpty, IsNumber } from "class-validator";
 
 export class FileDTO {
     @IsNotEmpty()
-    ID?:string;
+    file_id?:number;
 
     @IsNotEmpty()
-    Owner?:string;
+    file_name?:string;
     
     @IsNotEmpty()
-    NameFile?:string;
+    file_path?:string;
 
     @IsNotEmpty()
-    Type?:string;
+    cid?:string;
 
     @IsNotEmpty()
-    Link?:string;
+    user_id?:number;
+
+    
+
+    
 }

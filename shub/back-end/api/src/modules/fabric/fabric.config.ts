@@ -1,8 +1,8 @@
 /*
- * Copyright IBM Corp. All Rights Reserved.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
+  * Copyright IBM Corp. All Rights Reserved.
+  *
+  * SPDX-License-Identifier: Apache-2.0
+  */
 
 import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Network, Signer, signers } from '@hyperledger/fabric-gateway';
@@ -41,7 +41,7 @@ const assetId = `asset${Date.now()}`;
 
 async function network(): Promise<Fabric> {
 
-    
+
 
     // The gRPC client connection should be shared by all Gateway connections to this endpoint.
     const client = await newGrpcConnection();
@@ -65,15 +65,15 @@ async function network(): Promise<Fabric> {
         },
     });
 
-    
+
         // Get a network instance representing the channel where the smart contract is deployed.
         const network = gateway.getNetwork(channelName);
 
         // Get the smart contract from the network.
         //const contract = network.getContract(chaincodeName);
         // Initialize a set of asset data on the ledger using the chaincode 'InitLedger' function.
-       
-        
+
+
     return { network }
 
 }
@@ -110,4 +110,4 @@ function envOrDefault(key: string, defaultValue: string): string {
 export const FabricFactory = {
     provide: "FABRIC_CONFIG",
     useFactory: network
-};
+}; 

@@ -39,7 +39,7 @@ export class FileController {
         
     }
     @Get('/:id')
-    async getFile(@Param('id') id: string){
+    async getFile(@Param('id') id: number){
         try {
             const res = await this.fileService.getFile(this.contract,id);
             return new ResponseData<File>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
@@ -59,7 +59,7 @@ export class FileController {
         
     }
     @Delete('/delete/:id')
-    async delete(@Param('id') id: string) {
+    async delete(@Param('id') id: number) {
         try {
             const res = await this.fileService.delete(this.contract,id);
             return new ResponseData<File>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );

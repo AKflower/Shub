@@ -16,43 +16,70 @@ exports.StorageFileContract = void 0;
 const fabric_contract_api_1 = require("fabric-contract-api");
 const json_stringify_deterministic_1 = __importDefault(require("json-stringify-deterministic"));
 const sort_keys_recursive_1 = __importDefault(require("sort-keys-recursive"));
+const file_1 = require("./file");
 let StorageFileContract = class StorageFileContract extends fabric_contract_api_1.Contract {
     //Init
     async InitLedger(ctx) {
-        const firstfile = {
-            ID: '001',
-            Owner: 'Khoa',
-            NameFile: 'Readme.md',
-            Type: 'md',
-            Link: 'ipfs1',
-        };
-        await ctx.stub.putState(firstfile.ID, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
-        console.info(`Asset ${firstfile.ID} initialized`);
+        console.log('hahwahawafa');
+        console.log('heeeee', ctx);
+        const firstfile = new file_1.File({
+            file_id: '1',
+            file_name: "example.txt",
+            file_path: "+files",
+            cid: "123abc",
+            user_id: '1',
+        });
+        await ctx.stub.putState('' + firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
+        console.info(`Asset ${firstfile.file_id} initialized`);
     }
-    async UploadFile(ctx, id, owner, namefile, type, link) {
-        const exists = await this.FileExists(ctx, id);
+    async UploadFile(ctx, file_id, file_name, file_path, cid, user_id) {
+        const exists = await this.FileExists(ctx, file_id);
         if (exists) {
-            throw new Error(`The file ${id} already exists`);
+            throw new Error(`The file ${file_id} already exists`);
         }
-        const newfile = {
-            ID: id,
-            Owner: owner,
-            NameFile: namefile,
-            Type: type,
-            Link: link,
-        };
-        await ctx.stub.putState(id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
+        const newfile = new file_1.File({
+            file_id: file_id,
+            file_name: file_name,
+            file_path: file_path,
+            cid: cid,
+            user_id: user_id,
+        });
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
     }
-    async GetFile(ctx, id) {
-        const fileJSON = await ctx.stub.getState(id);
+    async GetFile(ctx, file_id) {
+        const fileJSON = await ctx.stub.getState(file_id);
         if (!fileJSON || fileJSON.length === 0) {
-            throw new Error(`The file ${id} does not exist`);
+            throw new Error(`The file ${file_id} does not exist`);
         }
         return fileJSON.toString();
     }
     async FileExists(ctx, id) {
         const fileJSON = await ctx.stub.getState(id);
         return fileJSON && fileJSON.length > 0;
+    }
+    async GetFilesByPath(ctx, file_path) {
+        const queryString = {
+            selector: {
+                file_path: file_path,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
     }
     async GetAllFile(ctx) {
         const allResults = [];
@@ -74,12 +101,12 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
-    async DeleteFile(ctx, id) {
-        const exists = await this.FileExists(ctx, id);
+    async DeleteFile(ctx, file_id) {
+        const exists = await this.FileExists(ctx, file_id);
         if (!exists) {
-            throw new Error(`The asset ${id} does not exist`);
+            throw new Error(`The asset ${file_id} does not exist`);
         }
-        return ctx.stub.deleteState(id);
+        return ctx.stub.deleteState('' + file_id);
     }
 };
 __decorate([
@@ -91,7 +118,7 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, Number]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "UploadFile", null);
 __decorate([
@@ -107,6 +134,13 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "FileExists", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFilesByPath", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
