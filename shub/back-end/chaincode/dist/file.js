@@ -16,23 +16,23 @@ let File = class File {
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "ID", void 0);
+], File.prototype, "file_id", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "Owner", void 0);
+], File.prototype, "file_name", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "NameFile", void 0);
+], File.prototype, "file_path", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "Type", void 0);
+], File.prototype, "cid", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "Link", void 0);
+], File.prototype, "user_id", void 0);
 File = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], File);

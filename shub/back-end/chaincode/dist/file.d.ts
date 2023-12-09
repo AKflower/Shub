@@ -1,7 +1,7 @@
 export declare class File {
-    ID: string;
-    Owner: string;
-    NameFile: string;
-    Type: string;
-    Link: string;
+    file_id: string;
+    file_name: string;
+    file_path: string;
+    cid: string;
+    user_id: string;
 }

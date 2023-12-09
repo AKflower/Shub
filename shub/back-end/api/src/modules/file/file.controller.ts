@@ -1,11 +1,11 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Query} from '@nestjs/common';
 import { FileService } from './file.service';
 import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { FabricService } from '../fabric/fabric.service';
 import { FileDTO } from 'src/dto/file.dto';
 
-@Controller('/file')
+@Controller('/files')
 export class FileController {
     private contract: Contract;
     constructor(private readonly fileService: FileService, private readonly fabricService: FabricService) {
@@ -21,15 +21,22 @@ export class FileController {
     getAllFile(){
         return this.fileService.getAllFile(this.contract);
     }
-    @Get('/:id')
-    getFile(@Param('id') id: string){
-        console.log(id);
-        return this.fileService.getFile(this.contract,id);
+    // @Get('/:id')
+    // getFile(@Param('id') id: number){
+    //     console.log(id);
+    //     return this.fileService.getFile(this.contract,''+id);
+    // }
+    @Get('/bypath')
+    getFilesByPath(@Query('path') path: string){
+        console.log('eeee: ',path);
+        return this.fileService.getFilesByPath(this.contract,path);
     }
     @Post('/new')
     upload(@Body(new ValidationPipe()) fileDTO: FileDTO){
         return this.fileService.upload(this.contract,fileDTO);
     }
+
+    
 }
 
  

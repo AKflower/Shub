@@ -1,16 +1,22 @@
 export class File {
-    ID?: string;
-    Owner?: string;
-    NameFile?: string;
-    Type?: string;
-    Link?: string;
+    file_id?: string;
+    file_name?: string;
+    file_path?: string;
+    cid?: string;
+    user_id?: string;
+    created_date?:Date;
+    updated_date?:Date;
+    file_size?:string;
 
-    constructor({ID,Owner,NameFile,Type,Link}) {
-        if(ID != null) this.ID=ID;
-        if (Link!=null) this.Link=Link;
-        if (NameFile!=null) this.NameFile=NameFile;
-        if (Owner!=null) this.Owner=Owner;
-        if (Type!=null) this.Type=Type;
+    constructor({file_id,file_name,file_path,cid,user_id,file_size}) {
+        if(file_id != null) this.file_id=file_id;
+        if (file_name!=null) this.file_name=file_name;
+        if (file_path!=null) this.file_path=file_path;
+        if (cid!=null) this.cid=cid;
+        if (user_id!=null) this.user_id=user_id;
+        // this.created_date= new Date();
+        // this.updated_date= new Date();
+        if (file_size!=null) this.file_size=file_size;
     }
     
 }
