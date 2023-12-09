@@ -20,10 +20,11 @@ export class StorageFileContract extends Contract {
                 file_name: 'Readme.md',
                 file_path: '/files',
                 cid: 'abcxyz',
-                user_id: 'user_1',
+                owner: 'user_1',
                 created_date: '123',
                 updated_date: '456',
-                file_size:'1KB'
+                file_size:'1KB',
+                file_type: 'image/png'
             }
           const admin : User = 
           {
@@ -40,7 +41,7 @@ export class StorageFileContract extends Contract {
             folder_name: 'folder_root',
 
             folder_path: '/files',
-            user_id: 'user_1',
+            owner: 'user_1',
             created_date: '456',
             updated_date: '123',
           }
@@ -48,7 +49,7 @@ export class StorageFileContract extends Contract {
     
             await ctx.stub.putState(firstfile.file_id, Buffer.from(stringify(sortKeysRecursive(firstfile))));
             await ctx.stub.putState(admin.user_id, Buffer.from(stringify(sortKeysRecursive(admin))));
-            await ctx.stub.putState(folder.user_id, Buffer.from(stringify(sortKeysRecursive(folder))));
+            await ctx.stub.putState(folder.folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
             console.info(`Asset ${firstfile.file_id} initialized`);
             console.info(`Asset ${admin.user_id} initialized`);
     }
@@ -77,11 +78,29 @@ export class StorageFileContract extends Contract {
         return JSON.stringify(allResults);
     }
 
-    
+    private async generateUniqueId(ctx: Context, prefix: string): Promise<string> {
+        let idCounter = 2;
+
+        // Lấy giá trị hiện tại của counter từ ledger
+        const counterBytes = await ctx.stub.getState('counter');
+        if (counterBytes && counterBytes.length > 0) {
+            idCounter = parseInt(counterBytes.toString(), 10);
+        }
+
+        // Tạo id mới với prefix và counter
+        const newId = `${prefix}${idCounter}`;
+
+        // Tăng giá trị counter cho lần tạo tiếp theo
+        idCounter++;
+        await ctx.stub.putState('counter', Buffer.from(idCounter.toString()));
+
+        return newId;
+    }
 
     /**************************File *****************/
     @Transaction()
-    public async UploadFile(ctx: Context,file_id: string, file_name:string, file_path:string, cid: string, user_id: string, created_date: string, updated_date: string, file_size:string): Promise<void>{
+    public async UploadFile(ctx: Context, file_name:string, file_path:string, cid: string, user_id: string, created_date: string, updated_date: string, file_size:string,file_type:string): Promise<void>{
+        const file_id = await this.generateUniqueId(ctx, 'file_');
         const exists =await this.FileExists(ctx, file_id);
         if (exists) {
             throw new Error(`The file ${file_id} already exists`);
@@ -94,10 +113,11 @@ export class StorageFileContract extends Contract {
             file_name: file_name,
             file_path: file_path,
             cid: cid,
-            user_id: user_id,
+            owner: user_id,
             created_date: created_date,
             updated_date: updated_date,
-            file_size: file_size
+            file_size: file_size,
+            file_type: file_type
 
         };
         await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(newfile))));
@@ -214,6 +234,7 @@ export class StorageFileContract extends Contract {
     
       @Transaction()
       public async DeleteFile(ctx: Context, file_id: string): Promise<void> {
+          console.log('Delete file ', file_id);
           const exists = await this.FileExists(ctx, file_id);
           if (!exists) {
               throw new Error(`The file ${file_id} does not exist`);
@@ -300,7 +321,8 @@ export class StorageFileContract extends Contract {
 
       /**************** Folder************************/
       @Transaction()
-      public async CreateFolder(ctx: Context, folder_id:string, folder_name: string, folder_path:string, user_id: string, created_date:string, updated_date: string): Promise<void> {
+      public async CreateFolder(ctx: Context, folder_name: string, folder_path:string, user_id: string, created_date:string, updated_date: string): Promise<void> {
+        const folder_id = await this.generateUniqueId(ctx, 'folder_');
         const exists = await this.FolderExists(ctx, folder_id);
         if (exists) {
             throw new Error(`The folder ${folder_id} already exists`);
@@ -309,13 +331,49 @@ export class StorageFileContract extends Contract {
             folder_id:folder_id,
             folder_name: folder_name,
             folder_path: folder_path,
-            user_id: user_id,
+            owner: user_id,
             created_date: created_date,
             updated_date: updated_date,
         }
         await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(newFolder))));
       }
-
+    @Transaction(false)
+    @Returns('string')
+    public async GetFoldersByPath(ctx: Context, path: string): Promise<string> {
+        const queryString = {
+          selector: {
+            folder_path: path,
+          },
+        };
+    
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+    
+        let result = await iterator.next();
+        while (!result.done) {
+          const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+          let record;
+          try {
+            record = JSON.parse(strValue);
+          } catch (err) {
+            console.log(err);
+            record = strValue;
+          }
+          allResults.push(record);
+          result = await iterator.next();
+        }
+    
+        return JSON.stringify(allResults);
+      }
+      @Transaction()
+      public async DeleteFolder(ctx: Context, folder_id: string): Promise<void> {
+          console.log('Delete file ', folder_id);
+          const exists = await this.FileExists(ctx, folder_id);
+          if (!exists) {
+              throw new Error(`The file ${folder_id} does not exist`);
+          }
+          return ctx.stub.deleteState(folder_id);
+      }
       @Transaction(false)
       @Returns('boolean')
       public async FolderExists(ctx: Context, folder_id: string): Promise<boolean> {
@@ -376,18 +434,34 @@ export class StorageFileContract extends Contract {
     //   }
     @Transaction()
     public async DeleteFolderAndSubFolder(ctx: Context, user_id: string, folder_path: string, folder_id: string): Promise<void> {
+        
+        
         folder_path=await this.ConcatenatePathAndNameById(ctx,folder_path,folder_id);
         const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
         const subFolders = JSON.parse(subFoldersJSON);
+       
+        const subfiles = [];
+        subFolders.map(async (subFolder) =>  {
+
+            const files = await this.GetFilesByPath(ctx,subFolder.folder_path);
+            
+            subfiles.push(...files);
+        })
+        console.log('subfiles:',subfiles);
+        console.log(subFolders);
         console.log('delete');
         // Tạo một mảng Promise để xóa tất cả các thư mục con cùng một lúc
-        const deletePromises = subFolders.map((subFolder) => this.DeleteFolderAndSubFolder(ctx, user_id, subFolder.folder_path, subFolder.folder_id));
-
+        const deletePromises = subFolders.map((subFolder) => this.DeleteFolderAndSubFolder(ctx,user_id,subFolder.folder_path,subFolder.folder_id));
+        
         // Chờ cho tất cả các Promise hoàn thành
         await Promise.all(deletePromises);
-
+        const deleteFilesPromises = subfiles.map((subfile) => this.DeleteFile(ctx,subfile.file_id));
+        await Promise.all(deleteFilesPromises);
+        
+        
         // Xóa thư mục hiện tại
         await ctx.stub.deleteState(folder_id);
+
     }
 
     
@@ -419,7 +493,10 @@ export class StorageFileContract extends Contract {
             return null;
         }
     }
+    // public async GetSubFile(ctx: Context, folder_path: string,user_id: string): Promise<File[]> {
+    //     const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
 
+    // }
     @Transaction(false)
     @Returns('string')
     public async GetSubFoldersRecursive(ctx: Context, user_id: string, folder_path: string): Promise<string> {
@@ -429,7 +506,7 @@ export class StorageFileContract extends Contract {
     private async getSubFoldersRecursive(ctx: Context, user_id: string, folder_path: string, allSubFolders: any[] = []): Promise<any[]> {
         const queryString = {
             selector: {
-                user_id: user_id,
+                owner: user_id,
                 folder_path: folder_path,
             },
         };
@@ -438,6 +515,7 @@ export class StorageFileContract extends Contract {
         let result = await iterator.next();
 
         while (!result.done) {
+
             const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
             let record;
             

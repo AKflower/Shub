@@ -1,10 +1,11 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Delete} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Delete,Query} from '@nestjs/common';
 import { FolderService } from './folder.service';
 import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { FabricService } from '../fabric/fabric.service';
 import { FileDTO } from 'src/dto/file.dto';
 import { Folder } from 'src/model/folder.model';
+import { Context } from 'vm';
 
 @Controller('/folders')
 export class FolderController {
@@ -16,6 +17,10 @@ export class FolderController {
     createFolder(@Body() newFolder: Folder){
         return this.folderService.createFolder(this.contract,newFolder);
 
+    }
+    @Get('/bypath')
+    getFoldersByPath(@Query('path') path: string) {
+        return this.folderService.getFoldersByPath(this.contract,path);
     }
     @Get()
     getSubFolders(@Body() params: {user_id:string, folder_path:string}){

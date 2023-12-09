@@ -24,10 +24,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             file_name: 'Readme.md',
             file_path: '/files',
             cid: 'abcxyz',
-            user_id: 'user_1',
+            owner: 'user_1',
             created_date: '123',
             updated_date: '456',
-            file_size: '1KB'
+            file_size: '1KB',
+            file_type: 'image/png'
         };
         const admin = {
             user_id: 'user_1',
@@ -39,13 +40,13 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             folder_id: 'folder_1',
             folder_name: 'folder_root',
             folder_path: '/files',
-            user_id: 'user_1',
+            owner: 'user_1',
             created_date: '456',
             updated_date: '123',
         };
         await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
         await ctx.stub.putState(admin.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(admin))));
-        await ctx.stub.putState(folder.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
+        await ctx.stub.putState(folder.folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
         console.info(`Asset ${firstfile.file_id} initialized`);
         console.info(`Asset ${admin.user_id} initialized`);
     }
@@ -69,8 +70,23 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
+    async generateUniqueId(ctx, prefix) {
+        let idCounter = 2;
+        // Lấy giá trị hiện tại của counter từ ledger
+        const counterBytes = await ctx.stub.getState('counter');
+        if (counterBytes && counterBytes.length > 0) {
+            idCounter = parseInt(counterBytes.toString(), 10);
+        }
+        // Tạo id mới với prefix và counter
+        const newId = `${prefix}${idCounter}`;
+        // Tăng giá trị counter cho lần tạo tiếp theo
+        idCounter++;
+        await ctx.stub.putState('counter', Buffer.from(idCounter.toString()));
+        return newId;
+    }
     /**************************File *****************/
-    async UploadFile(ctx, file_id, file_name, file_path, cid, user_id, created_date, updated_date, file_size) {
+    async UploadFile(ctx, file_name, file_path, cid, user_id, created_date, updated_date, file_size, file_type) {
+        const file_id = await this.generateUniqueId(ctx, 'file_');
         const exists = await this.FileExists(ctx, file_id);
         if (exists) {
             throw new Error(`The file ${file_id} already exists`);
@@ -80,10 +96,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             file_name: file_name,
             file_path: file_path,
             cid: cid,
-            user_id: user_id,
+            owner: user_id,
             created_date: created_date,
             updated_date: updated_date,
-            file_size: file_size
+            file_size: file_size,
+            file_type: file_type
         };
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
     }
@@ -176,6 +193,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return JSON.stringify(record);
     }
     async DeleteFile(ctx, file_id) {
+        console.log('Delete file ', file_id);
         const exists = await this.FileExists(ctx, file_id);
         if (!exists) {
             throw new Error(`The file ${file_id} does not exist`);
@@ -247,7 +265,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return ctx.stub.deleteState(user_id);
     }
     /**************** Folder************************/
-    async CreateFolder(ctx, folder_id, folder_name, folder_path, user_id, created_date, updated_date) {
+    async CreateFolder(ctx, folder_name, folder_path, user_id, created_date, updated_date) {
+        const folder_id = await this.generateUniqueId(ctx, 'folder_');
         const exists = await this.FolderExists(ctx, folder_id);
         if (exists) {
             throw new Error(`The folder ${folder_id} already exists`);
@@ -256,11 +275,43 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             folder_id: folder_id,
             folder_name: folder_name,
             folder_path: folder_path,
-            user_id: user_id,
+            owner: user_id,
             created_date: created_date,
             updated_date: updated_date,
         };
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newFolder))));
+    }
+    async GetFoldersByPath(ctx, path) {
+        const queryString = {
+            selector: {
+                folder_path: path,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
+    }
+    async DeleteFolder(ctx, folder_id) {
+        console.log('Delete file ', folder_id);
+        const exists = await this.FileExists(ctx, folder_id);
+        if (!exists) {
+            throw new Error(`The file ${folder_id} does not exist`);
+        }
+        return ctx.stub.deleteState(folder_id);
     }
     async FolderExists(ctx, folder_id) {
         const folderJSON = await ctx.stub.getState(folder_id);
@@ -311,11 +362,20 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         folder_path = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
         const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
         const subFolders = JSON.parse(subFoldersJSON);
+        const subfiles = [];
+        subFolders.map(async (subFolder) => {
+            const files = await this.GetFilesByPath(ctx, subFolder.folder_path);
+            subfiles.push(...files);
+        });
+        console.log('subfiles:', subfiles);
+        console.log(subFolders);
         console.log('delete');
         // Tạo một mảng Promise để xóa tất cả các thư mục con cùng một lúc
         const deletePromises = subFolders.map((subFolder) => this.DeleteFolderAndSubFolder(ctx, user_id, subFolder.folder_path, subFolder.folder_id));
         // Chờ cho tất cả các Promise hoàn thành
         await Promise.all(deletePromises);
+        const deleteFilesPromises = subfiles.map((subfile) => this.DeleteFile(ctx, subfile.file_id));
+        await Promise.all(deleteFilesPromises);
         // Xóa thư mục hiện tại
         await ctx.stub.deleteState(folder_id);
     }
@@ -342,6 +402,9 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             return null;
         }
     }
+    // public async GetSubFile(ctx: Context, folder_path: string,user_id: string): Promise<File[]> {
+    //     const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
+    // }
     async GetSubFoldersRecursive(ctx, user_id, folder_path) {
         const subFolders = await this.getSubFoldersRecursive(ctx, user_id, folder_path);
         return JSON.stringify(subFolders);
@@ -349,7 +412,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async getSubFoldersRecursive(ctx, user_id, folder_path, allSubFolders = []) {
         const queryString = {
             selector: {
-                user_id: user_id,
+                owner: user_id,
                 folder_path: folder_path,
             },
         };
@@ -476,9 +539,22 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "CreateFolder", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFoldersByPath", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "DeleteFolder", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('boolean'),

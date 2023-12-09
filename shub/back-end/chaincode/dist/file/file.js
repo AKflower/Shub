@@ -32,7 +32,7 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "user_id", void 0);
+], File.prototype, "owner", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
@@ -45,6 +45,10 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], File.prototype, "file_size", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], File.prototype, "file_type", void 0);
 File = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], File);

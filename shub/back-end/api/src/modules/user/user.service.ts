@@ -23,9 +23,26 @@ export class UserService {
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
+ 
     return user;
 }
-  
+async getUserByUserName(contract: Contract, user_name: string): Promise<User> {
+  console.log('\n ---> Submit Transaction: getUserbyUSerName');
+  const resultBytes= await contract.evaluateTransaction('GetUserByUserName',user_name);
+  const utf8Decoder = new TextDecoder();
+  const resultJson = utf8Decoder.decode(resultBytes);
+  const result = JSON.parse(resultJson);
+  const user : User = {
+      user_id: result.user_id,
+      username: result.username,
+      password: result.password,
+      email: result.email
+  }
+  console.log('*** Result:', result);
+  console.log('*** Transaction committed successfully');
+
+  return user;
+}
   
 
 }

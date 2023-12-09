@@ -17,7 +17,7 @@ export class File {
     public cid: string;
     
     @Property()
-    public user_id: string;
+    public owner: string;
 
     @Property()
     public created_date: string;
@@ -27,4 +27,7 @@ export class File {
 
     @Property()
     public file_size: string;
+
+    @Property()
+    public file_type: string;
 }

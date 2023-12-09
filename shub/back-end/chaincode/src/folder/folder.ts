@@ -14,7 +14,7 @@ export class Folder {
     public folder_path: string;
 
     @Property()
-    public user_id: string;
+    public owner: string;
 
     @Property()
     public created_date: string;

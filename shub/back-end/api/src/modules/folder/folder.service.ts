@@ -9,9 +9,27 @@ import { Folder } from 'src/model/folder.model';
 @Injectable()
 export class FolderService {
     async createFolder(contract: Contract,newFolder:Folder): Promise<string> {
-
-        await contract.submitTransaction('CreateFolder',newFolder.folder_id,newFolder.folder_name,newFolder.folder_path,newFolder.user_id);
+        newFolder.created_date=new Date();
+        newFolder.updated_date=new Date();
+        console.log(newFolder);
+        await contract.submitTransaction('CreateFolder',newFolder.folder_name,newFolder.folder_path,newFolder.user_id,''+newFolder.created_date,''+newFolder.updated_date);
         return 'Create thanh cong';
+    }
+    async getFoldersByPath(contract: Contract,path:string): Promise<Folder[]> {
+        const resultBytes= await contract.evaluateTransaction('GetFoldersByPath',path);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        const result = JSON.parse(resultJson);
+        console.log('*** Result:', result);
+        const folders : Folder[] = result.map(item => ({
+            folder_id: item.folder_id,
+            folder_name: item.folder_name,
+            folder_path: item.folder_path,
+            user_id: item.owner,
+
+    }));
+    return folders;
+    
     }
     async getSubFolders(contract: Contract,user_id:string,folder_path:string): Promise<Folder[]> {
 
@@ -26,7 +44,7 @@ export class FolderService {
             folder_id: item.folder_id,
             folder_name: item.folder_name,
             folder_path: item.folder_path,
-            user_id: item.user_id,
+            user_id: item.owner,
             
 
         }));

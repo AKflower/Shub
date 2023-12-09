@@ -21,8 +21,8 @@ export class Folder {
         
         if (folder_path!=null) this.folder_path=folder_path;
         if (user_id!=null) this.user_id=user_id;
-        this.created_date= new Date();
-        this.updated_date= new Date();
+        // this.created_date= new Date();
+        // this.updated_date= new Date();
         
     }
     
