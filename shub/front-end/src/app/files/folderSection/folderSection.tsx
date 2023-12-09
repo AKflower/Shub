@@ -24,7 +24,7 @@ interface FoldersProps {
 }
 
 export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
-    const { selected, handleSelect, handleNavigation, handleDSelected } = useShub();
+    const { selected, handleSelect, handleNavigation, handleDSelected, type, handleType } = useShub();
 
     
     const open = (children:Array<string>) => {
@@ -38,7 +38,8 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                     {folders.map((folder) => (
                         <div key={folder.folder_id}
                         onClick={() => {
-                            handleSelect(folder.folder_id)
+                            handleSelect(folder.folder_id, 'folder')
+                            handleType('folder')
                             
                         }}
                         onDoubleClick={() => {
@@ -48,7 +49,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                              handleDSelected(folder.folder_id)
                             }}
                         >
-                            <Card type="folder" key={folder.folder_id} name={folder.folder_name} date={folder.updated_at} selected={selected==folder.folder_id}/>
+                            <Card type1="folder" key={folder.folder_id} name={folder.folder_name} date={folder.updated_at} selected={selected==folder.folder_id && type=='folder'}/>
 
                         </div>
                         

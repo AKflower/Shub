@@ -12,7 +12,13 @@ interface RenameProps { }
 const Rename: React.FC<RenameProps> = () => {
    
     const [name, setName] = useState<string>("");
-    const { selected, toggleCurrentPromptName, toggleShowRename, handleChange } = useShub();
+    const { 
+        selected, 
+        toggleCurrentPromptName, 
+        toggleShowRename, 
+        handleChange,
+        type 
+    } = useShub();
     const toggle = () => {
         toggleCurrentPromptName()
         toggleShowRename()
@@ -29,34 +35,67 @@ const Rename: React.FC<RenameProps> = () => {
 
     const submit = () => {
         const token = localStorage.getItem('token');
-        const folderData = {
-            folder_name: name,
-        };
-        axios.put(`http://localhost:3001/folders/${selected}`, folderData,{
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`, 
-            },
-          })
-        .then(response => {
-            console.log('Folder created:', response.data);
-          })
-          .catch(error => {
-            console.error('Error creating folder:', error);
-          });
         
-        handleChange()
+        if(type == 'folder'){
+            const data = {
+                folder_name: name,
+            };
+            axios.put(`http://localhost:3001/folders/${selected}`, data,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, 
+                },
+            })
+            .then(response => {
+                console.log('Folder created:', response.data);
+                handleChange()
+            })
+            .catch(error => {
+                console.error('Error creating folder:', error);
+            });
+        }
+        else {
+            const data = {
+                file_name: name,
+            };
+            axios.put(`http://localhost:3001/files/${selected}`, data,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, 
+                },
+            })
+            .then(response => {
+                console.log('Folder created:', response.data);
+                handleChange()
+            })
+            .catch(error => {
+                console.error('Error creating folder:', error);
+            });
+        }
+        
+        
         toggleCurrentPromptName()
         toggleShowRename()
     }
     const [oldName, setOldName] = useState<string>("");
     useEffect(() => {
-        const foldersString = localStorage.getItem('folders');
-        if (foldersString) {
-            const folders = JSON.parse(foldersString);
-            let oldName = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
-            setOldName(oldName.folder_name);
+        if(type == 'folder'){
+            const foldersString = localStorage.getItem('folders');
+            if (foldersString) {
+                const folders = JSON.parse(foldersString);
+                let oldName = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
+                setOldName(oldName.folder_name);
           }
+        }
+        else{
+            const filesString = localStorage.getItem('files');
+            if (filesString) {
+                const files = JSON.parse(filesString);
+                let oldName = files.find((el: { file_id: number; })  => el.file_id == selected)
+                setOldName(oldName.file_name);
+          }
+        }
+        
     },[name])
 
 

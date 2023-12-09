@@ -73,6 +73,8 @@ interface ShubContextProps {
     toggleShowNewFile: () => void;
     showNewDir: string;
     toggleShowNewDir: () => void;
+    showUpload: string;
+    toggleShowUpload: () => void;
     showFile: any;
     addFile: (fileName: string) => void;
     showShare: string;
@@ -81,7 +83,7 @@ interface ShubContextProps {
     showOption: () => void;
     hideOption: () => void;
     selected: number;
-    handleSelect: (id: number) => void;
+    handleSelect: (id: number, type1: string) => void;
     showDelete: string;
     toggleShowDelete: () => void;
     showRename: string;
@@ -92,6 +94,12 @@ interface ShubContextProps {
     dSelected: number;
     handleDSelected: (id: number) => void;
     resetSelect: () => void;
+    stream: string;
+    handleStream: () => void;
+    data: string;
+    type: string;
+    handleData: (data: string, type: string) => void;
+    handleType: (type: string) => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -138,6 +146,12 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   }; 
 
+  const [showUpload, setShowUpload] = useState('');
+  const toggleShowUpload = () => {
+    setShowUpload(showUpload == '' ? 'more' : '');
+    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  }; 
+
   const [showShare, setShowShare] = useState('');
   const toggleShowShare = () => {
     setShowShare(showNewDir == '' ? 'more' : '');
@@ -152,13 +166,13 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   }
 
 const [dSelected, setDSelected] = useState(0);
-const handleDSelected = (id:number) => {
+const handleDSelected = (id: number) => {
   setDSelected(id)
 }
 
 const [selected, setSelected] = useState(0);
-const handleSelect = (id:number) => {
-  if (id==selected) {
+const handleSelect = (id: number, type1: string) => {
+  if (id == selected && type1 == type) {
       setSelected(0);
       hideOption()
   }
@@ -181,6 +195,23 @@ const [showRename, setShowRename] = useState("");
 const toggleShowRename = () => {
   setShowRename(showRename == '' ? 'more' : '');
   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [stream, setStream] = useState("");
+const handleStream = () => {
+  setStream(stream == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [data, setData] = useState("");
+const [type, setType] = useState("");
+const handleData = (data: string, type: string) => {
+  setData(data);
+  setType(type);
+};
+
+const handleType = (type: string) => {
+  setType(type);
 };
 
 const handleNavigation = (name: string) => {
@@ -213,7 +244,15 @@ const handleNavigation = (name: string) => {
     handleChange,
     dSelected,
     handleDSelected,
-    resetSelect
+    resetSelect,
+    stream,
+    handleStream,
+    data,
+    type,
+    handleData,
+    showUpload,
+    toggleShowUpload,
+    handleType
     
   };
 

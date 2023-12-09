@@ -13,7 +13,7 @@ interface DeleteProps {}
 const Delete: React.FC<DeleteProps> = () => {
   const pathname = usePathname()
 
-  const { selected, toggleShowDelete, handleChange } = useShub();
+  const { selected, toggleShowDelete, handleChange, type } = useShub();
   const toggle = () => {
     toggleShowDelete()
   }
@@ -21,24 +21,44 @@ const Delete: React.FC<DeleteProps> = () => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user_id');
     const path = pathname.replaceAll('/','+')
-    const foldersString = localStorage.getItem('folders');
-    if (foldersString) {
-      const folders = JSON.parse(foldersString);
-      const name = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
-      axios.delete(`http://localhost:3001/folders/${user}/${selected}/${path}+${name.folder_name}`,{
+    if (type == 'folder'){
+      const foldersString = localStorage.getItem('folders');
+      if (foldersString) {
+        const folders = JSON.parse(foldersString);
+        const name = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
+        axios.delete(`http://localhost:3001/folders/${user}/${selected}/${path}+${name.folder_name}`,{
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, 
+          },
+        })
+        .then(response => {
+          console.log('Folder deleted');
+          handleChange()
+
+        })
+        .catch(error => {
+          console.error('Error creating folder:', error);
+        });
+      }
+      
+    }
+    else {
+      axios.delete(`http://localhost:3001/files/${selected}`,{
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, 
         },
       })
-        .then(response => {
-            console.log('Folder deleted');
-        })
-        .catch(error => {
-          console.error('Error creating folder:', error);
-        });
+      .then(response => {
+        console.log('File deleted');
+        handleChange()
+
+      })
+      .catch(error => {
+        console.error('Error creating file:', error);
+      });
     }
-    handleChange()
     toggle()
   }
 

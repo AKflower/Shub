@@ -3,31 +3,31 @@ import styles from './fileSection.module.scss'
 import Card from '../card/card'
 import { useState } from 'react';
 import { useShub } from '@/app/Provider/Provider';
+import { type } from 'os';
 
 interface FileProps {
-    id: number,
-    name: string,
-    size: string,
-    date?: string
+    file_id: number,
+    file_name: string,
+    file_path: string,
+    file_data: string,
+    file_type: string,
+    user_id: number,
+    created_at: string,
+    updated_at: string
 }
 
 
 export default function FileSection ({files} : {files:FileProps[]}) {
-    const { showOption, hideOption } = useShub();
+    const { 
+        handleStream,
+        handleData,
+        selected,
+        handleSelect,
+        handleType,
+        type
+    } = useShub();
 
-    const [selected,setSelected] = useState(0);
-    const handleSelect = (id:number) => {
-        console.log('Hi');
-        if (id==selected) {
-            setSelected(0);
-            hideOption()
-
-        }
-        else {
-            showOption()
-            setSelected(id);
-        }
-    }
+    
     
 
     return (
@@ -35,10 +35,18 @@ export default function FileSection ({files} : {files:FileProps[]}) {
             <h3 className={styles.title}>Files</h3>
             <div className="grid grid-cols-4 gap-3">
                 {files.map((file) => (
-                    <div key={file.id}
-                        onClick={() => handleSelect(file.id)}>
+                    <div key={file.file_id}
+                        onClick={() => {
+                            handleSelect(file.file_id, file.file_type.slice(0, file.file_type.indexOf('/')))
+                            handleType(file.file_type.slice(0, file.file_type.indexOf('/')))
+                            }}
+                        onDoubleClick={() => {
+                            handleData(file.file_data, file.file_type.slice(0, file.file_type.indexOf('/')))
+                            handleStream()
+                        }}
+                    >
 
-                    <Card type="file" key={file.id} name={file.name} size={file.size}  date={file.date} selected={selected==file.id}/>
+                    <Card type1={file.file_type.slice(0, file.file_type.indexOf('/'))} key={file.file_id} name={file.file_name} size='10'  date={file.updated_at} selected={selected==file.file_id && type == file.file_type.slice(0, file.file_type.indexOf('/'))}/>
                     </div>
                         
                   

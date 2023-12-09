@@ -1,6 +1,5 @@
 "use client"
 import { FC, ReactNode, useState  } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import InfoIcon from '@mui/icons-material/Info';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -13,7 +12,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ForwardIcon from '@mui/icons-material/Forward';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import { logoURL } from '@/utils/constants';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
 import classNames from 'classnames/bind';
@@ -31,6 +29,7 @@ import Rename from '../prompts/Rename';
 import Copy from '../prompts/Copy';
 import Move from '../prompts/Move';
 import Delete from '../prompts/Delete';
+import Content from '../content/Content';
 
 const cx = classNames.bind(styles);
 
@@ -50,7 +49,6 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 //   };
 const [showDownload, setShowDownload] = useState("");
 const [showInfo, setShowInfo] = useState("");
-const [showUpload, setShowUpload] = useState("");
 const [showShare, setShowShare] = useState("");
 const [showCopy, setShowCopy] = useState("");
 const [showMove, setShowMove] = useState("");
@@ -58,7 +56,25 @@ const [showMove, setShowMove] = useState("");
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
 const isLogin = (pathname=='/') //check login page ? not render : render
-const { currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFile, showNewDir, toggleShowNewDir, option, showDelete, toggleShowDelete, showRename, toggleShowRename } = useShub();
+const { 
+  currentPromptName, 
+  toggleCurrentPromptName,
+  showNewFile, 
+  toggleShowNewFile, 
+  showNewDir, 
+  toggleShowNewDir, 
+  option, 
+  showDelete, 
+  toggleShowDelete, 
+  showRename, 
+  toggleShowRename,
+  stream,
+  handleStream,
+  data,
+  type,
+  showUpload,
+  toggleShowUpload 
+} = useShub();
 
 
   return (
@@ -178,8 +194,7 @@ const { currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFil
           label='Upload'
           counter={0} 
           onAction={()=>{
-            setShowUpload('show')
-            toggleCurrentPromptName()
+            toggleShowUpload()
 
           }
           }        
@@ -245,6 +260,9 @@ const { currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFil
       {showDelete && (
         <Delete />
       )}
+      {stream && data && type && (
+        <Content data={data} type={type}/>
+      )}
 
       {children && (
         <Action
@@ -263,7 +281,7 @@ const { currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFil
             toggleCurrentPromptName()
             if(showDownload){setShowDownload('')}
             if(showInfo){setShowInfo('')}
-            if(showUpload){setShowUpload('')}
+            if(showUpload){toggleShowUpload()}
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
             if(showShare){setShowShare('')}
@@ -271,6 +289,8 @@ const { currentPromptName, toggleCurrentPromptName,showNewFile, toggleShowNewFil
             if(showCopy){setShowCopy('')}
             if(showMove){setShowMove('')}
             if(showDelete){toggleShowDelete()}
+            if(stream){handleStream()}
+            
           }
         }
       />

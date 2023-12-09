@@ -33,11 +33,13 @@ const NewDir: React.FC<NewDirProps> = () => {
               })
             .then(response => {
                 console.log('Folder created:', response.data);
+                handleChange()
+
               })
               .catch(error => {
                 console.error('Error creating folder:', error);
               });
-            handleChange()
+
             toggleCurrentPromptName()
             toggleShowNewDir()
     }
