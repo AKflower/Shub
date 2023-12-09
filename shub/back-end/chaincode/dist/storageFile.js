@@ -20,6 +20,7 @@ const file_1 = require("./file");
 let StorageFileContract = class StorageFileContract extends fabric_contract_api_1.Contract {
     //Init
     async InitLedger(ctx) {
+<<<<<<< HEAD
         console.log('hahwahawafa');
         console.log('heeeee', ctx);
         const firstfile = new file_1.File({
@@ -30,6 +31,16 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             user_id: '1',
         });
         await ctx.stub.putState('' + firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
+=======
+        const firstfile = {
+            file_id: '001',
+            file_name: 'Readme.md',
+            file_path: '/files',
+            cid: 'abcxyz',
+            user_id: '1'
+        };
+        await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
+>>>>>>> b53c4ea
         console.info(`Asset ${firstfile.file_id} initialized`);
     }
     async UploadFile(ctx, file_id, file_name, file_path, cid, user_id) {
@@ -37,13 +48,21 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         if (exists) {
             throw new Error(`The file ${file_id} already exists`);
         }
+<<<<<<< HEAD
         const newfile = new file_1.File({
+=======
+        const newfile = {
+>>>>>>> b53c4ea
             file_id: file_id,
             file_name: file_name,
             file_path: file_path,
             cid: cid,
             user_id: user_id,
+<<<<<<< HEAD
         });
+=======
+        };
+>>>>>>> b53c4ea
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
     }
     async GetFile(ctx, file_id) {
@@ -53,8 +72,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return fileJSON.toString();
     }
-    async FileExists(ctx, id) {
-        const fileJSON = await ctx.stub.getState(id);
+    async FileExists(ctx, file_id) {
+        const fileJSON = await ctx.stub.getState(file_id);
         return fileJSON && fileJSON.length > 0;
     }
     async GetFilesByPath(ctx, file_path) {
@@ -101,12 +120,69 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
+<<<<<<< HEAD
     async DeleteFile(ctx, file_id) {
         const exists = await this.FileExists(ctx, file_id);
         if (!exists) {
             throw new Error(`The asset ${file_id} does not exist`);
         }
         return ctx.stub.deleteState('' + file_id);
+=======
+    async GetFilesByPath(ctx, path) {
+        const queryString = {
+            selector: {
+                file_path: path,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
+    }
+    async GetFileByName(ctx, path, fileName) {
+        const filesByPath = await this.GetFilesByPath(ctx, path);
+        const files = JSON.parse(filesByPath);
+        const desiredFile = files.find((file) => file.file_name === fileName);
+        if (!desiredFile) {
+            throw new Error(`File with name ${fileName} not found in path ${path}`);
+        }
+        return JSON.stringify(desiredFile);
+    }
+    async GetFileByCID(ctx, cid) {
+        const queryString = {
+            selector: {
+                cid: cid,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        if (result.done) {
+            throw new Error(`File with CID ${cid} not found`);
+        }
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
+        }
+        catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+        return JSON.stringify(record);
+>>>>>>> b53c4ea
     }
 };
 __decorate([
@@ -149,11 +225,34 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetAllFile", null);
 __decorate([
+<<<<<<< HEAD
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "DeleteFile", null);
+=======
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFilesByPath", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFileByName", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFileByCID", null);
+>>>>>>> b53c4ea
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageUploadShare', description: 'Smart contract for Upload and share file' })
 ], StorageFileContract);

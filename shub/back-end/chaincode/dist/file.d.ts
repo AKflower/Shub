@@ -4,6 +4,7 @@ export declare class File {
     file_path: string;
     cid: string;
     user_id: string;
+<<<<<<< HEAD
     created_at: Date;
     updated_at: Date;
     constructor({ file_id, file_name, file_path, user_id, cid }: {
@@ -13,4 +14,6 @@ export declare class File {
         user_id: any;
         cid: any;
     });
+=======
+>>>>>>> b53c4ea
 }

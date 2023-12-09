@@ -1,6 +1,7 @@
-import { StorageFileContract } from './storageFile';
+import { StorageFileContract } from './file/storageFile';
 
-export {StorageFileContract} from './storageFile';
+
+export {StorageFileContract} from './file/storageFile';
 
 
 

@@ -2,7 +2,7 @@ import { MinLength, IsNotEmpty, IsNumber } from "class-validator";
 
 export class FileDTO {
     @IsNotEmpty()
-    file_id?:number;
+    file_id?:string;
 
     @IsNotEmpty()
     file_name?:string;
@@ -14,9 +14,8 @@ export class FileDTO {
     cid?:string;
 
     @IsNotEmpty()
-    user_id?:number;
+    user_id?:string;
 
-    
-
-    
+    @IsNotEmpty()
+    file_size?:string;
 }

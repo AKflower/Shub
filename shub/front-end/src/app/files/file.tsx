@@ -42,7 +42,24 @@ export default function File () {
         resetSelect()
         hideOption()
     },[change])
+    const testFunction = async () => {
+        try {
+          // Sử dụng await để chờ Promise được giải quyết
+          const data = { path: "/files/demo" };
       
+          const test = await axios.get(`http://localhost:3001/files/bypath`, {
+            params: data, // Truyền dữ liệu qua query parameters
+          });
+      
+          console.log('test: ', test.data);
+          
+          // Khi Promise được giải quyết, bạn có thể xử lý kết quả
+        } catch (error) {
+          // Xử lý lỗi nếu có
+          console.error('Error fetching data:', error);
+        }
+      };
+    testFunction();
     return (
         <div className={styles.container}>
             <Breadcrumbs />
@@ -50,6 +67,7 @@ export default function File () {
                 router.push(pathname.slice(0, pathname.lastIndexOf('/')))
               
             }}><ArrowBackIosNewIcon /></button>)} */}
+            
             <FolderSection folders={folder}/>
             <FileSection files={showFile}/>
         </div>

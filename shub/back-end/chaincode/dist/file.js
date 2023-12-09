@@ -42,6 +42,7 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], File.prototype, "user_id", void 0);
+<<<<<<< HEAD
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", Date)
@@ -50,6 +51,8 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", Date)
 ], File.prototype, "updated_at", void 0);
+=======
+>>>>>>> b53c4ea
 File = __decorate([
     (0, fabric_contract_api_1.Object)(),
     __metadata("design:paramtypes", [Object])

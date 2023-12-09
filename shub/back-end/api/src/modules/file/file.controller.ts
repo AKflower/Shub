@@ -1,4 +1,4 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Delete} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Query} from '@nestjs/common';
 import { FileService } from './file.service';
 import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
@@ -8,7 +8,7 @@ import { ResponseData } from 'src/global/globalClass';
 import { HttpStatus, HttpMessage } from 'src/global/globalEnum';
 import { File } from 'src/model/file.model';
 
-@Controller('/file')
+@Controller('/files')
 export class FileController {
     //Property
     private contract: Contract;
@@ -38,35 +38,22 @@ export class FileController {
         }
         
     }
-    @Get('/:id')
-    async getFile(@Param('id') id: number){
-        try {
-            const res = await this.fileService.getFile(this.contract,id);
-            return new ResponseData<File>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
-        } catch (error) {
-            return new ResponseData<File>(null,HttpStatus.ERROR,HttpMessage.ERROR );
-        }
-        
+    // @Get('/:id')
+    // getFile(@Param('id') id: number){
+    //     console.log(id);
+    //     return this.fileService.getFile(this.contract,''+id);
+    // }
+    @Get('/bypath')
+    getFilesByPath(@Query('path') path: string){
+        console.log('eeee: ',path);
+        return this.fileService.getFilesByPath(this.contract,path);
     }
     @Post('/new')
-    async upload(@Body(new ValidationPipe()) fileDTO: FileDTO){
-        try {
-            const res = await this.fileService.upload(this.contract,fileDTO);
-            return new ResponseData<File>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
-        } catch (error) {
-            return new ResponseData<File>(null,HttpStatus.ERROR,HttpMessage.ERROR );
-        }
-        
+    upload(@Body(new ValidationPipe()) fileDTO: FileDTO){
+        return this.fileService.upload(this.contract,fileDTO);
     }
-    @Delete('/delete/:id')
-    async delete(@Param('id') id: number) {
-        try {
-            const res = await this.fileService.delete(this.contract,id);
-            return new ResponseData<File>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
-        } catch (error) {
-            return new ResponseData<File>(null,HttpStatus.ERROR,HttpMessage.ERROR );
-        }
-    }
+
+    
 }
 
  
