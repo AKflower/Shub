@@ -1,7 +1,8 @@
 // src/auth/auth.controller.ts
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, UseGuards, Req, Param, } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 
 @Controller('auth')
@@ -27,4 +28,11 @@ export class AuthController {
       access_token: token 
     };
   }
+
+  @Post('logout/:token')
+  async logout(@Param('token') token: string): Promise<void> {
+    
+    await this.authService.logout(token);
+  }
+
 }

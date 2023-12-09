@@ -1,9 +1,7 @@
 "use client"
 import styles from './fileSection.module.scss'
 import Card from '../card/card'
-import { useState } from 'react';
 import { useShub } from '@/app/Provider/Provider';
-import { type } from 'os';
 
 interface FileProps {
     file_id: number,

@@ -29,13 +29,13 @@
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
-<<<<<<< HEAD
+
     "file-type": "^12.4.2",
     "ipfs-cluster-api": "^0.0.9",
     "ipfs-http-client": "^53.0.1",
-=======
+
     "passport": "^0.7.0",
->>>>>>> 85a0db823cdd74ae4acf9c406bd043a81af71b76
+
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",

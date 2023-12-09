@@ -5,14 +5,17 @@ import classNames from 'classnames/bind';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { usePathname } from 'next/navigation';
 import { useShub } from '@/app/Provider/Provider';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
 interface UploadProps {}
 
 const Upload: React.FC<UploadProps> = () => {
-    const pathname = usePathname()
-    const {  toggleShowUpload, handleChange } = useShub();
+  const pathname = usePathname()
+  const {  toggleShowUpload, handleChange } = useShub();
+  const userId = Cookies.get('userId');
+  const accessToken = Cookies.get('accessToken');
 
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -27,19 +30,17 @@ const Upload: React.FC<UploadProps> = () => {
         if (selectedFile) {
             const formData = new FormData();
             formData.append('file', selectedFile);
-            const token = localStorage.getItem('token');
-            const userId = localStorage.getItem('user_id');
             const res =  await axios.post(`http://localhost:3001/files/upload/${userId}/${pathname.replaceAll('/','+')}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${accessToken}`, 
                 },
             })
 
             axios.post(`http://localhost:3001/files`, res.data,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${accessToken}`, 
                 },
             })
             .then(response => {

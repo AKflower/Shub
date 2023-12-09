@@ -5,6 +5,7 @@ import styles from './NewDir.module.scss'
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
 import { usePathname } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -17,31 +18,33 @@ const NewDir: React.FC<NewDirProps> = () => {
     const pathname = usePathname()
     const [name, setName] = useState<string>("");
     const {  toggleCurrentPromptName, toggleShowNewDir, handleChange } = useShub();
+    const accessToken = Cookies.get('accessToken');
+    const userId = Cookies.get('userId');
 
     const submit = () => {
-        const token = localStorage.getItem('token');
-            const folderData = {
-                folder_name: name,
-                folder_path: pathname.replaceAll('/','+'),
-                user_id: localStorage.getItem('user_id'), 
-              };
-            axios.post(`http://localhost:3001/folders`, folderData,{
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`, 
-                },
-              })
-            .then(response => {
-                console.log('Folder created:', response.data);
-                handleChange()
+        const folderData = {
+            folder_name: name,
+            folder_path: pathname.replaceAll('/','+'),
+            user_id: userId, 
+        };
+        
+        axios.post(`http://localhost:3001/folders`, folderData,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`, 
+            },
+        })
+        .then(response => {
+            console.log('Folder created:', response.data);
+            handleChange()
 
-              })
-              .catch(error => {
-                console.error('Error creating folder:', error);
-              });
+        })
+        .catch(error => {
+            console.error('Error creating folder:', error);
+        });
 
-            toggleCurrentPromptName()
-            toggleShowNewDir()
+        toggleCurrentPromptName()
+        toggleShowNewDir()
     }
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {

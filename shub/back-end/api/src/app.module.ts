@@ -1,11 +1,12 @@
 // src/app.module.ts
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { FoldersModule } from './folders/folders.module';
 import { AuthModule } from './auth/auth.module';
 import { IPFSModule } from './ipfs/ipfs.module';
 import { FilesModule } from './files/files.module';
+import { BlacklistMiddleware } from './auth/blacklist.middleware';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { FilesModule } from './files/files.module';
       host: "localhost",
       port: 5432,
       username: "postgres",
-      password: "khoa",
+      password: "1702",
       database: "Shub",
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false
@@ -28,4 +29,9 @@ import { FilesModule } from './files/files.module';
     // Import other modules as needed
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Sử dụng middleware ở mức ứng dụng hoặc chỉ cho các route cụ thể
+    consumer.apply(BlacklistMiddleware).forRoutes('*');
+  }
+}

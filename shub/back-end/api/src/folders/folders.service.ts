@@ -1,13 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Repository, getManager } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Folders } from './folders.entity';
+import { Files } from 'src/files/files.entity';
 
 @Injectable()
 export class FoldersService {
   constructor(
     @InjectRepository(Folders)
     private readonly folderRepository: Repository<Folders>,
+    @InjectRepository(Files)
+    private filesRepository: Repository<Files>,
   ) {}
 
   async findAll(): Promise<Folders[]> {
@@ -75,8 +78,13 @@ export class FoldersService {
   async deleteFolderAndSubfoldersByPath(folderPath: string, userId: number, folderId: number): Promise<void> {
     // Lấy tất cả các folder con của folder cha cần xóa
     const subfolders = await this.getSubfolders(folderPath, userId);
+    const subfiles = await this.getSubfiles(folderPath, userId);
+
     for (const subfolder of subfolders) { 
       await this.remove(subfolder.folder_id)
+    }
+    for (const subfile of subfiles) { 
+      await this.filesRepository.delete(subfile.file_id)
     }
     await this.remove(folderId)
   }
@@ -88,7 +96,9 @@ export class FoldersService {
       const folders = await this.folderRepository.find({
         where: { folder_path: currentFolderPath, user_id: userId },
       });
+      
       subfolders.push(...folders);
+      
 
       for (const folder of folders) {
         const newPath =  `${folder.folder_path}+${folder.folder_name}`
@@ -98,6 +108,28 @@ export class FoldersService {
     await getSubfoldersRecursive(folderPath);
 
     return subfolders;
+  }
+
+  private async getSubfiles(folderPath: string, userId: number): Promise<Files[]> {
+    // Lấy tất cả các folder con của folder cha theo đệ quy
+    const subfiles: Files[] = [];
+    const getSubfoldersRecursive = async (currentFolderPath: string) => {
+      const folders = await this.folderRepository.find({
+        where: { folder_path: currentFolderPath, user_id: userId },
+      });
+      const files = await this.filesRepository.find({
+        where: { file_path: currentFolderPath, user_id: userId },
+      });
+      subfiles.push(...files);
+
+      for (const folder of folders) {
+        const newPath =  `${folder.folder_path}+${folder.folder_name}`
+        await getSubfoldersRecursive(newPath);
+      }
+    };
+    await getSubfoldersRecursive(folderPath);
+
+    return subfiles;
   }
 
 

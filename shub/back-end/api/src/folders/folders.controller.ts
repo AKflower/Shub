@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, ParseIntPipe, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { FoldersService } from './folders.service';
 import { Folders } from './folders.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';

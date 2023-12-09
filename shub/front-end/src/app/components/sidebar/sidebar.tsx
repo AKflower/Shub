@@ -1,6 +1,5 @@
 // Trong file Sidebar.js (hoặc Sidebar.jsx nếu sử dụng JSX)
 "use client"
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './sidebar.module.scss';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -14,19 +13,36 @@ import NewFile from '../prompts/NewFile';
 import { usePathname } from 'next/navigation'
 import NewDir from '../prompts/NewDir';
 import { useShub } from '@/app/Provider/Provider';
-
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
 
 const Sidebar = () => {
     const { toggleCurrentPromptName, toggleShowNewFile, toggleShowNewDir } = useShub();
-
-
-    
-
     const pathname = usePathname()
-    const isLogin = (pathname=='/') //check login page ? not render : render    
+    const isLogin = (pathname=='/') //check login page ? not render : render
+    const accessToken = Cookies.get('accessToken');
+    const router = useRouter();
+
+    const logOut = () => {
+        axios.post(`http://localhost:3001/auth/logout/${accessToken}`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+            })
+            .then(response => {
+                console.log('Logout success');
+                router.push('/');
+
+            })
+            .catch(error => {
+                console.error('Error creating folder:', error);
+            });
+    }
   return (
     <>
          {!isLogin && 
@@ -91,7 +107,7 @@ const Sidebar = () => {
             <Link href="">
             <button
                 className={styles.action}
-               
+                onClick={logOut}
                 aria-label="Logout"
                 title="Logout"
             >

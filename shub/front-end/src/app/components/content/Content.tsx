@@ -19,16 +19,15 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
 
   useEffect(() => {
     // Replace 'your--Content-url' with the actual URL of your  Content
-    const url = `http://127.0.0.1:8080/ipfs/${data}`;
+    const url = `http://localhost:3001/${data}`;
 
-    axios.get(url, { responseType: 'blob' })
+    axios.get(url)
       .then(response => {
-        const objectURL = URL.createObjectURL(response.data);
-        setSrc(objectURL);
+        const imageUrl = response.data;
+        console.log(imageUrl)
+        setSrc(imageUrl);
       })
-      .catch(error => {
-        console.error('Error fetching :', error);
-      });
+      .catch(error => console.error('Error fetching image URL:', error));
   }, []);
 
   return (
@@ -57,7 +56,7 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
             alt="Streamed Image"
             width={0}
             height={0}
-            layout="responsive"
+            // layout="responsive"
             // sizes="100vw"
             // style={{ width: 'auto', height: '100%' }} // optional
           />

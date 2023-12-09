@@ -1,9 +1,9 @@
 import { FC, useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import styles from './Rename.module.scss'
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -19,6 +19,8 @@ const Rename: React.FC<RenameProps> = () => {
         handleChange,
         type 
     } = useShub();
+    const accessToken = Cookies.get('accessToken');
+
     const toggle = () => {
         toggleCurrentPromptName()
         toggleShowRename()
@@ -34,16 +36,15 @@ const Rename: React.FC<RenameProps> = () => {
     };
 
     const submit = () => {
-        const token = localStorage.getItem('token');
         
         if(type == 'folder'){
             const data = {
                 folder_name: name,
             };
-            axios.put(`http://localhost:3001/folders/${selected}`, data,{
+            axios.put(`http://localhost:3001/folders/${selected}`, data, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${accessToken}`, 
                 },
             })
             .then(response => {
@@ -61,7 +62,7 @@ const Rename: React.FC<RenameProps> = () => {
             axios.put(`http://localhost:3001/files/${selected}`, data,{
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${accessToken}`, 
                 },
             })
             .then(response => {
@@ -80,7 +81,8 @@ const Rename: React.FC<RenameProps> = () => {
     const [oldName, setOldName] = useState<string>("");
     useEffect(() => {
         if(type == 'folder'){
-            const foldersString = localStorage.getItem('folders');
+            const foldersString = Cookies.get('folders');
+
             if (foldersString) {
                 const folders = JSON.parse(foldersString);
                 let oldName = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
@@ -88,7 +90,7 @@ const Rename: React.FC<RenameProps> = () => {
           }
         }
         else{
-            const filesString = localStorage.getItem('files');
+            const filesString = Cookies.get('files');
             if (filesString) {
                 const files = JSON.parse(filesString);
                 let oldName = files.find((el: { file_id: number; })  => el.file_id == selected)
@@ -106,7 +108,7 @@ const Rename: React.FC<RenameProps> = () => {
             </div>
 
             <div className={cx("card-content")}>
-                <p>Insert a new name for {oldName}
+                <p>Insert a new name for <code>{oldName}</code>
                     {/* {oldName()} */}
                 </p>
                 <input

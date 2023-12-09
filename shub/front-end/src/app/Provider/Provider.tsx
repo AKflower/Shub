@@ -1,70 +1,6 @@
 "use client"
-import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState, createContext, ReactNode, useContext, useEffect } from "react";
-
-const files = [
-  {
-    id: 1,
-    name: 'Math',
-    size: '15KB',
-    date: '7 days ago',
-  },
-  {
-    id: 2,
-    name: 'Physics',
-    size: '8KB',
-    date: '12 days ago',
-  },
-  {
-    id: 3,
-    name: 'Chemistry',
-    size: '20KB',
-    date: '5 days ago',
-  },
-  {
-    id: 4,
-    name: 'Biology',
-    size: '12KB',
-    date: '10 days ago',
-  },
-  {
-    id: 5,
-    name: 'History',
-    size: '18KB',
-    date: '3 days ago',
-  },
-  {
-    id: 6,
-    name: 'Literature',
-    size: '25KB',
-    date: '8 days ago',
-  },
-  {
-    id: 7,
-    name: 'Geography',
-    size: '14KB',
-    date: '6 days ago',
-  },
-  {
-    id: 8,
-    name: 'Computer Science',
-    size: '22KB',
-    date: '9 days ago',
-  },
-  {
-    id: 9,
-    name: 'Art',
-    size: '10KB',
-    date: '15 days ago',
-  },
-  {
-    id: 10,
-    name: 'Music',
-    size: '30KB',
-    date: '4 days ago',
-  },
-];
+import React, { useState, createContext, ReactNode, useContext } from "react";
 
 interface ShubContextProps {
     currentPromptName: string;
@@ -75,8 +11,6 @@ interface ShubContextProps {
     toggleShowNewDir: () => void;
     showUpload: string;
     toggleShowUpload: () => void;
-    showFile: any;
-    addFile: (fileName: string) => void;
     showShare: string;
     toggleShowShare: () => void;
     option: string;
@@ -91,8 +25,6 @@ interface ShubContextProps {
     handleNavigation: (name: string) => void;
     change: number;
     handleChange: () => void;
-    dSelected: number;
-    handleDSelected: (id: number) => void;
     resetSelect: () => void;
     stream: string;
     handleStream: () => void;
@@ -100,6 +32,7 @@ interface ShubContextProps {
     type: string;
     handleData: (data: string, type: string) => void;
     handleType: (type: string) => void;
+   
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -117,18 +50,6 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setChange(change+1)
   }
   
-  const [showFile, setShowFile] = useState(files);
-  const addFile = (fileName: string) => {
-    setShowFile([...showFile, 
-      {
-        id: 12,
-        name: fileName,
-        size: '10KB',
-        date: '10 days ago',
-      }
-    ])
-  }
-
   const [currentPromptName, setCurrentPromptName] = useState('');
   const toggleCurrentPromptName = () => {
     setCurrentPromptName(currentPromptName == '' ? 'more' : '');
@@ -164,11 +85,6 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const hideOption = () => {
     setOption('');
   }
-
-const [dSelected, setDSelected] = useState(0);
-const handleDSelected = (id: number) => {
-  setDSelected(id)
-}
 
 const [selected, setSelected] = useState(0);
 const handleSelect = (id: number, type1: string) => {
@@ -217,8 +133,8 @@ const handleType = (type: string) => {
 const handleNavigation = (name: string) => {
   router.push(`${pathname}/${name}`);
 };
-  
-  const value: ShubContextProps = {
+
+const value: ShubContextProps = {
 
     currentPromptName,
     toggleCurrentPromptName,
@@ -226,8 +142,6 @@ const handleNavigation = (name: string) => {
     toggleShowNewFile,
     showNewDir,
     toggleShowNewDir,
-    showFile,
-    addFile,
     showShare,
     toggleShowShare,
     option,
@@ -242,8 +156,6 @@ const handleNavigation = (name: string) => {
     handleNavigation,
     change,
     handleChange,
-    dSelected,
-    handleDSelected,
     resetSelect,
     stream,
     handleStream,
@@ -252,7 +164,7 @@ const handleNavigation = (name: string) => {
     handleData,
     showUpload,
     toggleShowUpload,
-    handleType
+    handleType,
     
   };
 

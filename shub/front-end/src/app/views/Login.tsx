@@ -5,57 +5,42 @@ import classNames from 'classnames/bind';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
-import fontLogo from '../../../public/fonts/fonts';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
 interface Props {
-  // Add any props if needed
 }
 
 const Login: React.FC<Props> = () => {
-  const [createMode, setCreateMode] = useState(false);
   const [error, setError] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
   const router = useRouter();
+  
+  
 
-
-let recaptcha = ''
 const submit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
   event.stopPropagation();
 
   try {
-    if (createMode) {
-      // Handle signup logic
-    } else {
+    
       const response = await axios.post('http://localhost:3001/auth/login', { username, password });
-      localStorage.setItem('token', response.data.access_token);
       localStorage.setItem('user_id', response.data.user_id);
+      Cookies.set('accessToken', response.data.access_token, { secure: true, sameSite: 'strict' });
+      Cookies.set('userId', response.data.user_id, { secure: true, sameSite: 'strict' });
       router.push('/files');
-    }
   } catch (e) {
     setError('An error occurred');  
   }
 };
-let name = 'Shub'
-// let error
-// let username = 'username'
-let signup = ''
-  const toggleMode = () => {
-    setCreateMode(!createMode);
-  };
   
   return (
-    <div id={cx('login')} className={recaptcha ? cx('recaptcha') : ''}>
+    <div id={cx('login')}>
       <form onSubmit={submit}>
         <Image src="/images/logo.png" alt="Shub" width={200} height={200}/>
-        <h1 className={fontLogo.className}>
-          
-          
-          {name}</h1>
+        <h1 className={cx('fontLogo.className')}>Shub</h1>
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
 
         <input
@@ -74,7 +59,7 @@ let signup = ''
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
         />
-        {createMode && (
+        {/* {createMode && (
           <input
             className={cx('input','input--block')}
             type="password"
@@ -82,20 +67,19 @@ let signup = ''
             onChange={(e) => setPasswordConfirm(e.target.value)}
             placeholder="Confirm your password"
           />
-        )}
+        )} */}
 
-        {recaptcha && <div id="recaptcha"></div>}
         <input
           className={cx('button','button--block')}
           type="submit"
-          value={createMode ? 'Sign Up' : 'Log In'}
+          value={'Log In'}
         />
 
-        {signup && (
+        {/*{signup && (
           <p onClick={toggleMode}>
             {createMode ? 'Log In instead' : 'Create an Account'}
           </p>
-        )}
+        )} */}
       </form>
     </div>
   );

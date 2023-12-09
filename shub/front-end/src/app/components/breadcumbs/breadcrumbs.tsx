@@ -26,7 +26,6 @@ const Breadcrumbs =() => {
   
     
   })
-  console.log(routes);
   // const name = pathname.split("/");
   // name.splice(0,2);
   

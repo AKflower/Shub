@@ -10,6 +10,6 @@ import { IPFSModule } from 'src/ipfs/ipfs.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Files]), IPFSModule],
   controllers: [FilesController],
-  providers: [FilesService],
+  providers: [FilesService, Files],
 })
 export class FilesModule {}
