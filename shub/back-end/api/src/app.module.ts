@@ -1,31 +1,64 @@
-// src/app.module.ts
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
-import { FoldersModule } from './folders/folders.module';
-import { AuthModule } from './auth/auth.module';
-import { IPFSModule } from './ipfs/ipfs.module';
-import { FilesModule } from './files/files.module';
-import { BlacklistMiddleware } from './auth/blacklist.middleware';
+// // src/app.module.ts
+// import { Module } from '@nestjs/common';
+// import { TypeOrmModule } from '@nestjs/typeorm';
+// import { UsersModule } from './users/users.module';
+// import { FoldersModule } from './folders/folders.module';
+// import { AuthModule } from './auth/auth.module';
+// import { FileModule } from './modules/file/file.module';
+// import { FabricModule } from './modules/fabric/fabric.module';
+// import { AppController } from './app.controller';
+//  import { AppService } from './app.service';
+
+// @Module({
+//   imports: [
+//   //   TypeOrmModule.forRoot({
+//   //     type: "postgres",
+//   //     host: "localhost",
+//   //     port: 5432,
+//   //     username: "postgres",
+//   //     password: "khoa",
+//   //     database: "Shub",
+//   //     entities: [__dirname + '/**/*.entity{.ts,.js}'],
+//   //     synchronize: false
+//   // }
+//   //   ),
+//     // UsersModule,
+//     // FoldersModule,
+//     // AuthModule,
+//     FileModule, FabricModule
+//     // Import other modules as needed
+//   ],
+//   controllers: [AppController],
+//   providers: [AppService],
+// })
+// export class AppModule {}
+import { Module } from '@nestjs/common';
+
+// import { UsersModule } from './users/users.module';
+// import { FoldersModule } from './folders/folders.module';
+// import { AuthModule } from './auth/auth.module';
+import { FileModule } from './modules/file/file.module';
+import { FabricModule } from './modules/fabric/fabric.module';
+import { UserModule } from './modules/user/user.module';
+import { FolderModule } from './modules/folder/folder.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "postgres",
-      password: "1702",
-      database: "Shub",
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false
-  }
-    ),
-    UsersModule,
-    FoldersModule,
-    AuthModule,
-    IPFSModule,
-    FilesModule
+    FileModule, FabricModule, UserModule, FolderModule
+  //   TypeOrmModule.forRoot({
+  //     type: "postgres",
+  //     host: "localhost",
+  //     port: 5432,
+  //     username: "postgres",
+  //     password: "khoa",
+  //     database: "Shub",
+  //     entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  //     synchronize: false
+  // }
+  //   ),
+  //   UsersModule,
+  //   FoldersModule,
+  //   AuthModule
     // Import other modules as needed
   ],
 })

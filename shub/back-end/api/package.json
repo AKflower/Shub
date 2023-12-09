@@ -33,7 +33,8 @@
     "file-type": "^12.4.2",
     "ipfs-cluster-api": "^0.0.9",
     "ipfs-http-client": "^53.0.1",
-
+=======
+    "class-validator": "^0.14.0",
     "passport": "^0.7.0",
 
     "passport-jwt": "^4.0.1",

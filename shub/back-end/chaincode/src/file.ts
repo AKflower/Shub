@@ -5,17 +5,34 @@ import { Object, Property } from "fabric-contract-api";
 export class File {
 
     @Property()
-    public ID: string;
+    public file_id: string;
 
     @Property()
-    public Owner: string;
+    public file_name: string;
 
     @Property()
-    public NameFile: string;
+    public file_path: string;
 
     @Property()
-    public Type: string;
+    public cid: string;
+
+    @Property()
+    public user_id: string;
+
+    @Property()
+    public created_at: Date;
     
     @Property()
-    public Link: string;
+    public updated_at: Date;
+
+    constructor({ file_id, file_name, file_path, user_id, cid}) {
+        this.file_id = file_id;
+        this.file_name = file_name;
+        this.file_path = file_path;
+        this.cid = cid;
+        this.user_id = user_id;
+        this.created_at= new Date();
+        this.updated_at= new Date();
+    }
+    
 }

@@ -59,25 +59,35 @@ const File = () => {
         resetSelect()
         hideOption()
     },[change])
-   
+    const testFunction = async () => {
+        try {
+          // Sử dụng await để chờ Promise được giải quyết
+          const data = { path: "/files/demo" };
       
+          const test = await axios.get(`http://localhost:3001/files/bypath`, {
+            params: data, // Truyền dữ liệu qua query parameters
+          });
+      
+          console.log('test: ', test.data);
+          
+          // Khi Promise được giải quyết, bạn có thể xử lý kết quả
+        } catch (error) {
+          // Xử lý lỗi nếu có
+          console.error('Error fetching data:', error);
+        }
+      };
+    testFunction();
     return (
 
         <div className={cx('container')}>
             <Breadcrumbs />
+            {/* {show &&(<button onClick={() => {
+                router.push(pathname.slice(0, pathname.lastIndexOf('/')))
+              
+            }}><ArrowBackIosNewIcon /></button>)} */}
             
-            
-            {folder[0] && <FolderSection folders={folder}/>}
-            {file[0] && <FileSection files={file}/>}
-            {blank && (<div className={cx('content')}>
-                <div className="">
-                    <SentimentDissatisfiedIcon  style={{fontSize: '100px'}}/>
-                </div>
-                <div className={cx('message')}>It feels lonely here...</div>
-                
-            </div>)}
-
-            
+            <FolderSection folders={folder}/>
+            <FileSection files={file}/>
         </div>
     )
 }

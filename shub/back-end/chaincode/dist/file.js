@@ -12,29 +12,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.File = void 0;
 const fabric_contract_api_1 = require("fabric-contract-api");
 let File = class File {
+    constructor({ file_id, file_name, file_path, user_id, cid }) {
+        this.file_id = file_id;
+        this.file_name = file_name;
+        this.file_path = file_path;
+        this.cid = cid;
+        this.user_id = user_id;
+        this.created_at = new Date();
+        this.updated_at = new Date();
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "ID", void 0);
+], File.prototype, "file_id", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "Owner", void 0);
+], File.prototype, "file_name", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "NameFile", void 0);
+], File.prototype, "file_path", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "Type", void 0);
+], File.prototype, "cid", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], File.prototype, "Link", void 0);
+], File.prototype, "user_id", void 0);
+<<<<<<< HEAD
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Date)
+], File.prototype, "created_at", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Date)
+], File.prototype, "updated_at", void 0);
+=======
+>>>>>>> b53c4ea
 File = __decorate([
-    (0, fabric_contract_api_1.Object)()
+    (0, fabric_contract_api_1.Object)(),
+    __metadata("design:paramtypes", [Object])
 ], File);
 exports.File = File;
 //# sourceMappingURL=file.js.map
