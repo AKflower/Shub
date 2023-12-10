@@ -62,9 +62,10 @@ import { FolderModule } from './modules/folder/folder.module';
     // Import other modules as needed
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    // Sử dụng middleware ở mức ứng dụng hoặc chỉ cho các route cụ thể
-    consumer.apply(BlacklistMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
+// implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     // Sử dụng middleware ở mức ứng dụng hoặc chỉ cho các route cụ thể
+//     consumer.apply(BlacklistMiddleware).forRoutes('*');
+//   }
+// }
