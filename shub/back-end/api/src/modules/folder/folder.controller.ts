@@ -15,6 +15,7 @@ export class FolderController {
     }
     @Post('/new')
     createFolder(@Body() newFolder: Folder){
+        console.log('sao ga v', newFolder)
         return this.folderService.createFolder(this.contract,newFolder);
 
     }
@@ -31,6 +32,7 @@ export class FolderController {
     @Delete('/delete')
     deleteFolder(@Body() params: {user_id:string,folder_path:string,folder_id:string}){
         const {user_id,folder_path,folder_id} = params;
+        console.log('delete',user_id,folder_path,folder_id)
         return this.folderService.deleteFolder(this.contract,user_id,folder_path,folder_id)
     }
 }

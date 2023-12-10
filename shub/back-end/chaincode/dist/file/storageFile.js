@@ -320,7 +320,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async GetSubFolders(ctx, user_id, folder_path) {
         const queryString = {
             selector: {
-                user_id: user_id,
+                owner: user_id,
                 folder_path: folder_path,
             },
         };
@@ -338,7 +338,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
                 record = strValue;
             }
             if (record.folder_id && record.folder_id.startsWith('folder_')) {
-                allResults.push(record);
+                allResults.push(...record);
             }
             result = await iterator.next();
         }
@@ -371,7 +371,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         console.log(subFolders);
         console.log('delete');
         // Tạo một mảng Promise để xóa tất cả các thư mục con cùng một lúc
-        const deletePromises = subFolders.map((subFolder) => this.DeleteFolderAndSubFolder(ctx, user_id, subFolder.folder_path, subFolder.folder_id));
+        const deletePromises = subFolders.map((subFolder) => this.DeleteFolder(ctx, subFolder.folder_id));
         // Chờ cho tất cả các Promise hoàn thành
         await Promise.all(deletePromises);
         const deleteFilesPromises = subfiles.map((subfile) => this.DeleteFile(ctx, subfile.file_id));
@@ -406,6 +406,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     //     const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
     // }
     async GetSubFoldersRecursive(ctx, user_id, folder_path) {
+        const allSubFolders = [];
         const subFolders = await this.getSubFoldersRecursive(ctx, user_id, folder_path);
         return JSON.stringify(subFolders);
     }
@@ -430,7 +431,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             }
             if (record.folder_id && record.folder_id.startsWith('folder_')) {
                 record.folder_path = await this.ConcatenatePathAndNameById(ctx, record.folder_path, record.folder_id);
-                allSubFolders.push(record);
+                allSubFolders.push(...record);
                 await this.getSubFoldersRecursive(ctx, user_id, record.folder_path, allSubFolders);
             }
             result = await iterator.next();

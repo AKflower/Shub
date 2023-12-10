@@ -387,7 +387,7 @@ export class StorageFileContract extends Contract {
       public async GetSubFolders(ctx: Context, user_id: string, folder_path: string): Promise<string> {
           const queryString = {
               selector: {
-                  user_id: user_id,
+                  owner: user_id,
                   folder_path: folder_path,
               },
           };
@@ -407,7 +407,7 @@ export class StorageFileContract extends Contract {
               }
 
               if (record.folder_id && record.folder_id.startsWith('folder_')) {
-                  allResults.push(record);
+                  allResults.push(...record);
               }
 
               result = await iterator.next();
@@ -451,7 +451,7 @@ export class StorageFileContract extends Contract {
         console.log(subFolders);
         console.log('delete');
         // Tạo một mảng Promise để xóa tất cả các thư mục con cùng một lúc
-        const deletePromises = subFolders.map((subFolder) => this.DeleteFolderAndSubFolder(ctx,user_id,subFolder.folder_path,subFolder.folder_id));
+        const deletePromises = subFolders.map((subFolder) => this.DeleteFolder(ctx,subFolder.folder_id));
         
         // Chờ cho tất cả các Promise hoàn thành
         await Promise.all(deletePromises);
@@ -500,6 +500,7 @@ export class StorageFileContract extends Contract {
     @Transaction(false)
     @Returns('string')
     public async GetSubFoldersRecursive(ctx: Context, user_id: string, folder_path: string): Promise<string> {
+        const allSubFolders = []
         const subFolders = await this.getSubFoldersRecursive(ctx, user_id, folder_path);
         return JSON.stringify(subFolders);
     }
@@ -528,7 +529,7 @@ export class StorageFileContract extends Contract {
 
             if (record.folder_id && record.folder_id.startsWith('folder_')) {
                 record.folder_path = await this.ConcatenatePathAndNameById(ctx,record.folder_path,record.folder_id);
-                allSubFolders.push(record);
+                allSubFolders.push(...record);
                 await this.getSubFoldersRecursive(ctx, user_id, record.folder_path, allSubFolders);
             }
 

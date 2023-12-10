@@ -20,14 +20,11 @@ const NewDir: React.FC<NewDirProps> = () => {
     const {  toggleCurrentPromptName, toggleShowNewDir, handleChange } = useShub();
     const accessToken = Cookies.get('accessToken');
     const userId = Cookies.get('userId');
-    function generateRandomNumberWithPrefix(prefix: string, length: number): string {
-        const randomNumber = Math.floor(Math.random() * Math.pow(10, length));
-        return `${prefix}_${randomNumber}`;
-    }
+    
 
     const submit = () => {
         const folderData = {
-            folder_id: generateRandomNumberWithPrefix('folder',100),
+            
             folder_name: name,
             folder_path: pathname,
             user_id: userId, 
