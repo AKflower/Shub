@@ -7,7 +7,7 @@ interface FoldersProps {
     folder_id: number,
     folder_name: string,
     folder_path: string,
-    user_id: number,
+    owner: string,
     created_date: string,
     updated_date: string,
 }
@@ -20,10 +20,12 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                 <h3 className={styles.title}>Folders</h3>
                 <div className="grid grid-cols-4 gap-3">
                     {folders.map((folder) => (
+                        
                         <div key={folder.folder_id}
                         onClick={() => {
                             handleSelect(folder.folder_id, 'folder')
                             handleType('folder')
+                            {console.log(folder.updated_date)}
                             
                         }}
                         onDoubleClick={() => {
