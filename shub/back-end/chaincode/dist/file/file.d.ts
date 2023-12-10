@@ -3,8 +3,9 @@ export declare class File {
     file_name: string;
     file_path: string;
     cid: string;
-    user_id: string;
+    owner: string;
     created_date: string;
     updated_date: string;
     file_size: string;
+    file_type: string;
 }

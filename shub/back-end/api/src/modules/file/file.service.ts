@@ -40,11 +40,12 @@ export class FileService {
         file_id: item.file_id,
         file_name: item.file_name,
         file_path: item.file_path,
-        cid: item.cid,
-        user_id: item.user_id,
+        file_data: item.cid,
+        user_id: item.owner,
         created_date: item.created_date,
         updated_date: item.updated_date,
-        file_size: item.file_size
+        file_size: item.file_size,
+        file_type: item.file_type
     }));
     
     
@@ -61,11 +62,12 @@ export class FileService {
       file_id: result.file_id,
       file_name: result.file_name,
       file_path: result.file_path,
-      cid: result.cid,
-      user_id: result.user_id,
+      file_data: result.cid,
+      user_id: result.owner,
       created_date: result.created_date,
       updated_date: result.updated_date,
-      file_size: result.file_size
+      file_size: result.file_size,
+      file_type: result.file_type
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
@@ -82,10 +84,11 @@ export class FileService {
       file_name: item.file_name,
       file_path: item.file_path,
       cid: item.cid,
-      user_id: item.user_id,
+      user_id: item.owner,
       created_date: item.created_date,
       updated_date: item.updated_date,
-      file_size: item.file_size
+      file_size: item.file_size,
+      file_type: item.file_type
 
   }));
   return files;
@@ -100,12 +103,12 @@ export class FileService {
     newfile.updated_date=new Date();
     
     console.log('Dated: ',newfile.created_date,newfile.updated_date)
-    await contract.submitTransaction('UploadFile',''+newfile.file_id,newfile.file_name,newfile.file_path,newfile.cid,''+newfile.user_id,''+newfile.created_date,''+newfile.updated_date,newfile.file_size);
+    await contract.submitTransaction('UploadFile',newfile.file_name,newfile.file_path,newfile.file_data,''+newfile.user_id,''+newfile.created_date,''+newfile.updated_date,newfile.file_size,newfile.file_type);
 
     console.log('*** Transaction committed successfully');
     return newfile;
   }
-  async delete(contract: Contract, id: number) : Promise<File> {
+  async delete(contract: Contract, id: string) : Promise<File> {
     
     const resultBytes= await contract.submitTransaction('GetFile',''+id);
     const utf8Decoder = new TextDecoder();

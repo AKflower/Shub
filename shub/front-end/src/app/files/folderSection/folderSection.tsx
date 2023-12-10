@@ -8,8 +8,8 @@ interface FoldersProps {
     folder_name: string,
     folder_path: string,
     user_id: number,
-    created_at: string,
-    updated_at: string,
+    created_date: string,
+    updated_date: string,
 }
 
 export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
@@ -30,7 +30,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                              handleNavigation(folder.folder_name)
                         }}
                         >
-                            <Card type1="folder" key={folder.folder_id} name={folder.folder_name} date={folder.updated_at} selected={selected==folder.folder_id && type=='folder'}/>
+                            <Card type1="folder" key={folder.folder_id} name={folder.folder_name} date={folder.updated_date} selected={selected==folder.folder_id && type=='folder'}/>
 
                         </div>
                         

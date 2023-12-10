@@ -10,8 +10,8 @@ interface FileProps {
     file_data: string,
     file_type: string,
     user_id: number,
-    created_at: string,
-    updated_at: string
+    created_date: string,
+    updated_date: string
 }
 
 
@@ -44,7 +44,7 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                         }}
                     >
 
-                    <Card type1={file.file_type.slice(0, file.file_type.indexOf('/'))} key={file.file_id} name={file.file_name} size='10'  date={file.updated_at} selected={selected==file.file_id && type == file.file_type.slice(0, file.file_type.indexOf('/'))}/>
+                    <Card type1={file.file_type.slice(0, file.file_type.indexOf('/'))} key={file.file_id} name={file.file_name} size='10'  date={file.updated_date} selected={selected==file.file_id && type == file.file_type.slice(0, file.file_type.indexOf('/'))}/>
                     </div>
                         
                   

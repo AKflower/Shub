@@ -15,5 +15,6 @@ export class UserController {
         console.log('khoa: ',user_id);
         return this.userService.getUserByID(this.contract,user_id);
     }
+    
 
 }

@@ -1,4 +1,4 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Query} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete} from '@nestjs/common';
 import { FileService } from './file.service';
 import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
@@ -52,7 +52,10 @@ export class FileController {
     upload(@Body(new ValidationPipe()) fileDTO: FileDTO){
         return this.fileService.upload(this.contract,fileDTO);
     }
-
+    @Delete('/:file_id')
+    deleteFile(@Param('file_id') file_id: string) {
+        return this.fileService.delete(this.contract,file_id);
+    }
     
 }
 

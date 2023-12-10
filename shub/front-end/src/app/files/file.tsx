@@ -24,18 +24,22 @@ const File = () => {
     useEffect(() => {
         const fetchData = async () => {
             const path = pathname.replaceAll('/','+')
+          const data = { path: pathname };
 
-            const resF = await axios.get(`http://localhost:3001/folders/${userId}/${path}`,{
+            const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
+                params: data, // Truyền dữ liệu qua query parameters
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
+                    // 'Authorization': `Bearer ${accessToken}`, 
                 },
-                });
+              },
+             );
 
-            const res = await axios.get(`http://localhost:3001/files/${userId}/${path}`,{
+            const res = await axios.get(`http://localhost:3001/files/bypath`,{
+                params: data, // Truyền dữ liệu qua query parameters
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
+                    // 'Authorization': `Bearer ${accessToken}`, 
                 },
             });
 
@@ -59,24 +63,7 @@ const File = () => {
         resetSelect()
         hideOption()
     },[change])
-    const testFunction = async () => {
-        try {
-          // Sử dụng await để chờ Promise được giải quyết
-          const data = { path: "/files/demo" };
-      
-          const test = await axios.get(`http://localhost:3001/files/bypath`, {
-            params: data, // Truyền dữ liệu qua query parameters
-          });
-      
-          console.log('test: ', test.data);
-          
-          // Khi Promise được giải quyết, bạn có thể xử lý kết quả
-        } catch (error) {
-          // Xử lý lỗi nếu có
-          console.error('Error fetching data:', error);
-        }
-      };
-    testFunction();
+    
     return (
 
         <div className={cx('container')}>

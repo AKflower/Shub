@@ -28,7 +28,7 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], Folder.prototype, "user_id", void 0);
+], Folder.prototype, "owner", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)

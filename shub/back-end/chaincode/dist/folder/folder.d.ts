@@ -2,7 +2,7 @@ export declare class Folder {
     folder_id: string;
     folder_name: string;
     folder_path: string;
-    user_id: string;
+    owner: string;
     created_date: string;
     updated_date: string;
 }

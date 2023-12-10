@@ -2,8 +2,9 @@ import { Context, Contract } from "fabric-contract-api";
 export declare class StorageFileContract extends Contract {
     InitLedger(ctx: Context): Promise<void>;
     GetAllState(ctx: Context): Promise<string>;
+    private generateUniqueId;
     /**************************File *****************/
-    UploadFile(ctx: Context, file_id: string, file_name: string, file_path: string, cid: string, user_id: string, created_date: string, updated_date: string, file_size: string): Promise<void>;
+    UploadFile(ctx: Context, file_name: string, file_path: string, cid: string, user_id: string, created_date: string, updated_date: string, file_size: string, file_type: string): Promise<void>;
     GetFile(ctx: Context, id: string): Promise<string>;
     FileExists(ctx: Context, file_id: string): Promise<boolean>;
     GetAllFile(ctx: Context): Promise<string>;
@@ -18,7 +19,9 @@ export declare class StorageFileContract extends Contract {
     GetAllUser(ctx: Context): Promise<string>;
     DeleteUser(ctx: Context, user_id: string): Promise<void>;
     /**************** Folder************************/
-    CreateFolder(ctx: Context, folder_id: string, folder_name: string, folder_path: string, user_id: string, created_date: string, updated_date: string): Promise<void>;
+    CreateFolder(ctx: Context, folder_name: string, folder_path: string, user_id: string, created_date: string, updated_date: string): Promise<void>;
+    GetFoldersByPath(ctx: Context, path: string): Promise<string>;
+    DeleteFolder(ctx: Context, folder_id: string): Promise<void>;
     FolderExists(ctx: Context, folder_id: string): Promise<boolean>;
     GetSubFolders(ctx: Context, user_id: string, folder_path: string): Promise<string>;
     DeleteFolderAndSubFolder(ctx: Context, user_id: string, folder_path: string, folder_id: string): Promise<void>;

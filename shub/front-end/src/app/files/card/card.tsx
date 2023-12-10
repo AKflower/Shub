@@ -11,8 +11,8 @@ import { useShub } from '@/app/Provider/Provider';
 
 export default function Card ({type1, name,size,date, selected}: {type1:string, key:number, name:string,size?:string,date?:string, selected?:boolean}) {
     
-    
-
+    let dateObject
+    if(date) dateObject = new Date(date);
     return (
         <div className={ !selected ? styles.container : styles.containerSelect} >
            
@@ -31,7 +31,10 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
                 <p className={styles.name}>{name}</p>
                 {type1=='folder' ? <p className={styles.size}>---</p> : <p className={styles.size}>{size}</p>}
                 
-                <p className={styles.date}>{date?.slice(0, date.indexOf('T'))}</p>
+                <p className={styles.date}>
+                    {/* {date?.slice(0, date.indexOf('T'))} */}
+                    {dateObject && `${dateObject.getDate() < 10 ? `0${dateObject.getDate()}` : dateObject.getDate()}-${dateObject.getMonth() + 1 < 10 ? `0${dateObject.getMonth() + 1}` : dateObject.getMonth() + 1}-${dateObject.getFullYear()}`}
+                </p>
             </div>
         </div>
     )

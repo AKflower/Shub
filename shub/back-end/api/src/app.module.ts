@@ -32,7 +32,7 @@
 //   providers: [AppService],
 // })
 // export class AppModule {}
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
 // import { UsersModule } from './users/users.module';
 // import { FoldersModule } from './folders/folders.module';
@@ -41,10 +41,16 @@ import { FileModule } from './modules/file/file.module';
 import { FabricModule } from './modules/fabric/fabric.module';
 import { UserModule } from './modules/user/user.module';
 import { FolderModule } from './modules/folder/folder.module';
+// import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
+// import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
-    FileModule, FabricModule, UserModule, FolderModule
+    FileModule, 
+    FabricModule, 
+    UserModule, 
+    FolderModule, 
+    // AuthModule
   //   TypeOrmModule.forRoot({
   //     type: "postgres",
   //     host: "localhost",
