@@ -42,7 +42,7 @@ import { FabricModule } from './modules/fabric/fabric.module';
 import { UserModule } from './modules/user/user.module';
 import { FolderModule } from './modules/folder/folder.module';
 // import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
-// import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -50,7 +50,7 @@ import { FolderModule } from './modules/folder/folder.module';
     FabricModule, 
     UserModule, 
     FolderModule, 
-    // AuthModule
+    AuthModule
   //   TypeOrmModule.forRoot({
   //     type: "postgres",
   //     host: "localhost",

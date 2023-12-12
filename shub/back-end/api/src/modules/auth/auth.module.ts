@@ -1,4 +1,4 @@
-<<<<<<< HEAD:shub/back-end/api/src/auth/auth.module.ts
+
 // // auth.module.ts
 // import { Module } from '@nestjs/common';
 // import { JwtModule } from '@nestjs/jwt';
@@ -22,7 +22,7 @@
 //   exports: [JwtModule, AuthService, BlacklistService], // Export JwtModule to make it available to other modules
 // })
 // export class AuthModule {}
-=======
+
 // auth.module.ts
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
@@ -31,9 +31,10 @@ import { AuthController } from './auth.controller';
 // import { JwtStrategy } from './jwt.strategy'; // You need to implement this strategy
 // import { JwtAuthGuard } from './jwt-auth.guard';
 // import { UserModule } from 'src/users/users.module';
-import { BlacklistService } from './blacklist.service';
+// import { BlacklistService } from './blacklist.service';
 import { UserModule } from '../user/user.module';
 import { FabricModule } from '../fabric/fabric.module';
+import { ShubService } from 'src/config/shub.service';
 
 @Module({
   imports: [
@@ -45,11 +46,13 @@ import { FabricModule } from '../fabric/fabric.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, 
+  providers: [AuthService, ShubService
     // JwtStrategy, 
     // JwtAuthGuard, 
-    BlacklistService],
-  exports: [JwtModule, AuthService, BlacklistService], // Export JwtModule to make it available to other modules
+    // BlacklistService
+  ],
+  exports: [JwtModule, AuthService, 
+    // BlacklistService
+  ], // Export JwtModule to make it available to other modules
 })
 export class AuthModule {}
->>>>>>> 296467ee80b9826af934805af1177a4b2f77381f:shub/back-end/api/src/modules/auth/auth.module.ts

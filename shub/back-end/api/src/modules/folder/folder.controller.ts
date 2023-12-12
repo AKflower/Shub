@@ -1,4 +1,4 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Delete,Query} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Delete,Query, Put} from '@nestjs/common';
 import { FolderService } from './folder.service';
 import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
@@ -6,12 +6,15 @@ import { FabricService } from '../fabric/fabric.service';
 import { FileDTO } from 'src/dto/file.dto';
 import { Folder } from 'src/model/folder.model';
 import { Context } from 'vm';
+import { ShubService } from 'src/config/shub.service';
 
 @Controller('/folders')
 export class FolderController {
     private contract: Contract;
-    constructor(private readonly folderService: FolderService, private readonly fabricService: FabricService) {
-        this.contract = this.fabricService.getContract('basic');
+    constructor(private readonly folderService: FolderService, 
+        private readonly fabricService: FabricService,
+        private readonly shubService: ShubService) {
+        this.contract = this.fabricService.getContract(this.shubService.chaincode);
     }
     @Post('/new')
     createFolder(@Body() newFolder: Folder){
@@ -24,9 +27,10 @@ export class FolderController {
         return this.folderService.getFoldersByPath(this.contract,path);
     }
     @Get()
-    getSubFolders(@Body() params: {user_id:string, folder_path:string}){
-        const {user_id,folder_path} = params;
-        return this.folderService.getSubFolders(this.contract,user_id,folder_path);
+    getSubFolders(@Body() params: {user_id:string, folder_path:string,folder_id:string}){
+        const {user_id,folder_path,folder_id} = params;
+        console.log(typeof user_id,folder_id)
+        return this.folderService.getSubFolders(this.contract,user_id,folder_path,folder_id);
     }
     
     @Delete('/delete')
@@ -34,5 +38,10 @@ export class FolderController {
         const {user_id,folder_path,folder_id} = params;
         console.log('delete',user_id,folder_path,folder_id)
         return this.folderService.deleteFolder(this.contract,user_id,folder_path,folder_id)
+    }
+    @Put('/rename')
+    renameFolder(@Body() params: {user_id:string,folder_path:string,folder_id:string,new_folder_name:string}){ 
+        const {user_id,folder_path,folder_id,new_folder_name} = params;
+        return this.folderService.renameFolder(this.contract,user_id,folder_path,folder_id,new_folder_name);
     }
 }

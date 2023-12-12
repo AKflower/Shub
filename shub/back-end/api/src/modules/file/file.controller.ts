@@ -7,14 +7,16 @@ import { FileDTO } from 'src/dto/file.dto';
 import { ResponseData } from 'src/global/globalClass';
 import { HttpStatus, HttpMessage } from 'src/global/globalEnum';
 import { File } from 'src/model/file.model';
-
+import { ShubService } from 'src/config/shub.service';
 @Controller('/files')
 export class FileController {
     //Property
     private contract: Contract;
     //Constructor
-    constructor(private readonly fileService: FileService, private readonly fabricService: FabricService) {
-        this.contract = this.fabricService.getContract('basic');
+    constructor(private readonly fileService: FileService, 
+        private readonly fabricService: FabricService,
+        private readonly shubService:ShubService) {
+        this.contract = this.fabricService.getContract(this.shubService.chaincode);
     }
     
     @Post()

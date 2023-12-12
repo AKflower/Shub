@@ -42,6 +42,7 @@ const File = () => {
                     // 'Authorization': `Bearer ${accessToken}`, 
                 },
             });
+            console.log(resF.data);
 
             setFile(res.data)
             setFolder(resF.data)

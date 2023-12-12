@@ -11,11 +11,12 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import { TextDecoder } from 'util';
 import { Fabric } from './fabric.type';
+import { ShubService } from 'src/config/shub.service';
 
 
 
 const channelName = envOrDefault('CHANNEL_NAME', 'mychannel');
-const chaincodeName = envOrDefault('CHAINCODE_NAME', 'basic');
+const chaincodeName = envOrDefault('CHAINCODE_NAME', 'basic1');
 const mspId = envOrDefault('MSP_ID', 'Org1MSP');
 
 // Path to crypto materials.

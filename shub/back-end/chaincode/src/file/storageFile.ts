@@ -337,6 +337,14 @@ export class StorageFileContract extends Contract {
         }
         await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(newFolder))));
       }
+      @Transaction()
+      public async GetFolder(ctx:Context, folder_id:string): Promise<string>{
+          const folderJSON = await ctx.stub.getState(folder_id);
+          if (!folderJSON || folderJSON.length===0) {
+              throw new Error(`The folder ${folder_id} does not exist`);
+          } 
+          return folderJSON.toString();
+      }
     @Transaction(false)
     @Returns('string')
     public async GetFoldersByPath(ctx: Context, path: string): Promise<string> {
@@ -384,8 +392,9 @@ export class StorageFileContract extends Contract {
 
       @Transaction(false)
       @Returns('string')
-      public async GetSubFolders(ctx: Context, user_id: string, folder_path: string): Promise<string> {
-          const queryString = {
+      public async GetSubFolders(ctx: Context, user_id: string, folder_path: string,folder_id:string): Promise<string> {
+            folder_path=await this.ConcatenatePathAndNameById(ctx,folder_path,folder_id);
+            const queryString = {
               selector: {
                   owner: user_id,
                   folder_path: folder_path,
@@ -407,7 +416,7 @@ export class StorageFileContract extends Contract {
               }
 
               if (record.folder_id && record.folder_id.startsWith('folder_')) {
-                  allResults.push(...record);
+                  allResults.push(record);
               }
 
               result = await iterator.next();
@@ -415,56 +424,74 @@ export class StorageFileContract extends Contract {
           console.log('ketqua:',allResults);
           return JSON.stringify(allResults);
       }
-
-    //   @Transaction()
-    //   public async DeleteFolderAndSubFolder(ctx: Context, user_id: string, folder_path: string, folder_id: string): Promise<void> {
-    //       const subFoldersJSON = await this.GetSubFolders(ctx, user_id, folder_path);
-    //       const subFolders = JSON.parse(subFoldersJSON);
-          
-    //       // Lấy folder_paths từ kết quả trả về
-    //       // const subFolderPaths = subFolders.map((folder) => {folder.folder_path, folder.folder_id});
-
-    //       // Xóa từng subfolder
-    //       for (const subFolder of subFolders) {
-    //           await this.DeleteFolderAndSubFolder(ctx, user_id, subFolder.folder_path, subFolder.folder_id);
-    //       }
-
-    //       // Xóa folder hiện tại
-    //       await ctx.stub.deleteState(folder_id);
-    //   }
-    @Transaction()
-    public async DeleteFolderAndSubFolder(ctx: Context, user_id: string, folder_path: string, folder_id: string): Promise<void> {
-        
-        
-        folder_path=await this.ConcatenatePathAndNameById(ctx,folder_path,folder_id);
-        const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
-        const subFolders = JSON.parse(subFoldersJSON);
-       
-        const subfiles = [];
-        subFolders.map(async (subFolder) =>  {
-
-            const files = await this.GetFilesByPath(ctx,subFolder.folder_path);
+      @Transaction()
+      public async DeleteFolderAndSubFolder(ctx: Context,user_id:string,folder_path:string,folder_id:string): Promise<void> {
+        //Get subFolders
+        const subFoldersString = await this.GetSubFolders(ctx,user_id,folder_path,folder_id);
+        const subFolders = JSON.parse(subFoldersString);
+        //Get subfiles
+        const filePath = await this.ConcatenatePathAndNameById(ctx,folder_path,folder_id);
+        const subFilesString=await this.GetFilesByPath(ctx,filePath);
+        const subFiles = JSON.parse(subFilesString);
+        //Delete subfiles
+        for (const subFile of subFiles) {
             
-            subfiles.push(...files);
-        })
-        console.log('subfiles:',subfiles);
-        console.log(subFolders);
-        console.log('delete');
-        // Tạo một mảng Promise để xóa tất cả các thư mục con cùng một lúc
-        const deletePromises = subFolders.map((subFolder) => this.DeleteFolder(ctx,subFolder.folder_id));
+            await this.DeleteFile(ctx,subFile.file_id)
+        }
+        //Delete curr folder
+        await this.DeleteFolder(ctx,folder_id);
+        //Recursive
+        for (const subFolder of subFolders) {
+            
+            await this.DeleteFolderAndSubFolder(ctx,user_id,subFolder.folder_path,subFolder.folder_id);
+        }
+      }
+    
+    @Transaction()
+    public async RenameFolder(ctx: Context,user_id:string,folder_path:string,folder_id:string, new_folder_name: string): Promise<void> {
+        const folderString = await this.GetFolder(ctx,folder_id);
+        const folder: Folder = JSON.parse(folderString);
+        const pathLength=folder.folder_path.length+2-1; //Plus 2 -1 -> indexOf
+        const old_name=folder.folder_name;
+        await this.ChangePath(ctx,user_id,folder_path,folder_id,old_name,new_folder_name,pathLength);
+        folder.folder_name = new_folder_name;
+        await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
+    }
+    
+    @Transaction()
+    public async ChangePath(ctx: Context, user_id:string,folder_path:string,folder_id:string,old_name:string,new_parent_name:string,pathLength:number): Promise<void> {
+        const subFoldersString = await this.GetSubFolders(ctx,user_id,folder_path,folder_id);
+        const subFolders = JSON.parse(subFoldersString);
+        const folderString = await this.GetFolder(ctx,folder_id);
         
-        // Chờ cho tất cả các Promise hoàn thành
-        await Promise.all(deletePromises);
-        const deleteFilesPromises = subfiles.map((subfile) => this.DeleteFile(ctx,subfile.file_id));
-        await Promise.all(deleteFilesPromises);
+        //Get subfiles
+        const filePath = await this.ConcatenatePathAndNameById(ctx,folder_path,folder_id);
+        const subFilesString=await this.GetFilesByPath(ctx,filePath);
+        const subFiles = JSON.parse(subFilesString);
+        for (const subFile of subFiles) {
+            subFile.file_path = await this.replacePath(ctx,filePath,old_name,new_parent_name,pathLength)
+            await ctx.stub.putState(subFile.file_id, Buffer.from(stringify(sortKeysRecursive(subFile))));
+            
+        }
+
+        const folder:Folder = JSON.parse(folderString);
+        if (folder_path.length>=pathLength) {
+            folder.folder_path = await this.replacePath(ctx,folder_path,old_name,new_parent_name,pathLength)
+            await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
+        }
         
+        for (const subFolder of subFolders) {
+
+            await this.ChangePath(ctx,user_id,subFolder.folder_path,subFolder.folder_id,old_name,new_parent_name,pathLength);
+        }
+    }
+    private async replacePath(ctx:Context,path: string, wordToReplace: string, replacementWord: string, startIndex:number): Promise<string> {
         
-        // Xóa thư mục hiện tại
-        await ctx.stub.deleteState(folder_id);
+        const replacedString = path.substring(0, startIndex) + replacementWord + path.substring(startIndex + wordToReplace.length);
+
+        return replacedString;
 
     }
-
-    
     @Transaction(false)
     @Returns('string')
     public async ConcatenatePathAndNameById(ctx: Context, folder_path: string, folder_id: string): Promise<string> {
@@ -493,51 +520,8 @@ export class StorageFileContract extends Contract {
             return null;
         }
     }
-    // public async GetSubFile(ctx: Context, folder_path: string,user_id: string): Promise<File[]> {
-    //     const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
 
-    // }
-    @Transaction(false)
-    @Returns('string')
-    public async GetSubFoldersRecursive(ctx: Context, user_id: string, folder_path: string): Promise<string> {
-        const allSubFolders = []
-        const subFolders = await this.getSubFoldersRecursive(ctx, user_id, folder_path);
-        return JSON.stringify(subFolders);
-    }
-    private async getSubFoldersRecursive(ctx: Context, user_id: string, folder_path: string, allSubFolders: any[] = []): Promise<any[]> {
-        const queryString = {
-            selector: {
-                owner: user_id,
-                folder_path: folder_path,
-            },
-        };
-
-        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        let result = await iterator.next();
-
-        while (!result.done) {
-
-            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-            let record;
-            
-            try {
-                record = JSON.parse(strValue);
-            } catch (err) {
-                console.log(err);
-                record = strValue;
-            }
-
-            if (record.folder_id && record.folder_id.startsWith('folder_')) {
-                record.folder_path = await this.ConcatenatePathAndNameById(ctx,record.folder_path,record.folder_id);
-                allSubFolders.push(...record);
-                await this.getSubFoldersRecursive(ctx, user_id, record.folder_path, allSubFolders);
-            }
-
-            result = await iterator.next();
-        }
-
-        return allSubFolders;
-    }
+    
 
 }
    

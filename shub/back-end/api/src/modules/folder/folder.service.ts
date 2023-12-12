@@ -26,15 +26,17 @@ export class FolderService {
             folder_name: item.folder_name,
             folder_path: item.folder_path,
             user_id: item.owner,
-
+            created_date: item.created_date,
+            updated_date: item.updated_date
     }));
     return folders;
     
     }
-    async getSubFolders(contract: Contract,user_id:string,folder_path:string): Promise<Folder[]> {
+    async getSubFolders(contract: Contract,user_id:string,folder_path:string,folder_id:string): Promise<Folder[]> {
 
         console.log('GetSubFolders');
-        const resultBytes = await contract.evaluateTransaction('GetSubFolders',user_id,folder_path);
+        console.log(user_id,folder_path)
+        const resultBytes = await contract.submitTransaction('GetSubFolders',user_id,folder_path,folder_id);
         console.log('hahaha');
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
@@ -56,7 +58,9 @@ export class FolderService {
         await contract.submitTransaction('DeleteFolderAndSubFolder',user_id,folder_path,folder_id)
         return 'Delete successfuly!'
     }
-
+    async renameFolder(contract:Contract, user_id:string,folder_path:string,folder_id:string,new_folder_name:string): Promise<void> {
+        await contract.submitTransaction('RenameFolder',user_id,folder_path,folder_id,new_folder_name);
+    }
 
 
 }

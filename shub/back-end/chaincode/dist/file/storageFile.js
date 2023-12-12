@@ -281,6 +281,13 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         };
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newFolder))));
     }
+    async GetFolder(ctx, folder_id) {
+        const folderJSON = await ctx.stub.getState(folder_id);
+        if (!folderJSON || folderJSON.length === 0) {
+            throw new Error(`The folder ${folder_id} does not exist`);
+        }
+        return folderJSON.toString();
+    }
     async GetFoldersByPath(ctx, path) {
         const queryString = {
             selector: {
@@ -317,7 +324,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folderJSON = await ctx.stub.getState(folder_id);
         return folderJSON && folderJSON.length > 0;
     }
-    async GetSubFolders(ctx, user_id, folder_path) {
+    async GetSubFolders(ctx, user_id, folder_path, folder_id) {
+        folder_path = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
         const queryString = {
             selector: {
                 owner: user_id,
@@ -338,46 +346,65 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
                 record = strValue;
             }
             if (record.folder_id && record.folder_id.startsWith('folder_')) {
-                allResults.push(...record);
+                allResults.push(record);
             }
             result = await iterator.next();
         }
         console.log('ketqua:', allResults);
         return JSON.stringify(allResults);
     }
-    //   @Transaction()
-    //   public async DeleteFolderAndSubFolder(ctx: Context, user_id: string, folder_path: string, folder_id: string): Promise<void> {
-    //       const subFoldersJSON = await this.GetSubFolders(ctx, user_id, folder_path);
-    //       const subFolders = JSON.parse(subFoldersJSON);
-    //       // Lấy folder_paths từ kết quả trả về
-    //       // const subFolderPaths = subFolders.map((folder) => {folder.folder_path, folder.folder_id});
-    //       // Xóa từng subfolder
-    //       for (const subFolder of subFolders) {
-    //           await this.DeleteFolderAndSubFolder(ctx, user_id, subFolder.folder_path, subFolder.folder_id);
-    //       }
-    //       // Xóa folder hiện tại
-    //       await ctx.stub.deleteState(folder_id);
-    //   }
     async DeleteFolderAndSubFolder(ctx, user_id, folder_path, folder_id) {
-        folder_path = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
-        const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
-        const subFolders = JSON.parse(subFoldersJSON);
-        const subfiles = [];
-        subFolders.map(async (subFolder) => {
-            const files = await this.GetFilesByPath(ctx, subFolder.folder_path);
-            subfiles.push(...files);
-        });
-        console.log('subfiles:', subfiles);
-        console.log(subFolders);
-        console.log('delete');
-        // Tạo một mảng Promise để xóa tất cả các thư mục con cùng một lúc
-        const deletePromises = subFolders.map((subFolder) => this.DeleteFolder(ctx, subFolder.folder_id));
-        // Chờ cho tất cả các Promise hoàn thành
-        await Promise.all(deletePromises);
-        const deleteFilesPromises = subfiles.map((subfile) => this.DeleteFile(ctx, subfile.file_id));
-        await Promise.all(deleteFilesPromises);
-        // Xóa thư mục hiện tại
-        await ctx.stub.deleteState(folder_id);
+        //Get subFolders
+        const subFoldersString = await this.GetSubFolders(ctx, user_id, folder_path, folder_id);
+        const subFolders = JSON.parse(subFoldersString);
+        //Get subfiles
+        const filePath = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
+        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFiles = JSON.parse(subFilesString);
+        //Delete subfiles
+        for (const subFile of subFiles) {
+            await this.DeleteFile(ctx, subFile.file_id);
+        }
+        //Delete curr folder
+        await this.DeleteFolder(ctx, folder_id);
+        //Recursive
+        for (const subFolder of subFolders) {
+            await this.DeleteFolderAndSubFolder(ctx, user_id, subFolder.folder_path, subFolder.folder_id);
+        }
+    }
+    async RenameFolder(ctx, user_id, folder_path, folder_id, new_folder_name) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folder = JSON.parse(folderString);
+        const pathLength = folder.folder_path.length + 2 - 1; //Plus 2 -1 -> indexOf
+        const old_name = folder.folder_name;
+        await this.ChangePath(ctx, user_id, folder_path, folder_id, old_name, new_folder_name, pathLength);
+        folder.folder_name = new_folder_name;
+        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
+    }
+    async ChangePath(ctx, user_id, folder_path, folder_id, old_name, new_parent_name, pathLength) {
+        const subFoldersString = await this.GetSubFolders(ctx, user_id, folder_path, folder_id);
+        const subFolders = JSON.parse(subFoldersString);
+        const folderString = await this.GetFolder(ctx, folder_id);
+        //Get subfiles
+        const filePath = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
+        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFiles = JSON.parse(subFilesString);
+        for (const subFile of subFiles) {
+            subFile.file_path = await this.replacePath(ctx, filePath, old_name, new_parent_name, pathLength);
+            await ctx.stub.putState(subFile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(subFile))));
+        }
+        const folder = JSON.parse(folderString);
+        if (folder_path.length >= pathLength) {
+            folder.folder_path = await this.replacePath(ctx, folder_path, old_name, new_parent_name, pathLength);
+            await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
+        }
+        for (const subFolder of subFolders) {
+            await this.ChangePath(ctx, user_id, subFolder.folder_path, subFolder.folder_id, old_name, new_parent_name, pathLength);
+        }
+    }
+    async replacePath(ctx, path, wordToReplace, replacementWord, startIndex) {
+        const replacedString = path.substring(0, startIndex) + replacementWord + path.substring(startIndex + wordToReplace.length);
+        return replacedString;
     }
     async ConcatenatePathAndNameById(ctx, folder_path, folder_id) {
         // Assume you have a method to retrieve folder_name by folder_id
@@ -401,42 +428,6 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             console.error(error);
             return null;
         }
-    }
-    // public async GetSubFile(ctx: Context, folder_path: string,user_id: string): Promise<File[]> {
-    //     const subFoldersJSON = await this.GetSubFoldersRecursive(ctx, user_id, folder_path);
-    // }
-    async GetSubFoldersRecursive(ctx, user_id, folder_path) {
-        const allSubFolders = [];
-        const subFolders = await this.getSubFoldersRecursive(ctx, user_id, folder_path);
-        return JSON.stringify(subFolders);
-    }
-    async getSubFoldersRecursive(ctx, user_id, folder_path, allSubFolders = []) {
-        const queryString = {
-            selector: {
-                owner: user_id,
-                folder_path: folder_path,
-            },
-        };
-        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        let result = await iterator.next();
-        while (!result.done) {
-            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-            let record;
-            try {
-                record = JSON.parse(strValue);
-            }
-            catch (err) {
-                console.log(err);
-                record = strValue;
-            }
-            if (record.folder_id && record.folder_id.startsWith('folder_')) {
-                record.folder_path = await this.ConcatenatePathAndNameById(ctx, record.folder_path, record.folder_id);
-                allSubFolders.push(...record);
-                await this.getSubFoldersRecursive(ctx, user_id, record.folder_path, allSubFolders);
-            }
-            result = await iterator.next();
-        }
-        return allSubFolders;
     }
 };
 __decorate([
@@ -544,6 +535,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "CreateFolder", null);
 __decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFolder", null);
+__decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
@@ -567,7 +564,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetSubFolders", null);
 __decorate([
@@ -577,19 +574,24 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "DeleteFolderAndSubFolder", null);
 __decorate([
-    (0, fabric_contract_api_1.Transaction)(false),
-    (0, fabric_contract_api_1.Returns)('string'),
+    (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String]),
     __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "ConcatenatePathAndNameById", null);
+], StorageFileContract.prototype, "RenameFolder", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String, Number]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "ChangePath", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "GetSubFoldersRecursive", null);
+], StorageFileContract.prototype, "ConcatenatePathAndNameById", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);
