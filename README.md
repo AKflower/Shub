@@ -12,5 +12,12 @@ cd test-network
 <pre>
 cd shub/back-end/api
 npm install
-npm run start
+npm run start or npm run start:dev (for hot reload)
+</pre>
+**Run Front-end**
+<pre>
+cd shub/front-end
+npm install
+npm run dev
+
 </pre>
