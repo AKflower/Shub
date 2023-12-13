@@ -1,0 +1,5 @@
+node1/data/*
+node2/data/*
+nodeboot/data/*
+reset.sh
+nodeboot.json

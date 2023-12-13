@@ -1,0 +1,5 @@
+echo -e "/key/swarm/psk/1.0.0/\n/base16/\n`tr -dc 'a-f0-9' < /dev/urandom | head -c64`" > swarm.key
+
+https://discuss.ipfs.tech/t/webui-not-working-in-private-network-configuration/6348
+
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://192.168.1.102:5001", "http://192.168.1.102:8080"]'

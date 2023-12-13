@@ -1,0 +1,4 @@
+FROM ipfs/kubo:master-2023-03-10-a4052c6
+
+ENV LIBP2P_FORCE_PNET=1
+ENV IPFS_SWARM_KEY_FILE=/run/swarm.key

@@ -1,0 +1,55 @@
+version: "3.1"
+services:
+  nodeboot:
+    container_name: ipfs-node-boot
+    build:
+      context: .
+    ports:
+      - 5001:5001
+      - 4001:4001
+      - 4001:4001/udp
+    volumes:
+      - ./nodeboot/staging:/export
+      - ./nodeboot/data:/data/ipfs
+      - ./reset.sh:/container-init.d/reset.sh
+      - ./swarm.key:/run/swarm.key
+    networks:
+      ipfs_network:
+        ipv4_address: 172.26.24.100
+
+  node1:
+    container_name: ipfs-node-1
+    build:
+      context: .
+    image: ipfs-network-nodeboot
+    volumes:
+      - ./node1/staging:/export
+      - ./node1/data:/data/ipfs
+      - ./reset.sh:/container-init.d/reset.sh
+      - ./swarm.key:/run/swarm.key
+    networks:
+      ipfs_network:
+        ipv4_address: 172.26.24.101
+
+  node2:
+    container_name: ipfs-node-2
+    build:
+      context: .
+    image: ipfs-network-nodeboot
+    volumes:
+      - ./node2/staging:/export
+      - ./node2/data:/data/ipfs
+      - ./reset.sh:/container-init.d/reset.sh
+      - ./swarm.key:/run/swarm.key
+    networks:
+      ipfs_network:
+        ipv4_address: 172.26.24.102
+
+networks:
+  ipfs_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.24.0/24
+          gateway: 172.26.24.1
