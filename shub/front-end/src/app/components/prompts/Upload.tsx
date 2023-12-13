@@ -28,18 +28,16 @@ const Upload: React.FC<UploadProps> = () => {
   useEffect(() => {
     const uploadFile = async () => {
         if (selectedFile) {
+          const data = {
+            userId: userId,
+            filePath: pathname
+          }
             const formData = new FormData();
             formData.append('file', selectedFile);
-            const res =  await axios.post(`http://localhost:3001/files/upload/${userId}/${pathname.replaceAll('/','+')}`, formData, {
+            await axios.post(`http://localhost:3001/files/new`, formData, {
+                params: data,
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${accessToken}`, 
-                },
-            })
-
-            axios.post(`http://localhost:3001/files`, res.data,{
-                headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`, 
                 },
             })
@@ -53,6 +51,8 @@ const Upload: React.FC<UploadProps> = () => {
             .catch(error => {
                 console.error('Error uploading file:', error);
             });
+
+            
         }
     };
     uploadFile()

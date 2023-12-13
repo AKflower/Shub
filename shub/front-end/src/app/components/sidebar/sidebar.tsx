@@ -7,7 +7,7 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import NewFile from '../prompts/NewFile';
 import { usePathname } from 'next/navigation'
@@ -36,6 +36,8 @@ const Sidebar = () => {
             })
             .then(response => {
                 console.log('Logout success');
+                Cookies.set('accessToken', '', { secure: true, sameSite: 'strict' });
+
                 router.push('/');
 
             })
@@ -43,6 +45,9 @@ const Sidebar = () => {
                 console.error('Error creating folder:', error);
             });
     }
+    useEffect(() => {
+        if(accessToken == '') router.push('/');
+    },[accessToken])
   return (
     <>
          {!isLogin && 

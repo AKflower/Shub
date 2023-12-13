@@ -43,6 +43,7 @@ import { UserModule } from './modules/user/user.module';
 import { FolderModule } from './modules/folder/folder.module';
 // import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
 
 @Module({
   imports: [
@@ -68,10 +69,10 @@ import { AuthModule } from './modules/auth/auth.module';
     // Import other modules as needed
   ],
 })
-export class AppModule {}
-// implements NestModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     // Sử dụng middleware ở mức ứng dụng hoặc chỉ cho các route cụ thể
-//     consumer.apply(BlacklistMiddleware).forRoutes('*');
-//   }
-// }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Sử dụng middleware ở mức ứng dụng hoặc chỉ cho các route cụ thể
+    consumer.apply(BlacklistMiddleware).forRoutes('*');
+  }
+}
+

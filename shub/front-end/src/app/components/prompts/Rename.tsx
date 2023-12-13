@@ -4,13 +4,16 @@ import styles from './Rename.module.scss'
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { usePathname } from 'next/navigation';
 
 const cx = classNames.bind(styles);
 
 interface RenameProps { }
 
 const Rename: React.FC<RenameProps> = () => {
-   
+    const userId = Cookies.get('userId');
+    const pathname = usePathname()
+
     const [name, setName] = useState<string>("");
     const { 
         selected, 
@@ -39,9 +42,12 @@ const Rename: React.FC<RenameProps> = () => {
         
         if(type == 'folder'){
             const data = {
-                folder_name: name,
+                new_folder_name: name,
+                user_id: userId,
+                folder_path: pathname,
+                folder_id: selected,
             };
-            axios.put(`http://localhost:3001/folders/${selected}`, data, {
+            axios.put(`http://localhost:3001/folders/rename`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`, 
@@ -85,7 +91,7 @@ const Rename: React.FC<RenameProps> = () => {
 
             if (foldersString) {
                 const folders = JSON.parse(foldersString);
-                let oldName = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
+                let oldName = folders.find((el: { folder_id: string; })  => el.folder_id == selected)
                 setOldName(oldName.folder_name);
           }
         }
@@ -93,7 +99,7 @@ const Rename: React.FC<RenameProps> = () => {
             const filesString = Cookies.get('files');
             if (filesString) {
                 const files = JSON.parse(filesString);
-                let oldName = files.find((el: { file_id: number; })  => el.file_id == selected)
+                let oldName = files.find((el: { file_id: string; })  => el.file_id == selected)
                 setOldName(oldName.file_name);
           }
         }

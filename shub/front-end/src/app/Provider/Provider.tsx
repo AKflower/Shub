@@ -16,8 +16,8 @@ interface ShubContextProps {
     option: string;
     showOption: () => void;
     hideOption: () => void;
-    selected: number;
-    handleSelect: (id: number, type1: string) => void;
+    selected: string;
+    handleSelect: (id: string, type1: string) => void;
     showDelete: string;
     toggleShowDelete: () => void;
     showRename: string;
@@ -86,10 +86,10 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setOption('');
   }
 
-const [selected, setSelected] = useState(0);
-const handleSelect = (id: number, type1: string) => {
+const [selected, setSelected] = useState('');
+const handleSelect = (id: string, type1: string) => {
   if (id == selected && type1 == type) {
-      setSelected(0);
+      setSelected('');
       hideOption()
   }
   else {
@@ -98,7 +98,7 @@ const handleSelect = (id: number, type1: string) => {
   }
 }
 const resetSelect = () => {
-  setSelected(0)
+  setSelected('')
 }
 
 const [showDelete, setShowDelete] = useState("");

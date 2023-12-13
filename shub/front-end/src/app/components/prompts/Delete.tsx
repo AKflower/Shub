@@ -28,8 +28,14 @@ const Delete: React.FC<DeleteProps> = () => {
 
       if (foldersString) {
         const folders = JSON.parse(foldersString);
-        const name = folders.find((el: { folder_id: number; })  => el.folder_id == selected)
-        axios.delete(`http://localhost:3001/folders/${userId}/${selected}/${path}+${name.folder_name}`,{
+        const name = folders.find((el: { folder_id: string; })  => el.folder_id == selected)
+        const data = {
+          user_id: userId,
+          folder_path: pathname,
+          folder_id: selected,
+      };
+        axios.delete(`http://localhost:3001/folders/delete`,  {
+          params: data,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`, 

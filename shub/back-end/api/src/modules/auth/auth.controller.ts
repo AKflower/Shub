@@ -29,10 +29,10 @@ export class AuthController {
     };
   }
 
-  // @Post('logout/:token')
-  // async logout(@Param('token') token: string): Promise<void> {
+  @Post('logout/:token')
+  async logout(@Param('token') token: string): Promise<void> {
     
-  //   await this.authService.logout(token);
-  // }
+    await this.authService.logout(token);
+  }
 
 }
