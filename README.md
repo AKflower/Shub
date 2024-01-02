@@ -1,3 +1,10 @@
+
+<div align="center"><img width="706" alt="Logo" src="https://github.com/AKflower/Shub/assets/89245858/7ec7c235-6372-49df-baf5-91d89ed1b029"></div>
+
+  
+**Introduction**
+<p>"Shub" is short for Secret Hub. Shub aims to provide ogranizations with a secure, transparent, and cost-effective storage space based on the Blockchain and IPFS.</p> 
+
 **Prerequisites**
 <pre>https://hyperledger-fabric.readthedocs.io/en/release-2.5/prereqs.html</pre>
 
