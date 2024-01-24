@@ -4,13 +4,14 @@ import { FileService } from "./file.service";
 import { FabricService } from "../fabric/fabric.service";
 import { FabricFactory } from "../fabric/fabric.config";
 import { ShubService } from "src/config/shub.service";
-import { Ipfs } from "src/ipfs/ipfs.config";
+import { Ipfs } from "src/modules/ipfs/ipfs.config";
+import { IpfsFactory } from "../ipfs/ipfsCluster.config";
 
 
 
 @Module({
 
     controllers: [FileController],
-    providers: [FileService, FabricService, FabricFactory,ShubService,Ipfs]
+    providers: [FileService, FabricService, FabricFactory, ShubService, Ipfs, IpfsFactory]
 })
 export class FileModule {};

@@ -120,4 +120,13 @@ export class FileService {
     return result;
   }
 
+  async getDir(path: string): Promise<string[]> {
+    try {
+      const files = await fs.readdir(path);
+      return files;
+    } catch (error) {
+      throw new Error(`Error reading directory: ${error.message}`);
+    }
+  }
+
 }

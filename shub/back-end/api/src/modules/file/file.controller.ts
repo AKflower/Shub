@@ -1,6 +1,5 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles} from '@nestjs/common';
 import { FileService } from './file.service';
-import * as grpc from '@grpc/grpc-js';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { FabricService } from '../fabric/fabric.service';
 import { FileDTO } from 'src/dto/file.dto';
@@ -11,6 +10,9 @@ import { ShubService } from 'src/config/shub.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import * as ipfsCluster from "ipfs-cluster-api";
+import { FilesInterceptor } from '@nestjs/platform-express';
+
 @Controller('/files')
 export class FileController {
     //Property
@@ -19,7 +21,8 @@ export class FileController {
     constructor(private readonly fileService: FileService, 
         private readonly fabricService: FabricService,
         private readonly shubService:ShubService,
-        @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient) {
+        @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient,
+        @Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster) {
         this.contract = this.fabricService.getContract(this.shubService.chaincode);
     
     }
@@ -63,6 +66,7 @@ export class FileController {
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
         const { cid } = await this.ipfsClient.add(file.buffer)
+        this.ipfsCluster.pin.add(cid)
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
             file_path: filePath,
@@ -78,6 +82,19 @@ export class FileController {
     deleteFile(@Param('file_id') file_id: string) {
         return this.fileService.delete(this.contract,file_id);
     }
+
+    @Post('/folder')
+  @UseInterceptors(FilesInterceptor('files'))
+  uploadFiles(@UploadedFiles() files) {
+    // Xử lý các file tại đây
+    files.forEach((file: { originalname: any; }) => {
+      console.log('File received:', file.originalname);
+      // Bạn có thể lưu hoặc xử lý file ở đây
+    });
+
+    return { message: 'Upload success' };
+  }
+
     
 }
 

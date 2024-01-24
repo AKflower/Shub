@@ -121,6 +121,7 @@ export class StorageFileContract extends Contract {
 
         };
         await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(newfile))));
+        
 
     }
     @Transaction()
@@ -160,6 +161,7 @@ export class StorageFileContract extends Contract {
             }
             result = await iterator.next();
         }
+        console.log('All files:',allResults)
         return JSON.stringify(allResults);
     }
 

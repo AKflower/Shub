@@ -135,6 +135,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             }
             result = await iterator.next();
         }
+        console.log('All files:', allResults);
         return JSON.stringify(allResults);
     }
     async GetFilesByPath(ctx, path) {
