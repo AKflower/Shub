@@ -22,7 +22,8 @@ export class FileController {
         private readonly fabricService: FabricService,
         private readonly shubService:ShubService,
         @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient,
-        @Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster) {
+        @Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster
+        ) {
         this.contract = this.fabricService.getContract(this.shubService.chaincode);
     
     }
@@ -66,7 +67,7 @@ export class FileController {
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
         const { cid } = await this.ipfsClient.add(file.buffer)
-        this.ipfsCluster.pin.add(cid)
+        // this.ipfsCluster.pin.add(cid)
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
             file_path: filePath,
@@ -83,19 +84,14 @@ export class FileController {
         return this.fileService.delete(this.contract,file_id);
     }
 
-    @Post('/folder')
-  @UseInterceptors(FilesInterceptor('files'))
-  uploadFiles(@UploadedFiles() files) {
-    // Xử lý các file tại đây
-    files.forEach((file: { originalname: any; }) => {
-      console.log('File received:', file.originalname);
-      // Bạn có thể lưu hoặc xử lý file ở đây
-    });
-
-    return { message: 'Upload success' };
-  }
-
-    
+    @Post('/ipfslong')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadFile(@UploadedFile() file) {
+            const fileBuffer = file.buffer;
+            const result = await this.ipfsClient.add(fileBuffer);
+            this.ipfsCluster.pin.add(result.cid.toString())
+            return { cid: result.cid.toString() };
+          }
 }
 
  

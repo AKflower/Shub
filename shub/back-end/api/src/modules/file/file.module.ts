@@ -12,6 +12,8 @@ import { IpfsFactory } from "../ipfs/ipfsCluster.config";
 @Module({
 
     controllers: [FileController],
-    providers: [FileService, FabricService, FabricFactory, ShubService, Ipfs, IpfsFactory]
+    providers: [FileService, FabricService, FabricFactory, ShubService, Ipfs, 
+        IpfsFactory
+    ]
 })
 export class FileModule {};

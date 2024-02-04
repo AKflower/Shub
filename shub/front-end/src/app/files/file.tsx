@@ -1,4 +1,4 @@
-"use client"
+    "use client"
 import styles from './file.module.scss'
 import FileSection from './fileSection/fileSection';
 import FolderSection from './folderSection/folderSection';

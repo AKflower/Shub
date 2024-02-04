@@ -51,7 +51,9 @@ import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
     FabricModule, 
     UserModule, 
     FolderModule, 
-    AuthModule
+    AuthModule,
+   
+    
   //   TypeOrmModule.forRoot({
   //     type: "postgres",
   //     host: "localhost",

@@ -4,7 +4,7 @@ import Card from '../card/card'
 import { useShub } from '@/app/Provider/Provider';
 
 interface FoldersProps {
-    folder_id: number,
+    folder_id: string,
     folder_name: string,
     folder_path: string,
     owner: string,
@@ -32,7 +32,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                              handleNavigation(folder.folder_name)
                         }}
                         >
-                            <Card type1="folder" key={folder.folder_id} name={folder.folder_name} date={folder.updated_date} selected={selected==folder.folder_id && type=='folder'}/>
+                            <Card type1="folder" key={Number(folder.folder_id.slice(0, folder.folder_id.indexOf('_')))} name={folder.folder_name} date={folder.updated_date} selected={selected==folder.folder_id && type=='folder'}/>
 
                         </div>
                         
