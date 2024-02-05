@@ -9,9 +9,9 @@ function upNetwork() {
   echo "#!/bin/sh
   set -ex
   ipfs bootstrap rm all
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://172.20.209.39:5001\", \"http://172.20.209.39:8080\", \"http://localhost:3000\"]'
+  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://192.168.64.1:5001\", \"http://192.168.64.1:8080\", \"http://localhost:3000\"]'
   ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://172.20.209.39:5001\", \"http://172.20.209.39:8080\", \"http://localhost:3000\"]'
+  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://192.168.64.1:5001\", \"http://192.168.64.1:8080\", \"http://localhost:3000\"]'
   ipfs config --json Gateway.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
   " > reset.sh
 
@@ -27,9 +27,9 @@ function upNetwork() {
   set -ex
   ipfs bootstrap rm all
   ipfs bootstrap add /ip4/172.26.24.100/tcp/4001/p2p/${NODEBOOT_ID}
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://172.20.209.39:5001\", \"http://172.20.209.39:8080\", \"http://localhost:3000\"]'
+  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://192.168.64.1:5001\", \"http://192.168.64.1:8080\", \"http://localhost:3000\"]'
   ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://172.20.209.39:5001\", \"http://172.20.209.39:8080\", \"http://localhost:3000\"]'
+  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://192.168.64.1:5001\", \"http://192.168.64.1:8080\", \"http://localhost:3000\"]'
   ipfs config --json Gateway.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
   " > reset.sh
 

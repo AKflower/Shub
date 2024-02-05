@@ -6,7 +6,7 @@ import { Inject } from "@nestjs/common";
 
    getContract(classContractName: string) {
      // if (!process.env.FABRIC_CHAINCODE_NAME) throw Error("FABRIC_CHAINCODE_NAME environment variable is required");
-     return this.fabric.network.getContract(classContractName);
+     return this.fabric.network.getContract('basic2',classContractName);
 
  }
  }

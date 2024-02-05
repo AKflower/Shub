@@ -19,7 +19,7 @@ export class AuthService {
     private readonly fabricService: FabricService,
     private readonly shubService: ShubService
   ) {
-    this.contract = this.fabricService.getContract(this.shubService.chaincode);
+    this.contract = this.fabricService.getContract('UserContract');
   }
  
 

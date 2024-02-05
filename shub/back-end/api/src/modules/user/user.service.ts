@@ -43,6 +43,11 @@ async getUserByUserName(contract: Contract, user_name: string): Promise<User> {
 
   return user;
 }
+async createNewUser(contract: Contract, newUser : User): Promise<string> {
+  console.log('check new user');
+  await contract.submitTransaction('NewUser',newUser.username,newUser.password,newUser.email);
+  return 'Success';
+}
   
 
 }

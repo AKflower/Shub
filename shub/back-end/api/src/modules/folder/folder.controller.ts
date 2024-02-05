@@ -15,7 +15,7 @@ export class FolderController {
     constructor(private readonly folderService: FolderService, 
         private readonly fabricService: FabricService,
         private readonly shubService: ShubService) {
-        this.contract = this.fabricService.getContract(this.shubService.chaincode);
+        this.contract = this.fabricService.getContract('StorageFileContract');
     }
     @Post('/new')
     @UseGuards(JwtAuthGuard)

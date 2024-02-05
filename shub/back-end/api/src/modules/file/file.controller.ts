@@ -24,7 +24,7 @@ export class FileController {
         @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient,
         @Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster
         ) {
-        this.contract = this.fabricService.getContract(this.shubService.chaincode);
+        this.contract = this.fabricService.getContract('StorageFileContract');
     
     }
     

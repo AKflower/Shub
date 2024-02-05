@@ -11,8 +11,8 @@ export class User {
     
     email?: string;
 
-    constructor({user_id,username,password,email}) {
-        if(user_id != null) this.user_id=user_id;
+    constructor({username,password,email}) {
+        
         if (username!=null) this.username=username;
         
         if (password!=null) this.password=password;
