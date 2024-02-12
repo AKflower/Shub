@@ -16,7 +16,7 @@ import { ShubService } from 'src/config/shub.service';
 
 
 const channelName = envOrDefault('CHANNEL_NAME', 'mychannel');
-const chaincodeName = envOrDefault('CHAINCODE_NAME', 'basic1');
+const chaincodeName = envOrDefault('CHAINCODE_NAME', 'basic');
 const mspId = envOrDefault('MSP_ID', 'Org1MSP');
 
 // Path to crypto materials.
@@ -46,7 +46,7 @@ async function network(): Promise<Fabric> {
 
     // The gRPC client connection should be shared by all Gateway connections to this endpoint.
     const client = await newGrpcConnection();
-
+    
     const gateway = connect({
         client,
         identity: await newIdentity(),
@@ -65,11 +65,11 @@ async function network(): Promise<Fabric> {
             return { deadline: Date.now() + 60000 }; // 1 minute
         },
     });
-
+    
 
         // Get a network instance representing the channel where the smart contract is deployed.
         const network = gateway.getNetwork(channelName);
-
+        
         // Get the smart contract from the network.
         //const contract = network.getContract(chaincodeName);
         // Initialize a set of asset data on the ledger using the chaincode 'InitLedger' function.
@@ -91,6 +91,7 @@ async function newGrpcConnection(): Promise<grpc.Client> {
 
 async function newIdentity(): Promise<Identity> {
     const credentials = await fs.readFile(certPath);
+    
     return { mspId, credentials };
 }
 

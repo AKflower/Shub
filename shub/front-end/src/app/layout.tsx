@@ -26,9 +26,9 @@ export default function RootLayout({
      <html lang="en">
       <body className={inter.className}>
       
-      <HeaderBar showLogo showMenu>
+      {/* <HeaderBar showLogo showMenu>
       <Search/>
-      </HeaderBar>
+      </HeaderBar> */}
       
       <Sidebar />
       <main className='ml-60 mr-3 h-max'>
