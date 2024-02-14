@@ -102,8 +102,8 @@ const {
 
       {children}
       </div>
-        
-      <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
+        {/* ------------------------------------- Old version Header ----------------------------------------}
+      {/* <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
       {option && (
         <> 
         <Action 
@@ -219,7 +219,7 @@ const {
           counter={0}        
 
         />
-      </div>
+      </div> */}
 
       {showDownload && (
         <Download />

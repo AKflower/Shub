@@ -7,7 +7,7 @@ export default function ProfileSettingPage() {
         
         <div className="">
             
-             <Navigation />
+             
             <Profile />
         </div>
        

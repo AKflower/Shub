@@ -1,7 +1,12 @@
 "use client"
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState, createContext, ReactNode, useContext } from "react";
-
+import React, { useState, createContext, ReactNode, useContext, useEffect } from "react";
+type User = {
+  access_token: string,
+  user_id: string,
+  email: string,
+  password: string,
+}
 interface ShubContextProps {
     currentPromptName: string;
     toggleCurrentPromptName: () => void;
@@ -44,7 +49,7 @@ interface ShubProviderProps {
 export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const router = useRouter();
   const pathname = usePathname()
-
+  
   const [change, setChange] = useState(0);
   const handleChange= () =>{
     setChange(change+1)
@@ -134,6 +139,8 @@ const handleNavigation = (name: string) => {
   router.push(`${pathname}/${name}`);
 };
 
+
+
 const value: ShubContextProps = {
 
     currentPromptName,
@@ -165,7 +172,6 @@ const value: ShubContextProps = {
     showUpload,
     toggleShowUpload,
     handleType,
-    
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

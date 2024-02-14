@@ -25,7 +25,7 @@ const cx = classNames.bind(styles);
 
 const Sidebar = () => {
     
-    const { toggleCurrentPromptName, toggleShowNewFile, toggleShowNewDir } = useShub();
+    const { toggleCurrentPromptName, toggleShowNewFile, toggleShowNewDir, toggleShowUpload } = useShub();
     const pathname = usePathname()
     const isLogin = (pathname=='/') //check login page ? not render : render
     const accessToken = Cookies.get('accessToken');
@@ -58,7 +58,7 @@ const Sidebar = () => {
          <nav className={styles.nav}>
             <Link href='/files'>
           <div className={cx('logo')}>
-            <Image src='/images/logo.png' alt='Shub' width={80} height={80}/>
+            <Image src='/images/logo.png' alt='Shub' width={60} height={60}/>
           </div>
         </Link>
             <div className={styles.container}>
@@ -171,10 +171,10 @@ const Sidebar = () => {
             
             
         </div>
-        <div className={styles.button}>
+        <div className={styles.buttonContainer}>
         <Link href="">
                 <button
-                className={styles.action}
+                className={styles.button}
                 onClick={()=>{
                     toggleShowNewDir()
                     toggleCurrentPromptName()
@@ -184,6 +184,20 @@ const Sidebar = () => {
             >
                 <CreateNewFolderOutlinedIcon />
                 <span className={styles.title}>New Folder</span>
+            </button>
+        </Link>
+        <Link href="">
+                <button
+                className={styles.buttonBlue}
+                onClick={()=>{
+                    toggleShowUpload()
+                    
+                }}
+                aria-label="Upload"
+                title="Upload"
+            >
+                <svg width="24px" height="24px" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M32.381 18.167V45.166" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M41.381 24.167L32.381 18.167L23.382 24.167" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M32.382 58.334C47.1098 58.334 59.049 46.3948 59.049 31.667C59.049 16.9392 47.1098 5 32.382 5C17.6542 5 5.715 16.9392 5.715 31.667C5.715 46.3948 17.6542 58.334 32.382 58.334Z" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                <span className={styles.title}>Upload</span>
             </button>
             </Link>
         </div>
