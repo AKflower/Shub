@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { connect, Contract, Signer, signers } from '@hyperledger/fabric-gateway';
 import { promises as fs } from 'fs';
 import { User } from 'src/model/user.model';
-
+import * as bcrypt from "bcrypt";
 
 
 @Injectable()
@@ -45,6 +45,9 @@ async getUserByUserName(contract: Contract, user_name: string): Promise<User> {
 }
 async createNewUser(contract: Contract, newUser : User): Promise<string> {
   console.log('check new user');
+  const saltOfRounds = 10;
+  newUser.password = await bcrypt.hash(newUser.password, saltOfRounds);
+  
   await contract.submitTransaction('NewUser',newUser.username,newUser.password,newUser.email);
   return 'Success';
 }

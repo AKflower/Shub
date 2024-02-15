@@ -1,7 +1,12 @@
 "use client"
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState, createContext, ReactNode, useContext } from "react";
-
+import React, { useState, createContext, ReactNode, useContext, useEffect } from "react";
+type User = {
+  access_token: string,
+  user_id: string,
+  email: string,
+  password: string,
+}
 interface ShubContextProps {
     currentPromptName: string;
     toggleCurrentPromptName: () => void;
@@ -32,7 +37,8 @@ interface ShubContextProps {
     type: string;
     handleData: (data: string, type: string) => void;
     handleType: (type: string) => void;
-   
+    showChangePassword: string;
+    toggleShowChangePassword: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -44,7 +50,7 @@ interface ShubProviderProps {
 export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const router = useRouter();
   const pathname = usePathname()
-
+  
   const [change, setChange] = useState(0);
   const handleChange= () =>{
     setChange(change+1)
@@ -133,6 +139,12 @@ const handleType = (type: string) => {
 const handleNavigation = (name: string) => {
   router.push(`${pathname}/${name}`);
 };
+const [showChangePassword, setShowChangePassword] = useState("");
+const toggleShowChangePassword = () => {
+  setShowChangePassword( showChangePassword== '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+}
+
 
 const value: ShubContextProps = {
 
@@ -165,7 +177,8 @@ const value: ShubContextProps = {
     showUpload,
     toggleShowUpload,
     handleType,
-    
+    showChangePassword,
+    toggleShowChangePassword,
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

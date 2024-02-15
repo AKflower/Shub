@@ -1,0 +1,17 @@
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .label{
+        font-size: 0.8rem;
+        color: #546E7A;
+    }
+    .select {
+        margin: 0.4em 0 0 0;
+        padding: 0.2em 0.5em;
+        border: 0.5px solid silver;
+        border-radius: 7px;
+        width: 80%;
+        height: 2.3rem;
+    }
+}
