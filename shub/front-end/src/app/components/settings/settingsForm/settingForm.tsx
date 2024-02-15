@@ -2,9 +2,8 @@
 import styles from './settingForm.module.scss';
 import Input from '../../input/input';
 import Button1 from '../../button/button1';
-import Select from 'react-select';
 import { useState, useEffect } from 'react';
-
+import Select from '../../select/select';
 
 const SettingsForm = () => {
     type User = {
@@ -13,7 +12,12 @@ const SettingsForm = () => {
         encryptPassword: string,
     }    
     const [user, setUser] = useState<User | null >(null);
-
+    const roles = [
+        "Admin","User"
+    ]
+    const themes = [
+        "Light", "Dark"
+    ]
   // Lấy thông tin người dùng từ localStorage khi component được render
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -29,16 +33,16 @@ const SettingsForm = () => {
 
         <form action="" className="">
             
-            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16">
+            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
                 <Input label='First name' type='text'/>
                 <Input label='Last name' type='text'/>
                 <Input label='Email' type='email' value={user.email} />
-                <Input label='Password' type='password' value={user.encryptPassword}/>
-                <Input label='Role' type='text'/>
+                <Input label='Password' type='password' value={user.encryptPassword} changePossible={true}/>
+                <Select label='Role' list={roles}/>
             </div>
-            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16">
-            <Input label='Theme' type='text'/>
-            
+            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
+                <Select label='Themes' list={themes}/>
+
             </div>
             
             <div className={styles.buttonContainer}>

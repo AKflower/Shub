@@ -37,7 +37,8 @@ interface ShubContextProps {
     type: string;
     handleData: (data: string, type: string) => void;
     handleType: (type: string) => void;
-   
+    showChangePassword: string;
+    toggleShowChangePassword: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -138,7 +139,11 @@ const handleType = (type: string) => {
 const handleNavigation = (name: string) => {
   router.push(`${pathname}/${name}`);
 };
-
+const [showChangePassword, setShowChangePassword] = useState("");
+const toggleShowChangePassword = () => {
+  setShowChangePassword( showChangePassword== '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+}
 
 
 const value: ShubContextProps = {
@@ -172,6 +177,8 @@ const value: ShubContextProps = {
     showUpload,
     toggleShowUpload,
     handleType,
+    showChangePassword,
+    toggleShowChangePassword,
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

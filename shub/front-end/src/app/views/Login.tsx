@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useShub } from '../Provider/Provider';
+
 
 const cx = classNames.bind(styles);
 
