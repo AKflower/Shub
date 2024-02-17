@@ -12,8 +12,8 @@ export class StorageFileContract extends Contract {
     //Init
     @Transaction()
     public async InitLedger(ctx: Context): Promise<void> {
-        console.log('hahwahawafa');
-        console.log('heeeee',ctx);
+        
+       
         const firstfile: File = new File({
             file_id: '1',
             file_name: "example.txt",

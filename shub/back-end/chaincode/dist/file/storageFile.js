@@ -32,9 +32,10 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         };
         const admin = {
             user_id: 'user_1',
-            username: 'admin',
+            email: 'admin@hcmut.edu.vn',
             password: 'admin',
-            email: 'admin@hcmut.edu.vn'
+            firstName: 'Admin',
+            lastName: ''
         };
         const folder = {
             folder_id: 'folder_1',
@@ -202,69 +203,74 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return ctx.stub.deleteState(file_id);
     }
     /*************************************User ***************************/
-    async GetUserById(ctx, user_id) {
-        console.log('Check');
-        const fileJSON = await ctx.stub.getState(user_id);
-        if (!fileJSON || fileJSON.length === 0) {
-            throw new Error(`The user ${user_id} does not exist`);
-        }
-        return fileJSON.toString();
-    }
-    async GetUserByUserName(ctx, userName) {
-        const queryString = {
-            selector: {
-                username: userName,
-            },
-        };
-        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        const result = await iterator.next();
-        if (result.done) {
-            throw new Error(`User with username ${userName} not found`);
-        }
-        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-        let record;
-        try {
-            record = JSON.parse(strValue);
-        }
-        catch (err) {
-            console.log(err);
-            record = strValue;
-        }
-        return JSON.stringify(record);
-    }
-    async UserExists(ctx, user_id) {
-        const fileJSON = await ctx.stub.getState(user_id);
-        return fileJSON && fileJSON.length > 0;
-    }
-    async GetAllUser(ctx) {
-        const allResults = [];
-        // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
-        const iterator = await ctx.stub.getStateByRange('', '');
-        let result = await iterator.next();
-        while (!result.done) {
-            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-            let record;
-            try {
-                record = JSON.parse(strValue);
-            }
-            catch (err) {
-                console.log(err);
-                record = strValue;
-            }
-            if (record.file_id && record.file_id.startsWith('user_')) {
-                allResults.push(record);
-            }
-            result = await iterator.next();
-        }
-        return JSON.stringify(allResults);
-    }
-    async DeleteUser(ctx, user_id) {
-        const exists = await this.UserExists(ctx, user_id);
-        if (!exists) {
-            throw new Error(`The user ${user_id} does not exist`);
-        }
-        return ctx.stub.deleteState(user_id);
-    }
+    //   @Transaction(false)
+    // public async GetUserById(ctx:Context, user_id:string): Promise<string>{
+    //     console.log('Check');
+    //     const fileJSON = await ctx.stub.getState(user_id);
+    //     if (!fileJSON || fileJSON.length===0) {
+    //         throw new Error(`The user ${user_id} does not exist`);
+    //     } 
+    //     return fileJSON.toString();
+    // }
+    // @Transaction()
+    // public async GetUserByUserName(ctx: Context, userName: string): Promise<string> {
+    //     const queryString = {
+    //         selector: {
+    //             username: userName,
+    //         },
+    //     };
+    //     const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+    //     const result = await iterator.next();
+    //     if (result.done) {
+    //         throw new Error(`User with username ${userName} not found`);
+    //     }
+    //     const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+    //     let record;
+    //     try {
+    //         record = JSON.parse(strValue);
+    //     } catch (err) {
+    //         console.log(err);
+    //         record = strValue;
+    //     }
+    //     return JSON.stringify(record);
+    // }
+    // @Transaction(false)
+    // @Returns('boolean')
+    // public async UserExists(ctx:Context, user_id: string): Promise<boolean>{
+    //     const fileJSON = await ctx.stub.getState(user_id);
+    //     return fileJSON && fileJSON.length>0;
+    // }
+    // @Transaction(false)
+    // @Returns('string')
+    // public async GetAllUser(ctx: Context): Promise<string> {
+    //     const allResults = [];
+    //     // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
+    //     const iterator = await ctx.stub.getStateByRange('', '');
+    //     let result = await iterator.next();
+    //     while (!result.done) {
+    //         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+    //         let record;
+    //         try {
+    //             record = JSON.parse(strValue);
+    //         } catch (err) {
+    //             console.log(err);
+    //             record = strValue;
+    //         }
+    //         if (record.file_id && record.file_id.startsWith('user_')) {
+    //             allResults.push(record);
+    //         }
+    //         result = await iterator.next();
+    //     }
+    //     return JSON.stringify(allResults);
+    // }
+    //   @Transaction()
+    //   public async DeleteUser(ctx: Context, user_id: string): Promise<void> {
+    //       const exists = await this.UserExists(ctx, user_id);
+    //       if (!exists) {
+    //           throw new Error(`The user ${user_id} does not exist`);
+    //       }
+    //       return ctx.stub.deleteState(user_id);
+    //   }
     /**************** Folder************************/
     async CreateFolder(ctx, folder_name, folder_path, user_id, created_date, updated_date) {
         const folder_id = await this.generateUniqueId(ctx, 'folder_');
@@ -497,38 +503,6 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "DeleteFile", null);
-__decorate([
-    (0, fabric_contract_api_1.Transaction)(false),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
-    __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "GetUserById", null);
-__decorate([
-    (0, fabric_contract_api_1.Transaction)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
-    __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "GetUserByUserName", null);
-__decorate([
-    (0, fabric_contract_api_1.Transaction)(false),
-    (0, fabric_contract_api_1.Returns)('boolean'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
-    __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "UserExists", null);
-__decorate([
-    (0, fabric_contract_api_1.Transaction)(false),
-    (0, fabric_contract_api_1.Returns)('string'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context]),
-    __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "GetAllUser", null);
-__decorate([
-    (0, fabric_contract_api_1.Transaction)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
-    __metadata("design:returntype", Promise)
-], StorageFileContract.prototype, "DeleteUser", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import fonts from '../../../public/fonts/fonts';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +15,7 @@ interface Props {
 
 const Login: React.FC<Props> = () => {
   const [error, setError] = useState('');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   
@@ -27,13 +27,13 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
 
   try {
     
-      const response = await axios.post('http://localhost:3001/auth/login', { username, password });
-      const encryptPassword = ' '.repeat(password.length)
-      const email = response.data.email;
+      const response = await axios.post('http://localhost:3001/auth/login', { email, password });
+      
+      
       console.log(response.data);
       // setUser(response.data);
       // localStorage.setItem('user_id',response.data.user_id); //Delete?
-      localStorage.setItem('user', JSON.stringify({email, encryptPassword}));
+      localStorage.setItem('user', JSON.stringify(response.data));
       Cookies.set('accessToken', response.data.access_token, { secure: true, sameSite: 'strict' });
       Cookies.set('userId', response.data.user_id, { secure: true, sameSite: 'strict' });
       router.push('/files');
@@ -47,7 +47,7 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     <div id={cx('login')}>
       <form onSubmit={submit}>
         <Image src="/images/logo.png" alt="Shub" width={200} height={200}/>
-        <h1 className={cx('fontLogo.className')}>Shub</h1>
+        <h1 className={fonts.fontLogo.className}>Shub</h1>
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
 
         <input
@@ -55,8 +55,8 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
           className={cx('input','input--block')}
           type="text"
           autoCapitalize="off"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your username"
         />
         <input

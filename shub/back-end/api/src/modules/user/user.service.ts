@@ -16,27 +16,29 @@ export class UserService {
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
     const user : User = {
-        user_id: result.user_id,
-        username: result.username,
-        password: result.password,
-        email: result.email
+      user_id: result.user_id,
+      email: result.email,
+      password: result.password,
+      firstName: result.firstName,
+      lastName: result.lastName,
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
  
     return user;
 }
-async getUserByUserName(contract: Contract, user_name: string): Promise<User> {
+async getUserByEmail(contract: Contract, email: string): Promise<User> {
   console.log('\n ---> Submit Transaction: getUserbyUSerName');
-  const resultBytes= await contract.evaluateTransaction('GetUserByUserName',user_name);
+  const resultBytes= await contract.evaluateTransaction('GetUserByEmail',email);
   const utf8Decoder = new TextDecoder();
   const resultJson = utf8Decoder.decode(resultBytes);
   const result = JSON.parse(resultJson);
   const user : User = {
       user_id: result.user_id,
-      username: result.username,
+      email: result.email,
       password: result.password,
-      email: result.email
+      firstName: result.firstName,
+      lastName: result.lastName,
   }
   console.log('*** Result:', result);
   console.log('*** Transaction committed successfully');
@@ -48,7 +50,7 @@ async createNewUser(contract: Contract, newUser : User): Promise<string> {
   const saltOfRounds = 10;
   newUser.password = await bcrypt.hash(newUser.password, saltOfRounds);
   
-  await contract.submitTransaction('NewUser',newUser.username,newUser.password,newUser.email);
+  await contract.submitTransaction('NewUser',newUser.email,newUser.password,newUser.firstName,newUser.lastName);
   return 'Success';
 }
   

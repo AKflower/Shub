@@ -19,6 +19,7 @@ import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import fonts from '../../../../public/fonts/fonts';
 
 const cx = classNames.bind(styles);
 
@@ -55,7 +56,7 @@ const Sidebar = () => {
   return (
     <>
          {!isLogin && 
-         <nav className={styles.nav}>
+         <nav className={styles.nav+' '+fonts.poppins.className}>
             <Link href='/files'>
           <div className={cx('logo')}>
             <Image src='/images/logo.png' alt='Shub' width={60} height={60}/>

@@ -56,7 +56,7 @@ export class UserContract extends Contract {
         return newId;
     }
     @Transaction()
-    public async NewUser(ctx: Context, username:string, password: string, email: string): Promise<void>{
+    public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string): Promise<void>{
         const user_id = await this.generateUniqueId(ctx, 'user_');
         const exists =await this.UserExists(ctx, user_id);
         if (exists) {
@@ -66,10 +66,10 @@ export class UserContract extends Contract {
         
         const newUser = {
             user_id: user_id,
-            username: username,
-            password: password,
             email: email,
-
+            password: password,
+            firstName: firstName,
+            lastName: lastName
         };
         await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(newUser))));
         
@@ -85,10 +85,10 @@ export class UserContract extends Contract {
         return fileJSON.toString();
     }
     @Transaction()
-    public async GetUserByUserName(ctx: Context, userName: string): Promise<string> {
+    public async GetUserByEmail(ctx: Context, email: string): Promise<string> {
         const queryString = {
             selector: {
-                username: userName,
+                email: email,
             },
         };
 
@@ -96,7 +96,7 @@ export class UserContract extends Contract {
         const result = await iterator.next();
 
         if (result.done) {
-            throw new Error(`User with username ${userName} not found`);
+            throw new Error(`User with email ${email} not found`);
         }
 
         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');

@@ -20,8 +20,6 @@ const file_1 = require("./file");
 let StorageFileContract = class StorageFileContract extends fabric_contract_api_1.Contract {
     //Init
     async InitLedger(ctx) {
-        console.log('hahwahawafa');
-        console.log('heeeee', ctx);
         const firstfile = new file_1.File({
             file_id: '1',
             file_name: "example.txt",

@@ -1,6 +1,26 @@
-.header {
-    font-size: 2rem;
-    padding: 1rem 0;
+.headerContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    .header {
+        font-size: 2rem;
+        padding: 1rem 0;
+        color: #6a6a6a;
+    }
+   
+    button{
+        margin: 0 11rem 0 0;
+        background: #15acff;
+        padding: 1em;
+        color: white;
+        font-size: .75rem;
+        border-radius: 5px;
+    }
+}
+.title{
+    padding: 0 0 1rem 0;
+    font-size: 1.2rem;
 }
 .container {
     width: 100%;
@@ -8,12 +28,7 @@
     
     background-color: #fff;
     
-    .title {
-        width: 100%;
-        padding: 1em;
-        font-weight: 500;
-        font-size: 25px;
-    }
+    
     .content {
         padding: 1em 0 2em 1em;
         .choose {

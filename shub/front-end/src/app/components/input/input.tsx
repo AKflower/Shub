@@ -3,13 +3,13 @@ import Button1 from '../button/button1';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Editor from '@/app/views/files/Editor';
 import { useShub } from '@/app/Provider/Provider';
-const Input = ({label,type,value,changePossible=false}:{label: string, type: string, value?: string,changePossible?: boolean}) => {
+const Input = ({label,type,value,changePossible=false,isDisabled=true,onChange}:{label: string, type: string, value?: string,changePossible?: boolean, isDisabled?: boolean, onChange?: (value: string) => void}) => {
     const { toggleCurrentPromptName, toggleShowChangePassword } = useShub()
     return (
         <div className={styles.container}>
             <label className={styles.label}>{label}</label>
             <div className={styles.inputContainer}>
-                <input type={type} className={styles.input} value={value} disabled={true}/>
+                <input type={type} className={styles.input} value={value} disabled={isDisabled}  onChange={e => onChange && onChange(e.target.value)}/>
                 {changePossible && <span className={styles.edit} 
                 onClick={() => {
                     toggleShowChangePassword()
