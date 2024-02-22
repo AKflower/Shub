@@ -7,6 +7,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+
 const cx = classNames.bind(styles);
 
 interface Props {
@@ -18,7 +19,7 @@ const Login: React.FC<Props> = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
   
-  
+
 
 const submit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
@@ -27,10 +28,16 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
   try {
     
       const response = await axios.post('http://localhost:3001/auth/login', { username, password });
-      localStorage.setItem('user_id', response.data.user_id);
+      const encryptPassword = ' '.repeat(password.length)
+      const email = response.data.email;
+      console.log(response.data);
+      // setUser(response.data);
+      // localStorage.setItem('user_id',response.data.user_id); //Delete?
+      localStorage.setItem('user', JSON.stringify({email, encryptPassword}));
       Cookies.set('accessToken', response.data.access_token, { secure: true, sameSite: 'strict' });
       Cookies.set('userId', response.data.user_id, { secure: true, sameSite: 'strict' });
       router.push('/files');
+      
   } catch (e) {
     setError('An error occurred');  
   }

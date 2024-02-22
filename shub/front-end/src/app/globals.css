@@ -55,22 +55,27 @@ main {
 
 
 header {
-  z-index: 1000;
-  background-color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.075);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
   position: fixed;
   top: 0;
-  left: 0;
+  left: 13.65em;
   height: 4em;
   width: 100%;
   padding: 0;
   display: flex;
-  padding: 0.5em 0.5em 0.5em 1em;
+  z-index: 1000;
+  padding: 0.5em 0.5em 0.5em 1em ;
   align-items: center;
   justify-content: space-between;
+  background: #fafafa;
 }
-
+.white {
+  color: white;
+}
+.red {
+  color: red;
+}
 header > * {
   flex: 0 0 auto;
 }
@@ -82,4 +87,3 @@ header img {
 header img {
   /* height: 2.5em; */
 }
-

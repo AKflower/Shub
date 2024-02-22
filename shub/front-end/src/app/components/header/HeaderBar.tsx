@@ -30,6 +30,7 @@ import Copy from '../prompts/Copy';
 import Move from '../prompts/Move';
 import Delete from '../prompts/Delete';
 import Content from '../content/Content';
+import ChangePassword from '../prompts/ChangePassword';
 
 const cx = classNames.bind(styles);
 
@@ -73,7 +74,9 @@ const {
   data,
   type,
   showUpload,
-  toggleShowUpload 
+  toggleShowUpload,
+  showChangePassword,
+  toggleShowChangePassword, 
 } = useShub();
 
 
@@ -102,8 +105,8 @@ const {
 
       {children}
       </div>
-        
-      <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
+        {/* ------------------------------------- Old version Header ----------------------------------------}
+      {/* <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
       {option && (
         <> 
         <Action 
@@ -219,12 +222,12 @@ const {
           counter={0}        
 
         />
-      </div>
+      </div> */}
 
       {showDownload && (
         <Download />
       )}
-
+      
       {showInfo && (
         <Info />
       )}
@@ -263,7 +266,11 @@ const {
       {stream && data && type && (
         <Content data={data} type={type}/>
       )}
+      {showChangePassword && (
+        <ChangePassword />
+      )
 
+      }
       {children && (
         <Action
                   id={cx('more')} 
@@ -290,7 +297,7 @@ const {
             if(showMove){setShowMove('')}
             if(showDelete){toggleShowDelete()}
             if(stream){handleStream()}
-            
+            if(showChangePassword){toggleShowChangePassword()}
           }
         }
       />
