@@ -89,6 +89,12 @@
     height: 100%;
     // max-width: 30em;
     align-items: center;
+
+    form{
+      display: block;
+    height: 100%;
+    position: relative;
+    }
   }
 .search-input{
   height: 70%;
@@ -103,7 +109,7 @@
   
   .search-box{
     width: 100%;
-    text-indent: 2em;
+    text-indent: 1em;
     height: 100%;
     outline: 0;
     &:focus{

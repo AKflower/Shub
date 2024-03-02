@@ -71,18 +71,18 @@ const File = () => {
 
 
 
-            const test = await fetch(`http://localhost:3001/files/file_3/download`)
+            // const test = await fetch(`http://localhost:3001/files/file_3/download`)
 
-            const fileContent = await test.blob();
-  const url = window.URL.createObjectURL(fileContent);
-  setUrl(url)
+//             const fileContent = await test.blob();
+//   const url = window.URL.createObjectURL(fileContent);
+//   setUrl(url)
 
-  const downloadLink = document.createElement('a');
-  downloadLink.href = url;
-  downloadLink.download = `sad.jpg`;
-  downloadLink.click();
+//   const downloadLink = document.createElement('a');
+//   downloadLink.href = url;
+//   downloadLink.download = `sad.jpg`;
+//   downloadLink.click();
 
-  window.URL.revokeObjectURL(url);
+//   window.URL.revokeObjectURL(url);
             // const url = 'http://localhost:3001/files/file_3/download';
 
             // axios.get(url)

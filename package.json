@@ -8,6 +8,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-dropzone-uploader": "^2.11.0",
-    "react-router-dom": "^6.19.0"
+    "react-router-dom": "^6.19.0",
+    "react-search-bar": "^2.2.0"
   }
 }

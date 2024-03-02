@@ -1,0 +1,38 @@
+.container{
+    height: 100%;
+    position: relative;
+    top: 7px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.res{
+    width: 100%;
+    background: #fff;
+    // border: 1px solid #ccc;
+    // border-radius: 10px;
+    .obo{
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+
+        &:hover{
+            background: #2196f3;
+            
+        }
+
+        span{
+            padding-left: 1em;
+            padding-right: 1em;
+
+        }
+
+        // .name{
+        //     padding-right: 3em;
+        // }
+
+    }
+}

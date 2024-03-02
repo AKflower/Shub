@@ -1,24 +1,12 @@
 "use client"
-import { FC, ReactNode, useState  } from 'react';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import InfoIcon from '@mui/icons-material/Info';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import GridViewIcon from '@mui/icons-material/GridView';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import ShareIcon from '@mui/icons-material/Share';
-import EditIcon from '@mui/icons-material/Edit';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import ForwardIcon from '@mui/icons-material/Forward';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { FC, ReactNode, useEffect, useState  } from 'react';
 import Action from './Action';
 import styles from './HeaderBar.module.scss'
 import classNames from 'classnames/bind';
 import Download from '../prompts/Download';
 import Info from '../prompts/Info';
 import Upload from '../prompts/Upload';
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useShub } from '@/app/Provider/Provider';
 import NewFile from '../prompts/NewFile';
 import NewDir from '../prompts/NewDir';
@@ -30,7 +18,11 @@ import Copy from '../prompts/Copy';
 import Move from '../prompts/Move';
 import Delete from '../prompts/Delete';
 import Content from '../content/Content';
+import Cookies from 'js-cookie';
 import ChangePassword from '../prompts/ChangePassword';
+import axios from 'axios';
+import Dropdown from '../prompts/DropDown';
+
 
 const cx = classNames.bind(styles);
 
@@ -40,42 +32,109 @@ interface HeaderBarProps {
   children?: ReactNode;
 }
 
+interface Option {
+  file_id: string;
+  file_name: string;
+  file_path: string;
+}
+
+
 const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 
-const pathname = usePathname()
-const isLogin = (pathname=='/') 
-const { 
-  currentPromptName, 
-  toggleCurrentPromptName,
-  showNewFile, 
-  toggleShowNewFile, 
-  showNewDir, 
-  toggleShowNewDir, 
-  option, 
-  showCopy,
-  showMove,
-  showShare,
-  showDelete, 
-  toggleShowDelete, 
-  showRename, 
-  toggleShowRename,
-  stream,
-  handleStream,
-  data,
-  type,
-  showUpload,
-  toggleShowUpload,
-  showChangePassword,
-  toggleShowChangePassword, 
-  toggleShowShare,
-  toggleShowCopy,
-  toggleShowMove,
-  showDownload,
-  toggleShowDownload,
-  showInfo,
-  toggleShowInfo,
-} = useShub();
+  const pathname = usePathname()
+  const isLogin = (pathname=='/') 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchData, setSearchData] = useState<Option[] >([]);
+  const { 
+    currentPromptName, 
+    toggleCurrentPromptName,
+    showNewFile, 
+    toggleShowNewFile, 
+    showNewDir, 
+    toggleShowNewDir, 
+    option, 
+    showCopy,
+    showMove,
+    showShare,
+    showDelete, 
+    toggleShowDelete, 
+    showRename, 
+    toggleShowRename,
+    stream,
+    handleStream,
+    data,
+    type,
+    showUpload,
+    toggleShowUpload,
+    showChangePassword,
+    toggleShowChangePassword, 
+    toggleShowShare,
+    toggleShowCopy,
+    toggleShowMove,
+    showDownload,
+    toggleShowDownload,
+    showInfo,
+    toggleShowInfo,
+  } = useShub();
+  const accessToken = Cookies.get('accessToken');
+  const router = useRouter();
 
+  
+
+  
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    // Xử lý truy vấn tìm kiếm
+  };
+  // console.log(searchQuery);
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      const otp: Option[] = []
+      const data = { prefix: searchQuery };
+      
+      const res = await axios.get(`http://localhost:3001/files/search`,{
+        params: data, // Truyền dữ liệu qua Data parameters
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, 
+        },
+      })
+      .then(response => {
+        for (const pie in response.data){
+          otp.push({
+            file_id: response.data[pie].file_id,
+            file_name: response.data[pie].file_name,
+            file_path: response.data[pie].file_path,
+          })
+
+        }
+        // console.log(response.data)
+        setSearchData(otp)
+      })
+      .catch(error => {
+        console.error('Error creating folder:', error);
+      });
+
+
+      
+    }
+    if(searchQuery.length > 0) fetchData()
+    else setSearchData([])
+    
+  },[searchQuery])
+
+  useEffect(()=>{
+    setSearchQuery('')
+  },[pathname])
+
+  
+  const handleSelect = (selectedOption: any) => {
+    console.log('Selected option:', selectedOption);
+    setSearchQuery('')
+    router.push(selectedOption.file_path);
+  };
+  console.log(searchQuery)
 
  
   return (
@@ -85,11 +144,31 @@ const {
       <div className={cx('flex')}>
       {/* <form  action="/search" method="GET">
       </form> */}
+      
+      
         <div className={cx('left')}>
-          <div className={cx('search-input')}>
-            <img className={cx('icon')} src='/sr.svg'></img>
-            <input className={cx('search-box')} type="text" name="query" placeholder="Search Files..."/>
-          </div>
+            
+          <form onSubmit={handleSubmit}>
+            <Dropdown 
+              options={searchData}
+              onSelect={handleSelect}
+            >
+              <div className={cx('search-input')}>
+                <img className={cx('icon')} src='/sr.svg'></img>
+                <input 
+                  className={cx('search-box')} 
+                  type="text" 
+                  placeholder="Search Files..." 
+                  value={searchQuery} 
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  // onBlur={() => setSearchQuery('')}
+                />
+              </div>
+          </Dropdown>
+              
+            
+          </form>
+          
 
           <div className={cx('filter')}>
             <select name="lang" id="lang-select">
