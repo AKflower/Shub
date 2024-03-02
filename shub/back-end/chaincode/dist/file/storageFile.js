@@ -138,6 +138,56 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         console.log('All files:', allResults);
         return JSON.stringify(allResults);
     }
+    async GetFilesByName(ctx, fileName) {
+        const queryString = {
+            selector: {
+                file_name: fileName,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
+    }
+    async GetFilesByPrefix(ctx, prefix) {
+        const queryString = {
+            selector: {
+                file_name: {
+                    $regex: `^${prefix}`
+                }
+            }
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
+    }
     async GetFilesByPath(ctx, path) {
         const queryString = {
             selector: {
@@ -470,6 +520,20 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetAllFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFilesByName", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFilesByPrefix", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
