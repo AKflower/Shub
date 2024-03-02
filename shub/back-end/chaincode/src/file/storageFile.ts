@@ -164,7 +164,65 @@ export class StorageFileContract extends Contract {
         console.log('All files:',allResults)
         return JSON.stringify(allResults);
     }
+    @Transaction(false)
+    @Returns('string')
+    public async GetFilesByName(ctx: Context, fileName: string): Promise<string> {
+        const queryString = {
+          selector: {
+            file_name: fileName,
+          },
+        };
+    
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+    
+        let result = await iterator.next();
+        while (!result.done) {
+          const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+          let record;
+          try {
+            record = JSON.parse(strValue);
+          } catch (err) {
+            console.log(err);
+            record = strValue;
+          }
+          allResults.push(record);
+          result = await iterator.next();
+        }
+    
+        return JSON.stringify(allResults);
+        }
+      @Transaction(false)
+      @Returns('string')
+        public async GetFilesByPrefix(ctx: Context, prefix: string): Promise<string> {
+        const queryString = {
+            selector: {
+            file_name: {
+                $regex: `^${prefix}`
+            }
+            }
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+    
+        let result = await iterator.next();
+        while (!result.done) {
+          const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+          let record;
+          try {
+            record = JSON.parse(strValue);
+          } catch (err) {
+            console.log(err);
+            record = strValue;
+          }
+          allResults.push(record);
+          result = await iterator.next();
+        }
+    
+        return JSON.stringify(allResults);
 
+        
+     }
     @Transaction(false)
     @Returns('string')
     public async GetFilesByPath(ctx: Context, path: string): Promise<string> {
@@ -193,6 +251,7 @@ export class StorageFileContract extends Contract {
     
         return JSON.stringify(allResults);
       }
+
       @Transaction(false)
       @Returns('string')
       public async GetFileByName(ctx: Context, path: string, fileName: string): Promise<string> {
@@ -206,6 +265,8 @@ export class StorageFileContract extends Contract {
     
         return JSON.stringify(desiredFile);
       }
+    
+      
       @Transaction(false)
       @Returns('string')
       public async GetFileByCID(ctx: Context, cid: string): Promise<string> {

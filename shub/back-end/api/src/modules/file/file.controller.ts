@@ -72,8 +72,10 @@ export class FileController {
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
+        console.log('fsagfsa');
         const { cid } = await this.ipfsClient.add(file.buffer)
         // this.ipfsCluster.pin.add(cid)
+        console.log('fsagfsa1');
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
             file_path: filePath,
@@ -82,12 +84,27 @@ export class FileController {
             file_size: ''+file.size,
             user_id: userId,
         }
+
         return this.fileService.upload(this.contract,fileDTO);
     }
     @Delete('/:file_id')
     @UseGuards(JwtAuthGuard)
     deleteFile(@Param('file_id') file_id: string) {
         return this.fileService.delete(this.contract,file_id);
+    }
+    //Get Files By Name
+    // @Get('/')
+    // // @UseGuards(JwtAuthGuard)
+    // getFilesByName(@Query('fileName') fileName: string) {
+    //     console.log(fileName);
+    //     return this.fileService.getFilesByName(this.contract,fileName);
+    // }
+
+    // The API is used to get files whose names start with prefix
+    @Get('/search')
+    @UseGuards(JwtAuthGuard)
+    getFilesByPrefix(@Query('prefix') prefix: string) {
+        return this.fileService.getFilesByPrefix(this.contract,prefix);
     }
 
     @Post('/ipfslong')

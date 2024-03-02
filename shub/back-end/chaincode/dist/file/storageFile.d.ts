@@ -8,6 +8,8 @@ export declare class StorageFileContract extends Contract {
     GetFile(ctx: Context, id: string): Promise<string>;
     FileExists(ctx: Context, file_id: string): Promise<boolean>;
     GetAllFile(ctx: Context): Promise<string>;
+    GetFilesByName(ctx: Context, fileName: string): Promise<string>;
+    GetFilesByPrefix(ctx: Context, prefix: string): Promise<string>;
     GetFilesByPath(ctx: Context, path: string): Promise<string>;
     GetFileByName(ctx: Context, path: string, fileName: string): Promise<string>;
     GetFileByCID(ctx: Context, cid: string): Promise<string>;

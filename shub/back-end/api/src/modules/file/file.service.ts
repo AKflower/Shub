@@ -119,7 +119,48 @@ export class FileService {
 
     return result;
   }
-
+  async getFilesByName(contract: Contract, fileName: string): Promise<File[]> {
+    const resultBytes= await contract.evaluateTransaction('GetFilesByName',fileName);
+    const utf8Decoder = new TextDecoder();
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    console.log('*** Result:', result);
+    const files : File[] = result.map(item => ({
+      file_id: item.file_id,
+      file_name: item.file_name,
+      file_path: item.file_path,
+      file_data: item.cid,
+      user_id: item.owner,
+      created_date: item.created_date,
+      updated_date: item.updated_date,
+      file_size: item.file_size,
+      file_type: item.file_type
+    }));
+      
+      
+    return files;
+  }
+  async getFilesByPrefix(contract: Contract, prefix: string): Promise<File[]> {
+    const resultBytes= await contract.evaluateTransaction('GetFilesByPrefix',prefix);
+    const utf8Decoder = new TextDecoder();
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    console.log('*** Result:', result);
+    const files : File[] = result.map(item => ({
+      file_id: item.file_id,
+      file_name: item.file_name,
+      file_path: item.file_path,
+      file_data: item.cid,
+      user_id: item.owner,
+      created_date: item.created_date,
+      updated_date: item.updated_date,
+      file_size: item.file_size,
+      file_type: item.file_type
+    }));
+      
+      
+    return files;
+  }
   async getDir(path: string): Promise<string[]> {
     try {
       const files = await fs.readdir(path);
