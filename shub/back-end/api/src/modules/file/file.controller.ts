@@ -1,5 +1,7 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles, Res} from '@nestjs/common';
 import { FileService } from './file.service';
+import { Request, Response } from "express";
+
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { FabricService } from '../fabric/fabric.service';
 import { FileDTO } from 'src/dto/file.dto';
@@ -12,6 +14,9 @@ import { IPFSHTTPClient } from 'ipfs-http-client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import * as ipfsCluster from "ipfs-cluster-api";
 import { FilesInterceptor } from '@nestjs/platform-express';
+import * as fs from "fs";
+import * as path from 'path';
+import { IPFSService } from '../ipfs/ipfs.service';
 
 @Controller('/files')
 export class FileController {
@@ -21,6 +26,7 @@ export class FileController {
     constructor(private readonly fileService: FileService, 
         private readonly fabricService: FabricService,
         private readonly shubService:ShubService,
+        private readonly ipfsService: IPFSService,
         @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient,
         @Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster
         ) {
@@ -92,6 +98,30 @@ export class FileController {
             this.ipfsCluster.pin.add(result.cid.toString())
             return { cid: result.cid.toString() };
           }
+
+    @Get(':id/download')
+    async downloadFile(@Param('id') id: string, @Res() res: Response) {
+        // const filePath = `./assets/QmRdQWfRzf287N9pv6dcoKNYCcSjpsmQWAdsQ2monPwTVt.jpg`;
+        
+        const file1 = this.fileService.getFile(this.contract, id)
+        
+
+
+        // const absoluteFilePath = path.join(__dirname, '../assets', `${(await file1).file_data}.${(await file1).file_type.slice((await file1).file_type.indexOf('/'), (await file1).file_type.length - 1)}}`);
+        // const absoluteFilePath = path.join('./assets', `QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv.jpg`);
+        // const file = await fs.promises.readFile(absoluteFilePath);
+        
+        // const file = await this.ipfsClient.get('QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv')
+        // const file = await this.ipfsClient.cat('QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv');
+        
+        // res.send(file);
+        // res.setHeader('Content-Type', `application/json`);
+
+        const a = await this.ipfsService.downloadFile('QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv') 
+        res.setHeader('Content-Disposition', `attachment; filename="QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv.jpg"`);
+        
+        res.send(a)
+    }
 }
 
  

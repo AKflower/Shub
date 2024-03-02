@@ -10,11 +10,13 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames/bind';
 import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import Tool from '../components/tool/Tool';
 
 const cx = classNames.bind(styles);
 
 const File = () => {
     const {  change, resetSelect, hideOption } = useShub();
+    const [url, setUrl] = useState('');
     const [blank, setBlank] = useState('');
     const [folder, setFolder] = useState([]);
     const [file, setFile] = useState([]);
@@ -24,7 +26,7 @@ const File = () => {
 
     const userId = Cookies.get('userId');
     useEffect(() => {
-        console.log(accessToken)
+        // console.log(accessToken)
 
         if ( accessToken == '') {
             router.push('/');
@@ -65,6 +67,39 @@ const File = () => {
             const files = JSON.stringify(res.data);
             Cookies.set('files', files, { secure: true, sameSite: 'strict' });
 
+
+
+
+
+            const test = await fetch(`http://localhost:3001/files/file_3/download`)
+
+            const fileContent = await test.blob();
+  const url = window.URL.createObjectURL(fileContent);
+  setUrl(url)
+
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = `sad.jpg`;
+  downloadLink.click();
+
+  window.URL.revokeObjectURL(url);
+            // const url = 'http://localhost:3001/files/file_3/download';
+
+            // axios.get(url)
+            //   .then((response) => {
+            //     const img = document.createElement('img');
+            //     img.src = response.data.url;
+            //     document.body.appendChild(img);
+            //   })
+            //   .catch((error) => {
+            //     // Xử lý lỗi
+            //   });
+        
+        
+        
+        
+        
+        
         }
         fetchData()
         
@@ -76,6 +111,7 @@ const File = () => {
 
         <div className={cx('container')}>
             <Breadcrumbs />
+            <Tool />
             
             {folder[0] && <FolderSection folders={folder}/>}
             {file[0] && <FileSection files={file}/>}
@@ -86,6 +122,11 @@ const File = () => {
                 <div className={cx('message')}>It feels lonely here...</div>
 
             </div>)}
+            <div>
+                {/* <img src={url} alt="" />
+                 */}
+                 {url}
+            </div>
         </div>
     )
 }

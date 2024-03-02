@@ -1,11 +1,13 @@
 .container {
     cursor: pointer;
-
+    width: 80%;
     background-color: #fff;
     display: flex;
     padding: 1em;
-    border-radius: 3px;
+    border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    user-select: none;
+
     &:hover {
         box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     }
@@ -16,40 +18,51 @@
         .imgFile {
             color:#6F6F6F;
         }
+        user-select: none;
+
         
     }
    
     .content {
-        padding: 0 0 0 1.5em;
+        // padding: 0 0 0 1.5em;
         max-width: 70%;
         .name {
-            font-weight: 500;
+            font-weight: 600;
             user-select: none;
             white-space: nowrap;        /* Ngăn chặn xuống dòng */
             overflow: hidden;           /* Ẩn nội dung vượt quá khối */
             text-overflow: ellipsis;    /* Hiển thị dấu "..." khi nội dung bị ẩn */
-            max-width: 100%;            /* Đảm bảo rằng nội dung không tràn khỏi khối cha */
+            max-width: 100%;  
+            font-size: 14px;          /* Đảm bảo rằng nội dung không tràn khỏi khối cha */
         }
         .size {
             color: #6F6F6F;
         user-select: none;
+    font-weight: 200;
+
 
         }
         .date {
             color: #6F6F6F;
         user-select: none;
+        font-size: 7px;          /* Đảm bảo rằng nội dung không tràn khỏi khối cha */
+
 
         }
     }
 
 }
 .containerSelect{
+    width: 80%;
+
     cursor: pointer;
     background-color: #2196f3;
     display: flex;
     padding: 1em;
     border-radius: 3px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    user-select: none;
+
     .img {
         .imgFolder{
             color:#fff;
@@ -57,13 +70,16 @@
         .imgFile {
             color:#fff;
         }
+        user-select: none;
+
         
     }
     .content {
-        padding: 0 0 0 1.5em;
+        // padding: 0 0 0 1.5em;
         max-width: 70%;
         .name {
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 14px;          /* Đảm bảo rằng nội dung không tràn khỏi khối cha */
             color: #fff;
     user-select: none;
     white-space: nowrap;        /* Ngăn chặn xuống dòng */
@@ -75,11 +91,15 @@
         .size {
             color: #fff;
     user-select: none;
+    font-weight: 200;
+
 
         }
         .date {
             color: #fff;
     user-select: none;
+    font-size: 7px;          /* Đảm bảo rằng nội dung không tràn khỏi khối cha */
+
 
         }
     }
@@ -89,3 +109,11 @@
 .truncate {
 
   }
+
+.left{
+    width: 75%;
+}
+
+.right{
+    width: 25%;
+}

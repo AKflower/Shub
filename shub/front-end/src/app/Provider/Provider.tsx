@@ -27,6 +27,14 @@ interface ShubContextProps {
     toggleShowDelete: () => void;
     showRename: string;
     toggleShowRename: () => void;
+    showCopy: string;
+    toggleShowCopy: () => void;
+    showMove: string;
+    toggleShowMove: () => void;
+    showDownload: string;
+    toggleShowDownload: () => void;
+    showInfo: string;
+    toggleShowInfo: () => void;
     handleNavigation: (name: string) => void;
     change: number;
     handleChange: () => void;
@@ -79,10 +87,7 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
     setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   }; 
 
-  const [showShare, setShowShare] = useState('');
-  const toggleShowShare = () => {
-    setShowShare(showNewDir == '' ? 'more' : '');
-  }; 
+ 
 
   const [option, setOption] = useState('');
   const showOption = () => {
@@ -116,6 +121,36 @@ const toggleShowDelete = () => {
 const [showRename, setShowRename] = useState("");
 const toggleShowRename = () => {
   setShowRename(showRename == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [showCopy, setShowCopy] = useState("");
+const toggleShowCopy = () => {
+  setShowCopy(showCopy == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [showMove, setShowMove] = useState("");
+const toggleShowMove = () => {
+  setShowMove(showMove == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [showShare, setShowShare] = useState("");
+const toggleShowShare = () => {
+  setShowShare(showShare == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [showDownload, setShowDownload] = useState("");
+const toggleShowDownload = () => {
+  setShowDownload(showDownload == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
+const [showInfo, setShowInfo] = useState("");
+const toggleShowInfo = () => {
+  setShowInfo(showInfo == '' ? 'more' : '');
   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
@@ -165,6 +200,14 @@ const value: ShubContextProps = {
     toggleShowDelete,
     showRename,
     toggleShowRename,
+    showCopy,
+    toggleShowCopy,
+    showMove,
+    toggleShowMove,
+    showDownload,
+    toggleShowDownload,
+    showInfo,
+    toggleShowInfo,
     handleNavigation,
     change,
     handleChange,

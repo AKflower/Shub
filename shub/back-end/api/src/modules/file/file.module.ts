@@ -6,6 +6,7 @@ import { FabricFactory } from "../fabric/fabric.config";
 import { ShubService } from "src/config/shub.service";
 import { Ipfs } from "src/modules/ipfs/ipfs.config";
 import { IpfsFactory } from "../ipfs/ipfsCluster.config";
+import { IPFSService } from "../ipfs/ipfs.service";
 
 
 
@@ -13,7 +14,7 @@ import { IpfsFactory } from "../ipfs/ipfsCluster.config";
 
     controllers: [FileController],
     providers: [FileService, FabricService, FabricFactory, ShubService, Ipfs, 
-        IpfsFactory
+        IpfsFactory, IPFSService
     ]
 })
 export class FileModule {};

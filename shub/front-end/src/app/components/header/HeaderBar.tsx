@@ -41,22 +41,9 @@ interface HeaderBarProps {
 }
 
 const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
-//   const dispatch = useDispatch();
-//   const currentPromptName = useSelector((state: any) => state.currentPromptName);
 
-
-//   const openSidebar = () => {
-//     dispatch({ type: 'showHover', payload: 'sidebar' });
-//   };
-const [showDownload, setShowDownload] = useState("");
-const [showInfo, setShowInfo] = useState("");
-const [showShare, setShowShare] = useState("");
-const [showCopy, setShowCopy] = useState("");
-const [showMove, setShowMove] = useState("");
-
-const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
-const isLogin = (pathname=='/') //check login page ? not render : render
+const isLogin = (pathname=='/') 
 const { 
   currentPromptName, 
   toggleCurrentPromptName,
@@ -65,6 +52,9 @@ const {
   showNewDir, 
   toggleShowNewDir, 
   option, 
+  showCopy,
+  showMove,
+  showShare,
   showDelete, 
   toggleShowDelete, 
   showRename, 
@@ -77,14 +67,57 @@ const {
   toggleShowUpload,
   showChangePassword,
   toggleShowChangePassword, 
+  toggleShowShare,
+  toggleShowCopy,
+  toggleShowMove,
+  showDownload,
+  toggleShowDownload,
+  showInfo,
+  toggleShowInfo,
 } = useShub();
 
 
+ 
   return (
     <>
       {!isLogin && 
       <header>
-      <div className={cx('flex')} >
+      <div className={cx('flex')}>
+      {/* <form  action="/search" method="GET">
+      </form> */}
+        <div className={cx('left')}>
+          <div className={cx('search-input')}>
+            <img className={cx('icon')} src='/sr.svg'></img>
+            <input className={cx('search-box')} type="text" name="query" placeholder="Search Files..."/>
+          </div>
+
+          <div className={cx('filter')}>
+            <select name="lang" id="lang-select">
+              <option value="">Filter</option>
+              <option value="csharp">C#</option>
+              <option value="cpp">C++</option>
+              <option value="php">PHP</option>
+              <option value="ruby">Ruby</option>
+              <option value="js">Javascript</option>
+              <option value="dart">Dart</option>
+            </select>
+          </div>
+        </div>
+
+        <div className={cx('right')}>
+          
+          <img className={cx('noti')} src='/noti.svg'></img>
+          
+          <div className={cx('id')}>
+            <img className={cx('ava')} src='/dan.jpg'></img>
+            <div className={cx('info')}>
+              <p className={cx('name')}>Danisolation</p>
+              <p className={cx('mail')}>tranquocdungb4@gmail.com</p>
+            </div>
+          </div>
+        </div>
+        
+
         {showLogo !== undefined && 
         <Link href='/files'>
           <div className={cx('logo')}>
@@ -286,15 +319,15 @@ const {
         onClick={
           ()=>{
             toggleCurrentPromptName()
-            if(showDownload){setShowDownload('')}
-            if(showInfo){setShowInfo('')}
+            if(showDownload){toggleShowDownload()}
+            if(showInfo){toggleShowInfo()}
             if(showUpload){toggleShowUpload()}
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
-            if(showShare){setShowShare('')}
+            if(showShare){toggleShowShare()}
             if(showRename){toggleShowRename()}
-            if(showCopy){setShowCopy('')}
-            if(showMove){setShowMove('')}
+            if(showCopy){toggleShowCopy()}
+            if(showMove){toggleShowMove()}
             if(showDelete){toggleShowDelete()}
             if(stream){handleStream()}
             if(showChangePassword){toggleShowChangePassword()}
@@ -302,10 +335,11 @@ const {
         }
       />
       )}
+    
       
     </header>
     }
-    </>
+      </>
     
   );
 };

@@ -77,5 +77,99 @@
   .flex{
     display: flex;
     height: 100%;
-    max-width: 30em;
+    // max-width: 30em;
+    align-items: center;
+    width: 100%;
+    max-width: 1228.8px;
+    justify-content: space-between;
   }
+
+  .left{
+    display: flex;
+    height: 100%;
+    // max-width: 30em;
+    align-items: center;
+  }
+.search-input{
+  height: 70%;
+  display: flex;
+  align-items: center;
+
+
+  width: 20em;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  
+  
+  .search-box{
+    width: 100%;
+    text-indent: 2em;
+    height: 100%;
+    outline: 0;
+    &:focus{
+      background: #fff;
+  border-radius: 10px;
+  border: 2px solid #6b9bd2;
+    }
+  }
+
+  .icon{
+  height: 110%;
+  width: 10%;
+  }
+}
+
+// .header{
+//   margin-right: 0.75rem;
+// }
+
+
+
+.filter{
+  padding-left: 1em;
+  height: 70%;
+  width: 9em;
+  select{
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+  border: 1px solid #ccc;
+
+  }
+
+}
+
+
+.right{
+  height: 100%;
+  align-items: center;
+  display: flex;
+  .noti{
+    height: 60%;
+    // width: 70%;
+    padding-right: 1em;
+  }
+
+  .id{
+    height: 70%;
+    display: flex;
+
+    .ava{
+      height: 100%;
+      border-radius: 100px;
+      
+    }
+    .info{
+      padding-left: 1em;
+      .name{
+        color: #25396F;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .mail{
+        color: #7C8DB5;
+        font-size: 13px;
+      }
+    }
+  }
+}

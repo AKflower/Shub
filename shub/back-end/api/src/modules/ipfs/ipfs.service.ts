@@ -1,17 +1,17 @@
-// import { Inject, Injectable, UploadedFile } from "@nestjs/common";
-// import * as ipfsCluster from "ipfs-cluster-api";
-// import * as fs from "fs";
-// import axios from 'axios';
-// import * as stream from 'stream';
-// import { promisify } from 'util';
-// import * as FileType from 'file-type';
-// import { IPFSHTTPClient } from "ipfs-http-client";
+import { Inject, Injectable, UploadedFile } from "@nestjs/common";
+import * as ipfsCluster from "ipfs-cluster-api";
+import * as fs from "fs";
+import axios from 'axios';
+import * as stream from 'stream';
+import { promisify } from 'util';
+import * as FileType from 'file-type';
+import { IPFSHTTPClient } from "ipfs-http-client";
 
-// @Injectable()
-// export class IPFSService {
+@Injectable()
+export class IPFSService {
 
-//   constructor(@Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster, @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient) {
-//   }
+  constructor(@Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster, @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient) {
+  }
 
 
 //   async uploadFile(@UploadedFile() file) {
@@ -45,43 +45,57 @@
 //     return dataUint8Array
 //   }
 
-//   async downloadFile(cid: string) {
-//     // const url = `http://127.0.0.1:8080/ipfs/${cid}`;
-//     // const response = await axios.get(url, { responseType: 'arraybuffer' });
-//     const asyncArr = await this.ipfsClient.cat(cid);
+  async downloadFile(cid: string) {
+    // const url = `http://127.0.0.1:8080/ipfs/${cid}`;
+    // const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const asyncArr3 = await this.ipfsClient.cat(cid);
 
-//     // Chuyển đổi AsyncIterable<Uint8Array> thành một mảng Uint8Array
-//     const dataArray = [];
-//     for await (const chunk of asyncArr) {
-//       dataArray.push(chunk);
-//     }
+    // Chuyển đổi AsyncIterable<Uint8Array> thành một mảng Uint8Array
+    const dataArray = [];
+    for await (const chunk of asyncArr3) {
+      dataArray.push(chunk);
+    }
 
-//     // Nối các phần tử Uint8Array thành một Uint8Array duy nhất
-//     const dataUint8Array = new Uint8Array(dataArray.reduce((acc, chunk) => [...acc, ...chunk], []));
-//     const blob = new Blob([dataUint8Array], { type: 'image/jpeg' }); // Thay đổi kiểu MIME nếu cần
-//     const imageUrl = URL.createObjectURL(blob);
-//     console.log(imageUrl)
+    // Nối các phần tử Uint8Array thành một Uint8Array duy nhất
+    const dataUint8Array = new Uint8Array(dataArray.reduce((acc, chunk) => [...acc, ...chunk], []));
+    const blob3 = new Blob([dataUint8Array], { type: 'image/jpeg' }); // Thay đổi kiểu MIME nếu cần
+    const imageUrl = URL.createObjectURL(blob3);
+    console.log(imageUrl)
 
-//     // Xác định loại file bằng cách đọc phần đầu của dữ liệu
-//     const type = await FileType(dataUint8Array.slice(0, 261)); // Đọc 261 byte đầu tiên (đủ cho việc xác định loại file)
-//     const extension = type ? type.ext : 'bin'; // Sử dụng 'bin' nếu không xác định được phần mở rộng
+    // Xác định loại file bằng cách đọc phần đầu của dữ liệu
+    const type = await FileType(dataUint8Array.slice(0, 261)); // Đọc 261 byte đầu tiên (đủ cho việc xác định loại file)
+    const extension = type ? type.ext : 'bin'; // Sử dụng 'bin' nếu không xác định được phần mở rộng
   
-//     // Tạo một stream ghi file với đúng phần mở rộng
-//     // const writer = fs.createWriteStream(`./files/${cid}.${extension}`);
-  
-//     // // Chuyển đổi dữ liệu đã tải về thành stream và ghi vào file
-//     // const dataStream = stream.Readable.from(asyncArr);
-//     // const pipeline = promisify(stream.pipeline);
+   
+    const asyncArr2 = await this.ipfsClient.cat(cid);
+
+    fs.createWriteStream(`./assets/${cid}.${extension}`);
+    for await (const chunk of asyncArr2) {
+      fs.appendFileSync(`./assets/${cid}.${extension}`, Buffer.from(chunk));
+    }
+
     
-//     // await pipeline(dataStream, writer);
-//     const asyncArr2 = await this.ipfsClient.cat(cid);
+    const asyncArr = await this.ipfsClient.cat(cid);
+    let totalLength = 0;
+  const chunks =  [];
 
-//     fs.createWriteStream(`C:/Users/tranq/Downloads/${cid}.${extension}`);
-//     for await (const chunk of asyncArr2) {
-//       fs.appendFileSync(`C:/Users/tranq/Downloads/${cid}.${extension}`, Buffer.from(chunk));
-//     }
-//     return fs.createReadStream(`C:/Users/tranq/Downloads/${cid}.${extension}`, {});
-//   }
+  for await (const chunk of asyncArr) {
+    chunks.push(chunk);
+    totalLength += chunk.length;
+  }
+
+  const combinedArray = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    combinedArray.set(chunk, offset);
+    offset += chunk.length;
+  }
+  const mimeType = 'image/jpeg'; // Replace with the appropriate MIME type
+  const blob = new Blob([combinedArray], { type: mimeType });
+  const filename = 'your-file.txtQmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv.jpg'; // Replace with the desired filename
+const file = new File([blob], filename, { type: mimeType });
+    return file;
+  }
   
 //   async download(cid: string) {
 //     const asyncArr = this.ipfsClient.cat(cid);
@@ -124,5 +138,5 @@
 //     }
 //   } 
   
-// }
+}
 

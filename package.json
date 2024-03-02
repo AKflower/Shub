@@ -2,6 +2,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.9.7",
     "class-validator": "^0.14.0",
+    "fs": "^0.0.1-security",
     "next": "^14.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
