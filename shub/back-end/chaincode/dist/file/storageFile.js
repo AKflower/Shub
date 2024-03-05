@@ -23,6 +23,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             file_id: 'file_1',
             file_name: 'Readme.md',
             file_path: '/files',
+            file_nameForSearch: 'readme',
             cid: 'abcxyz',
             owner: 'user_1',
             created_date: '123',
@@ -39,6 +40,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folder = {
             folder_id: 'folder_1',
             folder_name: 'folder_root',
+            folder_nameForSearch: 'folder_root',
             folder_path: '/files',
             owner: 'user_1',
             created_date: '456',
@@ -94,6 +96,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const newfile = {
             file_id: file_id,
             file_name: file_name,
+            file_nameForSearch: file_name.toLowerCase(),
             file_path: file_path,
             cid: cid,
             owner: user_id,
@@ -165,7 +168,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async GetFilesByPrefix(ctx, prefix) {
         const queryString = {
             selector: {
-                file_name: {
+                file_nameForSearch: {
                     $regex: `^${prefix}`
                 }
             }
@@ -325,6 +328,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const newFolder = {
             folder_id: folder_id,
             folder_name: folder_name,
+            folder_nameForSearch: folder_name.toLowerCase(),
             folder_path: folder_path,
             owner: user_id,
             created_date: created_date,
@@ -479,6 +483,32 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             console.error(error);
             return null;
         }
+    }
+    async GetFoldersByPrefix(ctx, prefix) {
+        const queryString = {
+            selector: {
+                folder_nameForSearch: {
+                    $regex: `^${prefix}`
+                }
+            }
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
     }
 };
 __decorate([
@@ -657,6 +687,13 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "ConcatenatePathAndNameById", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFoldersByPrefix", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);

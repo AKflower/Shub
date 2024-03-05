@@ -33,4 +33,5 @@ export declare class StorageFileContract extends Contract {
     private replacePath;
     ConcatenatePathAndNameById(ctx: Context, folder_path: string, folder_id: string): Promise<string>;
     private getFolderNameById;
+    GetFoldersByPrefix(ctx: Context, prefix: string): Promise<string>;
 }

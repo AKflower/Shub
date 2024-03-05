@@ -62,5 +62,19 @@ export class FolderService {
         await contract.submitTransaction('RenameFolder',user_id,folder_path,folder_id,new_folder_name);
     }
 
-
+    async getFoldersByPrefix(contract: Contract, prefix:string): Promise<Folder[]> {
+        const resultBytes=await contract.submitTransaction('GetFoldersByPrefix',prefix);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        const result = JSON.parse(resultJson);
+        console.log('*** Result:', result);
+        const folders : Folder[] = result.map(item => ({
+            folder_id: item.folder_id,
+            folder_name: item.folder_name,
+            folder_path: item.folder_path,
+            user_id: item.owner,
+            
+        }))
+        return folders;
+    }
 }

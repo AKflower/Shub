@@ -14,6 +14,9 @@ export class File {
     public file_path: string;
 
     @Property()
+    public file_nameForSearch?: string;
+
+    @Property()
     public cid: string;
     
     @Property()
