@@ -52,6 +52,7 @@ export class FolderController {
     }
 
     @Get('/search')
+    @UseGuards(JwtAuthGuard)
     getFoldersByPrefix(@Query('prefix') prefix: string) {
         return this.folderService.getFoldersByPrefix(this.contract,prefix);
     }

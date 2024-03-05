@@ -96,7 +96,7 @@ export class FileController {
 
     // The API is used to get files whose names start with prefix
     @Get('/search')
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     getFilesByPrefix(@Query('prefix') prefix: string) {
         return this.fileService.getFilesByPrefix(this.contract,prefix);
     }
