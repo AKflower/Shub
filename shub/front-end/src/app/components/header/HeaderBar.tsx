@@ -81,13 +81,6 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 
   
 
-  
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    // Xử lý truy vấn tìm kiếm
-  };
-  // console.log(searchQuery);
-
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
@@ -109,7 +102,6 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
           })
 
         }
-        // console.log(response.data)
         setSearchData(otp)
       })
       .catch(error => {
@@ -130,11 +122,9 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 
   
   const handleSelect = (selectedOption: any) => {
-    console.log('Selected option:', selectedOption);
     setSearchQuery('')
     router.push(selectedOption.file_path);
   };
-  console.log(searchQuery)
 
  
   return (
@@ -148,7 +138,9 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
       
         <div className={cx('left')}>
             
-          <form onSubmit={handleSubmit}>
+          <form 
+            // onSubmit={handleSubmit}
+            >
             <Dropdown 
               options={searchData}
               onSelect={handleSelect}

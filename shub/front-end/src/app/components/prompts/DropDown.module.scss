@@ -1,5 +1,5 @@
 .container{
-    height: 100%;
+    // height: 100%;
     position: relative;
     top: 7px;
     display: flex;
@@ -8,25 +8,34 @@
 }
 
 .res{
-    width: 100%;
     background: #fff;
-    // border: 1px solid #ccc;
-    // border-radius: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 20em;
+    max-height: 15em;
+    overflow-y: scroll;
     .obo{
-        border: 1px solid #ccc;
-        border-radius: 10px;
+        // border: 1px solid #ccc;
+        // border-radius: 10px;
+        white-space: nowrap;
         display: flex;
         justify-content: space-between;
         cursor: pointer;
+        width: 100%;
 
         &:hover{
             background: #2196f3;
-            
+            border-radius: 10px;
         }
 
         span{
             padding-left: 1em;
             padding-right: 1em;
+            max-width: 10em;
+            white-space: nowrap; /* không xuống dòng */
+            overflow: hidden; /* ẩn nội dung bị thừa */
+            text-overflow: ellipsis; /* thêm dấu ... đằng sau */
+        user-select: none;
 
         }
 

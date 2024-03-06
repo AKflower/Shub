@@ -36,11 +36,6 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
     setIsOpen(false);
   };
 
-  // useEffect(() => {
-  //   if (options.length > 0) setIsOpen(true)
-  //   else setIsOpen(false)
-  // // console.log(options.length)
-  // },[options])
 
   return (
     <div 
@@ -52,9 +47,8 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
      
         {children}
       
-      {isOpen && (
+      {isOpen && options[0] && (
 
-        // <div >
           <ul className={cx('res')}>
             {options.map((option) => (
               <li className={cx('obo')} key={option.file_id} onClick={() => handleSelect(option)}>
@@ -63,7 +57,6 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
               </li>
             ))}
           </ul>
-        // </div>
       )}
     </div>
   );
