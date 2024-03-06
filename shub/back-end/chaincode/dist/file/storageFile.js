@@ -166,6 +166,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return JSON.stringify(allResults);
     }
     async GetFilesByPrefix(ctx, prefix) {
+        prefix = prefix.toLowerCase();
         const queryString = {
             selector: {
                 file_nameForSearch: {
@@ -485,6 +486,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
     }
     async GetFoldersByPrefix(ctx, prefix) {
+        prefix = prefix.toLowerCase();
         const queryString = {
             selector: {
                 folder_nameForSearch: {

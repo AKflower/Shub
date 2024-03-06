@@ -197,6 +197,7 @@ export class StorageFileContract extends Contract {
       @Transaction(false)
       @Returns('string')
         public async GetFilesByPrefix(ctx: Context, prefix: string): Promise<string> {
+        prefix=prefix.toLowerCase();
         const queryString = {
             selector: {
             file_nameForSearch: {
@@ -591,6 +592,7 @@ export class StorageFileContract extends Contract {
     @Transaction(false)
     @Returns('string')
     public async GetFoldersByPrefix(ctx: Context, prefix: string): Promise<string> {
+      prefix=prefix.toLowerCase();
       const queryString = {
           selector: {
           folder_nameForSearch: {
