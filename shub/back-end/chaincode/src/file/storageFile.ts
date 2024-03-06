@@ -19,6 +19,7 @@ export class StorageFileContract extends Contract {
                 file_id: 'file_1',
                 file_name: 'Readme.md',
                 file_path: '/files',
+                file_nameForSearch: 'readme',
                 cid: 'abcxyz',
                 owner: 'user_1',
                 created_date: '123',
@@ -39,7 +40,7 @@ export class StorageFileContract extends Contract {
             folder_id: 'folder_1',
 
             folder_name: 'folder_root',
-
+            folder_nameForSearch: 'folder_root',
             folder_path: '/files',
             owner: 'user_1',
             created_date: '456',
@@ -111,6 +112,7 @@ export class StorageFileContract extends Contract {
         const newfile = {
             file_id: file_id,
             file_name: file_name,
+            file_nameForSearch: file_name.toLowerCase(),
             file_path: file_path,
             cid: cid,
             owner: user_id,
@@ -197,8 +199,9 @@ export class StorageFileContract extends Contract {
         public async GetFilesByPrefix(ctx: Context, prefix: string): Promise<string> {
         const queryString = {
             selector: {
-            file_name: {
+            file_nameForSearch: {
                 $regex: `^${prefix}`
+                
             }
             }
         };
@@ -393,6 +396,7 @@ export class StorageFileContract extends Contract {
         const newFolder: Folder = {
             folder_id:folder_id,
             folder_name: folder_name,
+            folder_nameForSearch: folder_name.toLowerCase(),
             folder_path: folder_path,
             owner: user_id,
             created_date: created_date,
@@ -584,7 +588,38 @@ export class StorageFileContract extends Contract {
         }
     }
 
-    
+    @Transaction(false)
+    @Returns('string')
+    public async GetFoldersByPrefix(ctx: Context, prefix: string): Promise<string> {
+      const queryString = {
+          selector: {
+          folder_nameForSearch: {
+              $regex: `^${prefix}`
+              
+          }
+          }
+      };
+      const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+      const allResults = [];
+  
+      let result = await iterator.next();
+      while (!result.done) {
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+          record = JSON.parse(strValue);
+        } catch (err) {
+          console.log(err);
+          record = strValue;
+        }
+        allResults.push(record);
+        result = await iterator.next();
+      }
+  
+      return JSON.stringify(allResults);
+
+      
+   }
 
 }
    

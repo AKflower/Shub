@@ -24,6 +24,10 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
+], Folder.prototype, "folder_nameForSearch", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
 ], Folder.prototype, "folder_path", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),

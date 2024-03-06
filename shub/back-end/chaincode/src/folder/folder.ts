@@ -11,6 +11,9 @@ export class Folder {
     public folder_name: string;
 
     @Property()
+    public folder_nameForSearch?: string;
+
+    @Property()
     public folder_path: string;
 
     @Property()

@@ -28,6 +28,10 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
+], File.prototype, "file_nameForSearch", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
 ], File.prototype, "cid", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
