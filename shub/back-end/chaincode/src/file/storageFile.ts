@@ -505,7 +505,7 @@ export class StorageFileContract extends Contract {
           
          const fileString = await this.GetFolder(ctx,folder_id);
           const fileJSON = JSON.parse(fileString);
-          fileJSON.file_path= newPath;
+          fileJSON.folder_path= newPath;
           await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
       }
       @Transaction(false)

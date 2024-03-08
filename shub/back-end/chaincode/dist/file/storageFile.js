@@ -419,7 +419,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async UpdateFolderPath(ctx, folder_id, newPath) {
         const fileString = await this.GetFolder(ctx, folder_id);
         const fileJSON = JSON.parse(fileString);
-        fileJSON.file_path = newPath;
+        fileJSON.folder_path = newPath;
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }
     async GetSubFolders(ctx, user_id, folder_path, folder_id) {

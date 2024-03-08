@@ -102,7 +102,7 @@ export class FileController {
     }
 
     @Put('updatePath')
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async updateFilePath(@Body() params: {file_id: string, newPath: string}) {
         const {file_id,newPath} = params;
         return this.fileService.updateFilePath(this.contract,file_id,newPath)
