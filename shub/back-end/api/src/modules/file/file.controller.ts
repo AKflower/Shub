@@ -1,4 +1,4 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles} from '@nestjs/common';
+import { Put, Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles} from '@nestjs/common';
 import { FileService } from './file.service';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { FabricService } from '../fabric/fabric.service';
@@ -97,8 +97,15 @@ export class FileController {
     // The API is used to get files whose names start with prefix
     @Get('/search')
     @UseGuards(JwtAuthGuard)
-    getFilesByPrefix(@Query('prefix') prefix: string) {
+    async getFilesByPrefix(@Query('prefix') prefix: string) {
         return this.fileService.getFilesByPrefix(this.contract,prefix);
+    }
+
+    @Put('updatePath')
+    // @UseGuards(JwtAuthGuard)
+    async updateFilePath(@Body() params: {file_id: string, newPath: string}) {
+        const {file_id,newPath} = params;
+        return this.fileService.updateFilePath(this.contract,file_id,newPath)
     }
 
     @Post('/ipfslong')

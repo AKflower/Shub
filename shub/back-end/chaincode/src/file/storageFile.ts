@@ -126,7 +126,7 @@ export class StorageFileContract extends Contract {
         
 
     }
-    @Transaction()
+    @Transaction(false)
     public async GetFile(ctx:Context, id:string): Promise<string>{
         const fileJSON = await ctx.stub.getState(id);
         if (!fileJSON || fileJSON.length===0) {
@@ -308,6 +308,15 @@ export class StorageFileContract extends Contract {
           }
           return ctx.stub.deleteState(file_id);
       }
+      @Transaction()
+      public async UpdateFilePath(ctx: Context, file_id: string,newPath: string): Promise<void> {
+          
+         const fileString = await this.GetFile(ctx,file_id);
+          const fileJSON = JSON.parse(fileString);
+          fileJSON.file_path= newPath;
+          await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+          
+      }
       /*************************************User ***************************/
       @Transaction(false)
     public async GetUserById(ctx:Context, user_id:string): Promise<string>{
@@ -456,8 +465,49 @@ export class StorageFileContract extends Contract {
           const folderJSON = await ctx.stub.getState(folder_id);
           return folderJSON && folderJSON.length > 0;
       }
-      
+      @Transaction()
+      public async UpdateFoldersAndFilesPath(ctx: Context,folder_id: string,newPath:string, user_id:string) : Promise<void> {
+        const folderString = await this.GetFolder(ctx,folder_id);
+        const folderJSON = JSON.parse(folderString);
+        const oldPathPrefix = folderJSON.folder_path;
+        await this.updateFoldersAndFilesPath(ctx,folderJSON.folder_id,newPath, newPath,oldPathPrefix,user_id);
 
+      }
+      private async updateFoldersAndFilesPath(ctx: Context,folder_id:string,newPath:string, newPathPrefix: string,oldPathPrefix: string,user_id:string) {
+        const folderString = await this.GetFolder(ctx,folder_id);
+        const folderJSON = JSON.parse(folderString); 
+        //Get subFolders
+         const subFoldersString = await this.GetSubFolders(ctx,user_id,folderJSON.folder_path,folder_id);
+         const subFolders = JSON.parse(subFoldersString);
+         //Get subfiles
+         const filePath = await this.ConcatenatePathAndNameById(ctx,folderJSON.folder_path,folder_id);
+         const subFilesString=await this.GetFilesByPath(ctx,filePath);
+         const subFiles = JSON.parse(subFilesString);
+         
+         for (const subFile of subFiles) {
+           var newPathForSubFile = await this.genNewPath(ctx,subFile.file_path,oldPathPrefix,newPathPrefix);
+           await this.UpdateFilePath(ctx,subFile.file_id,newPathForSubFile);
+         }
+         await this.UpdateFolderPath(ctx,folder_id,newPath);
+         for (const subFolder of subFolders) {
+           var newPathForSubFolder = await this.genNewPath(ctx,subFolder.folder_path,oldPathPrefix,newPathPrefix);
+           await this.updateFoldersAndFilesPath(ctx,subFolder.folder_id,newPathForSubFolder, newPathPrefix,oldPathPrefix,user_id);
+         }
+         
+         
+      }
+      private async genNewPath(ctx: Context,oldPath:string, oldPathPrefix:string, newPathPrefix: string) : Promise<string> {
+        const newPath = oldPath.replace(oldPathPrefix,newPathPrefix);
+        return newPath;
+      }
+      @Transaction()
+      public async UpdateFolderPath(ctx: Context, folder_id: string,newPath: string): Promise<void> {
+          
+         const fileString = await this.GetFolder(ctx,folder_id);
+          const fileJSON = JSON.parse(fileString);
+          fileJSON.file_path= newPath;
+          await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+      }
       @Transaction(false)
       @Returns('string')
       public async GetSubFolders(ctx: Context, user_id: string, folder_path: string,folder_id:string): Promise<string> {

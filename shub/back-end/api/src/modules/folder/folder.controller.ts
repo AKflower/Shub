@@ -20,7 +20,7 @@ export class FolderController {
     @Post('/new')
     @UseGuards(JwtAuthGuard)
     createFolder(@Body() newFolder: Folder){
-        console.log('sao ga v', newFolder)
+        console.log(newFolder)
         return this.folderService.createFolder(this.contract,newFolder);
 
     }
@@ -52,8 +52,14 @@ export class FolderController {
     }
 
     @Get('/search')
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     getFoldersByPrefix(@Query('prefix') prefix: string) {
         return this.folderService.getFoldersByPrefix(this.contract,prefix);
+    }
+
+    @Put('/updatePath')
+    updateFolderPath(@Body() params : {folder_id: string,newPath: string,user_id: string}) {
+        const {folder_id, newPath,user_id} = params;
+        return this.folderService.updateFolderPath(this.contract,folder_id,newPath,user_id)
     }
 }

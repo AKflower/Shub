@@ -161,6 +161,10 @@ export class FileService {
       
     return files;
   }
+  async updateFilePath(contract: Contract,file_id: string, newPath: string): Promise<string> {
+    await contract.submitTransaction('UpdateFilePath',file_id,newPath);
+    return 'Update Successful!'
+  }
   async getDir(path: string): Promise<string[]> {
     try {
       const files = await fs.readdir(path);
