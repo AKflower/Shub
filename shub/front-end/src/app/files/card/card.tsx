@@ -8,13 +8,14 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 
-export default function Card ({type1, name,size,date, selected}: {type1:string, key:number, name:string,size?:string,date?:string, selected?:boolean}) {
+export default function Card ({type1, name,size,date, selected}: {type1:string, key:string, name:string,size?:string,date?:string, selected?:boolean}) {
     const { 
         
         option, 
         
        
       } = useShub();
+
     let dateObject
     if(date) dateObject = new Date(date);
     return (
@@ -23,11 +24,16 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
                 <div className={ styles.img} >
                     {type1=='folder' ? 
                     <div className={styles.imgFolder}>{option && selected ? <img src='/folderW.svg' style={{width: '70px'}}></img> : <img src='/folder.svg' style={{width: '70px'}}></img>}</div> : 
-                        type1 =='video' ? 
-                    <div className={styles.imgFile}><TheatersIcon style={{fontSize: '70px'}}/></div> :
-                        (type1 == 'image') ?
+                        type1 == 'mp4' ? 
+                    <div className={styles.imgFile}><img src='/video.svg' style={{width: '70px'}}></img></div> :
+                        type1=='jpeg' || type1=='png' ?
                     <div className={styles.imgFile}><img src='/img.svg' style={{width: '70px'}}></img></div> :
-                    <div className={styles.imgFile}><DescriptionIcon style={{fontSize: '70px'}}/></div>
+                        type1=='pdf' ?
+                    <div className={styles.imgFile}><img src='/pdf.svg' style={{width: '70px'}}></img></div> :
+                        type1=='vnd.openxmlformats-officedocument.wordprocessingml.document' ?
+                    <div className={styles.imgFile}><img src='/word.svg' style={{width: '70px'}}></img></div> :
+                    
+                    <div className={styles.imgFile}><img src='/un.svg' style={{width: '70px'}}></img></div>
                     }   
                 
                 </div>

@@ -33,9 +33,10 @@ interface HeaderBarProps {
 }
 
 interface Option {
-  file_id: string;
-  file_name: string;
-  file_path: string;
+  id: string;
+  name: string;
+  path: string;
+  type: string;
 }
 
 
@@ -44,6 +45,7 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
   const pathname = usePathname()
   const isLogin = (pathname=='/') 
   const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState('');
   const [searchData, setSearchData] = useState<Option[] >([]);
   const { 
     currentPromptName, 
@@ -79,42 +81,74 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
   const accessToken = Cookies.get('accessToken');
   const router = useRouter();
 
-  
-
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
       const data = { prefix: searchQuery };
       
-      const res = await axios.get(`http://localhost:3001/files/search`,{
+      const resFile = await axios.get(`http://localhost:3001/files/search`,{
         params: data, // Truyền dữ liệu qua Data parameters
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`, 
         },
       })
-      .then(response => {
-        for (const pie in response.data){
-          otp.push({
-            file_id: response.data[pie].file_id,
-            file_name: response.data[pie].file_name,
-            file_path: response.data[pie].file_path,
-          })
-
-        }
-        setSearchData(otp)
+     
+      const resFolder = await axios.get(`http://localhost:3001/folders/search`,{
+        params: data, // Truyền dữ liệu qua Data parameters
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, 
+        },
       })
-      .catch(error => {
-        console.error('Error creating folder:', error);
-      });
-
-
+      if (filter == 'File'){
+        for (const pie in resFile.data){
+          await otp.push({
+            id: resFile.data[pie].file_id,
+            name: resFile.data[pie].file_name,
+            path: resFile.data[pie].file_path,
+            type: resFile.data[pie].file_type.slice(resFile.data[pie].file_type.indexOf('/') + 1, resFile.data[pie].file_type.length)
+          })
+        }
+      }
+      else if (filter == 'Folder'){
+        for (const pie in resFolder.data){
+          await otp.push({
+            id: resFolder.data[pie].folder_id,
+            name: resFolder.data[pie].folder_name,
+            path: resFolder.data[pie].folder_path,
+            type: 'folder'
+          })
+        }
+      }
+      else{
+        for (const pie in resFile.data){
+          await otp.push({
+            id: resFile.data[pie].file_id,
+            name: resFile.data[pie].file_name,
+            path: resFile.data[pie].file_path,
+            type: resFile.data[pie].file_type.slice(resFile.data[pie].file_type.indexOf('/') + 1, resFile.data[pie].file_type.length)
+          })
+        }
+        for (const pie in resFolder.data){
+          await otp.push({
+            id: resFolder.data[pie].folder_id,
+            name: resFolder.data[pie].folder_name,
+            path: resFolder.data[pie].folder_path,
+            type: 'folder'
+          })
+        }
+      }
+      
+        
+          await setSearchData(otp)
       
     }
+
     if(searchQuery.length > 0) fetchData()
     else setSearchData([])
     
-  },[searchQuery])
+  },[searchQuery, filter])
 
   useEffect(()=>{
     setSearchQuery('')
@@ -123,7 +157,7 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
   
   const handleSelect = (selectedOption: any) => {
     setSearchQuery('')
-    router.push(selectedOption.file_path);
+    router.push(selectedOption.path);
   };
 
  
@@ -132,8 +166,7 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
       {!isLogin && 
       <header>
       <div className={cx('flex')}>
-      {/* <form  action="/search" method="GET">
-      </form> */}
+      
       
       
         <div className={cx('left')}>
@@ -153,7 +186,6 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
                   placeholder="Search Files..." 
                   value={searchQuery} 
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  // onBlur={() => setSearchQuery('')}
                 />
               </div>
           </Dropdown>
@@ -163,14 +195,11 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
           
 
           <div className={cx('filter')}>
-            <select name="lang" id="lang-select">
-              <option value="">Filter</option>
-              <option value="csharp">C#</option>
-              <option value="cpp">C++</option>
-              <option value="php">PHP</option>
-              <option value="ruby">Ruby</option>
-              <option value="js">Javascript</option>
-              <option value="dart">Dart</option>
+            <select name="lang" id="lang-select" onChange={(e) => setFilter(e.target.value)}>
+              <option value="">All</option>
+              <option value="File">File</option>
+              <option value="Folder">Folder</option>
+            
             </select>
           </div>
         </div>
@@ -209,124 +238,7 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
 
       {children}
       </div>
-        {/* ------------------------------------- Old version Header ----------------------------------------}
-      {/* <div id={cx('dropdown')} className={currentPromptName === 'more' ? cx('active') : ''}>
-      {option && (
-        <> 
-        <Action 
-          icon={<ShareIcon/>}
-          label='Share'
-          counter={0}
-          onAction={()=>{
-            setShowShare('show')
-            toggleCurrentPromptName()
-            }
-          } 
-        />
-
-        <Action 
-          icon={<EditIcon/>}
-          label='Rename'
-          counter={0}
-          onAction={()=>{
-            toggleShowRename()
-            toggleCurrentPromptName()
-            }
-          } 
-        />
-
-        <Action 
-          icon={<ContentCopyIcon/>}
-          label='Copy'
-          counter={0}
-          onAction={()=>{
-            setShowCopy('show')
-            toggleCurrentPromptName()
-            }
-          } 
-        />
-
-        <Action 
-          icon={<ForwardIcon/>}
-          label='Move file'
-          counter={0}
-          onAction={()=>{
-            setShowMove('show')
-            toggleCurrentPromptName()
-            }
-          } 
-        />
-
-        <Action 
-          icon={<DeleteIcon/>}
-          label='Delete'
-          counter={0}
-          onAction={()=>{
-            toggleShowDelete()
-            toggleCurrentPromptName()
-            }
-          } 
-        />
-
-        </>
-        )
-      }
-      <Action 
-          icon={showView === 'grid' ? <GridViewIcon/> : showView === 'list' ? <ViewListIcon/> : <ViewModuleIcon/>}
-          label='Switch View'
-          counter={0}  
-          onAction={()=>{
-            if (showView === 'grid') setShowView('list')
-            else if (showView === 'list') setShowView('module')
-              else setShowView('grid')
-
-            }
-          }      
-
-        />
-      <Action 
-          icon={<FileDownloadIcon/>}
-          label='Download'
-          counter={0}    
-          show={showDownload}   
-          onAction={()=>{
-            setShowDownload('show')
-            toggleCurrentPromptName()
-            }
-          } 
-
-        />
-        <Action 
-          icon={<FileUploadIcon/>}
-          label='Upload'
-          counter={0} 
-          onAction={()=>{
-            toggleShowUpload()
-
-          }
-          }        
-
-        />
-        <Action 
-          icon={<InfoIcon/>}
-          label='Info'
-          counter={0} 
-          onAction={()=>{
-            setShowInfo('show')
-            toggleCurrentPromptName()
-
-          }
-          }  
-                
-
-        />
-        <Action 
-          icon={<CheckCircleIcon/>}
-          label='Select Multiple'
-          counter={0}        
-
-        />
-      </div> */}
+        
 
       {showDownload && (
         <Download />

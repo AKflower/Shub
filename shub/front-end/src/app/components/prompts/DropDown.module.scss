@@ -24,20 +24,44 @@
         width: 100%;
 
         &:hover{
-            background: #2196f3;
+            background: #ccc;
             border-radius: 10px;
         }
 
-        span{
+        .path{
             padding-left: 1em;
             padding-right: 1em;
-            max-width: 10em;
+            max-width: 40%;
             white-space: nowrap; /* không xuống dòng */
             overflow: hidden; /* ẩn nội dung bị thừa */
             text-overflow: ellipsis; /* thêm dấu ... đằng sau */
-        user-select: none;
+            user-select: none;
 
+        } 
+        
+
+        .left{
+
+            display: flex;
+            width: 60%;
+           
+            span{
+                padding-left: 0.5em;
+                padding-right: 1em;
+                max-width: 80%;
+                white-space: nowrap; /* không xuống dòng */
+                overflow: hidden; /* ẩn nội dung bị thừa */
+                text-overflow: ellipsis; /* thêm dấu ... đằng sau */
+                user-select: none;
+            }
+            img{
+                max-width: 15%;
+                padding-left: 0.5em;
+                max-height: 90%;
+            }
         }
+
+        
 
         // .name{
         //     padding-right: 3em;

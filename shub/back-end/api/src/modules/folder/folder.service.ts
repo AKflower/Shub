@@ -63,7 +63,7 @@ export class FolderService {
     }
 
     async getFoldersByPrefix(contract: Contract, prefix:string): Promise<Folder[]> {
-        const resultBytes=await contract.submitTransaction('GetFoldersByPrefix',prefix);
+        const resultBytes=await contract.evaluateTransaction('GetFoldersByPrefix',prefix);
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
         const result = JSON.parse(resultJson);
