@@ -36,7 +36,7 @@ export class FolderService {
 
         console.log('GetSubFolders');
         console.log(user_id,folder_path)
-        const resultBytes = await contract.submitTransaction('GetSubFolders',user_id,folder_path,folder_id);
+        const resultBytes = await contract.evaluateTransaction('GetSubFolders',user_id,folder_path,folder_id);
         console.log('hahaha');
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
@@ -76,5 +76,9 @@ export class FolderService {
             
         }))
         return folders;
+    }
+    async updateFolderPath(contract: Contract,folder_id: string,newPath:string,user_id:string) : Promise<void> {
+        await contract.submitTransaction('UpdateFoldersAndFilesPath',folder_id,newPath,user_id);
+       
     }
 }

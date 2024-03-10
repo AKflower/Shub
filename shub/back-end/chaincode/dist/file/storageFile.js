@@ -255,6 +255,12 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return ctx.stub.deleteState(file_id);
     }
+    async UpdateFilePath(ctx, file_id, newPath) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.file_path = newPath;
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+    }
     /*************************************User ***************************/
     async GetUserById(ctx, user_id) {
         console.log('Check');
@@ -379,6 +385,42 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async FolderExists(ctx, folder_id) {
         const folderJSON = await ctx.stub.getState(folder_id);
         return folderJSON && folderJSON.length > 0;
+    }
+    async UpdateFoldersAndFilesPath(ctx, folder_id, newPath, user_id) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        const oldPathPrefix = folderJSON.folder_path;
+        await this.updateFoldersAndFilesPath(ctx, folderJSON.folder_id, newPath, newPath, oldPathPrefix, user_id);
+    }
+    async updateFoldersAndFilesPath(ctx, folder_id, newPath, newPathPrefix, oldPathPrefix, user_id) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        //Get subFolders
+        const subFoldersString = await this.GetSubFolders(ctx, user_id, folderJSON.folder_path, folder_id);
+        const subFolders = JSON.parse(subFoldersString);
+        //Get subfiles
+        const filePath = await this.ConcatenatePathAndNameById(ctx, folderJSON.folder_path, folder_id);
+        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFiles = JSON.parse(subFilesString);
+        for (const subFile of subFiles) {
+            var newPathForSubFile = await this.genNewPath(ctx, subFile.file_path, oldPathPrefix, newPathPrefix);
+            await this.UpdateFilePath(ctx, subFile.file_id, newPathForSubFile);
+        }
+        await this.UpdateFolderPath(ctx, folder_id, newPath);
+        for (const subFolder of subFolders) {
+            var newPathForSubFolder = await this.genNewPath(ctx, subFolder.folder_path, oldPathPrefix, newPathPrefix);
+            await this.updateFoldersAndFilesPath(ctx, subFolder.folder_id, newPathForSubFolder, newPathPrefix, oldPathPrefix, user_id);
+        }
+    }
+    async genNewPath(ctx, oldPath, oldPathPrefix, newPathPrefix) {
+        const newPath = oldPath.replace(oldPathPrefix, newPathPrefix);
+        return newPath;
+    }
+    async UpdateFolderPath(ctx, folder_id, newPath) {
+        const fileString = await this.GetFolder(ctx, folder_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.folder_path = newPath;
+        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }
     async GetSubFolders(ctx, user_id, folder_path, folder_id) {
         folder_path = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
@@ -533,7 +575,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "UploadFile", null);
 __decorate([
-    (0, fabric_contract_api_1.Transaction)(),
+    (0, fabric_contract_api_1.Transaction)(false),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
@@ -593,6 +635,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "DeleteFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateFilePath", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     __metadata("design:type", Function),
@@ -657,6 +705,18 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "FolderExists", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateFoldersAndFilesPath", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateFolderPath", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
