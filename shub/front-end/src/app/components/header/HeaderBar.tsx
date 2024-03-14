@@ -54,7 +54,6 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
     toggleShowNewFile, 
     showNewDir, 
     toggleShowNewDir, 
-    option, 
     showCopy,
     showMove,
     showShare,

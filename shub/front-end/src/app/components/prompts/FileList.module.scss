@@ -24,17 +24,31 @@
         cursor: pointer;
       }
 
-      li:before {
-        content: "folder";
-        color: #6f6f6f;
-        vertical-align: middle;
-        line-height: 1.4;
-        font-family: 'Material Icons';
-        font-size: 1.75em;
-        margin-right: .25em;
-      }
+      // li:before {
+      //   content: "folder";
+      //   color: #6f6f6f;
+      //   vertical-align: middle;
+      //   line-height: 1.4;
+      //   font-family: 'Material Icons';
+      //   font-size: 1.75em;
+      //   margin-right: .25em;
+      // }
 
       li[aria-selected=true]:before {
         color: white;
       }
+  }
+
+  .li{
+    display: flex;
+    justify-content: space-between;
+    span{
+      padding-left: 1em;
+      padding-right: 1em;
+      // max-width: 70%;
+      white-space: nowrap; /* không xuống dòng */
+      overflow: hidden; /* ẩn nội dung bị thừa */
+      text-overflow: ellipsis; /* thêm dấu ... đằng sau */
+      user-select: none;
+    }
   }

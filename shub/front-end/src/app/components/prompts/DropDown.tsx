@@ -56,7 +56,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
                 <div className={cx('left')}>
                   {option.type == 'folder' ? 
                       <img src="/folder.svg" alt="" />
-                    : option.type == 'jpeg' || option.type == 'png'  ?
+                    : option.type == 'jpeg' || option.type == 'png' || option.type=='svg+xml' ?
                       <img src="/img.svg" alt="" />
                     : option.type == 'mp4' ?
                       <img src="/video.svg" alt="" />

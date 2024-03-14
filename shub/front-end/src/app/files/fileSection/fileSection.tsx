@@ -35,16 +35,16 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                 {files.map((file) => (
                     <div key={file.file_id}
                         onClick={() => {
-                            handleSelect(file.file_id, file.file_type.slice(0, file.file_type.indexOf('/')))
-                            handleType(file.file_type.slice(0, file.file_type.indexOf('/')))
+                            handleSelect(file.file_id, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                            handleType(file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
                             }}
                         onDoubleClick={() => {
-                            handleData(file.file_data, file.file_type.slice(0, file.file_type.indexOf('/')))
+                            handleData(file.file_data, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
                             handleStream()
                         }}
                     >
 
-                    <Card type1={file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)} key={file.file_id} name={file.file_name} size='10'  date={file.updated_date} selected={selected==file.file_id && type == file.file_type.slice(file.file_type.indexOf('/'), file.file_type.length - 1)}/>
+                    <Card type1={file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)} key={file.file_id} name={file.file_name} size='10'  date={file.updated_date} selected={selected == file.file_id && type == file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)}/>
                     </div>
                         
                   

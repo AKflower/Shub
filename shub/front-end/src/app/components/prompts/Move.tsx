@@ -1,96 +1,220 @@
 import { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import FileList from './FileList';
 import classNames from 'classnames/bind';
+import { usePathname, useRouter } from 'next/navigation'
 import styles from './Move.module.scss'
-// import { useHistory } from 'react-router-dom';
-// import { RootState } from '@/redux/store';
-// import FileList from "./FileList";
-// import { files as api } from "@/api";
-// import buttons from "@/utils/buttons";
-// import * as upload from "@/utils/upload";
+import Cookies from 'js-cookie';
+import { useShub } from '@/app/Provider/Provider';
+import axios from 'axios';
+import NewDir from './NewDir';
 
 const cx = classNames.bind(styles);
 
 interface MoveProps { }
 
+interface Item {
+    id: string;
+    name: string;
+    url: string;
+  }
+
 const Move: React.FC<MoveProps> = () => {
-    // const history = useHistory();
-    // const dispatch = useDispatch();
-    // const { req, selected, user } = useSelector((state: RootState) => ({
-    //     req: state.req,
-    //     selected: state.selected,
-    //     user: state.user,
-    // }));
-    // const [current, setCurrent] = useState<string>(window.location.pathname);
-    // const [dest, setDest] = useState<string | null>(null);
-    // useEffect(() => {
-    //     setCurrent(window.location.pathname);
-    // }, []);
-    // const move = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    //     event.preventDefault();
-    //     let items: any[] = [];
+    const pathname = usePathname()
+    const [path, setPath] = useState(pathname);
+    const [create, setCreate] = useState('');
+    const [items, setItems] = useState<Item[] >([]);
+    const router = useRouter();
+    const userId = Cookies.get('userId');
+    const accessToken = Cookies.get('accessToken');
+    const { 
+        type,
+        selected,
+        handleChange,
+        toggleCurrentPromptName,
+        toggleShowMove,
+        toggleShowNewDir
+    } = useShub();
 
-    //     for (let item of selected) {
-    //         items.push({
-    //             from: req.items[item].url,
-    //             to: dest + encodeURIComponent(req.items[item].name),
-    //             name: req.items[item].name,
-    //         });
-    //     }
+    const handleClick = (name: string) => {
+        const newPath = path + '/' + name 
+        setPath(newPath)
+    }
 
-    //     let action = async (overwrite: boolean, rename: boolean) => {
-    //         buttons.loading('move');
+    const handleBack = () => {
+        const newPath = path.slice(0, path.lastIndexOf('/'))
+        setPath(newPath)
+    }
+    
+    const handleMove = () => {
+        if (type == 'folder'){
+            const data = {
+                folder_id: selected,
+                newPath: path,
+                user_id: userId,
+            };
 
-    //         try {
-    //             await api.move(items, overwrite, rename);
+            axios.put(`http://localhost:3001/folders/updatePath`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${accessToken}`, 
+                },
+              })
+              .then(response => {
+                console.log('Folder moved');
+                handleChange()
+      
+              })
+              .catch(error => {
+                console.error('Error moving folder:', error);
+              });
+        }
+        else{
+            const data = {
+                file_id: selected,
+                newPath: path,
+            };
 
-    //             buttons.success('move');
-    //             history.push(dest as string);
-    //         } catch (e) {
-    //             buttons.done('move');
-    //             console.error(e);
-    //         }
-    //     };
+            axios.put(`http://localhost:3001/files/updatePath`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${accessToken}`, 
+                },
+              })
+              .then(response => {
+                console.log('File moved');
+                handleChange()
+                toggleCurrentPromptName()
+                toggleShowMove()
+      
+              })
+              .catch(error => {
+                console.error('Error moving file:', error);
+              });
+        }
+        
 
-    //     let dstItems = (await api.fetch(dest as string)).items;
-    //     let conflict = upload.checkConflict(items, dstItems);
+    }
+    
 
-    //     let overwrite = false;
-    //     let rename = false;
+    useEffect(()=>{
+        const fetchData = async () => {
+            const itm: Item[] = []
 
-    //     if (conflict) {
-    //         dispatch({
-    //             type: 'SHOW_HOVER',
-    //             payload: {
-    //                 prompt: 'replace-rename',
-    //                 confirm: (event: { preventDefault: () => void; }, option: string) => {
-    //                     overwrite = option === 'overwrite';
-    //                     rename = option === 'rename';
+            const data = { path: path };
 
-    //                     event.preventDefault();
-    //                     dispatch({ type: 'CLOSE_HOVERS' });
-    //                     action(overwrite, rename);
-    //                 },
-    //             },
-    //         });
+            const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
+                params: data, // Truyền dữ liệu qua query parameters
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              },
+             );
 
-    //         return;
-    //     }
+            if(type != 'folder'){
+                for (const pie in resF.data){
+                    await itm.push({
+                        id: resF.data[pie].folder_id,
+                        name: resF.data[pie].folder_name,
+                        url: resF.data[pie].folder_path,
+                    })
+                }
+            }
+            else{
+                for (const pie in resF.data){
+                    if(resF.data[pie].folder_id != selected){
+                        await itm.push({
+                            id: resF.data[pie].folder_id,
+                            name: resF.data[pie].folder_name,
+                            url: resF.data[pie].folder_path,
+                        })
+                    }
+                }
+            }
 
-    //     action(overwrite, rename);
-    // };
+            
+            setItems(itm)
+
+        }
+        fetchData()
+    },[path, create])
+
+    const [name, setName] = useState<string>("");
+    
+
+    const submit = () => {
+        const folderData = {
+            folder_name: name,
+            folder_path: path,
+            user_id: userId, 
+        };
+        
+        axios.post(`http://localhost:3001/folders/new`, folderData,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`, 
+            },
+        })
+        .then(response => {
+            console.log('Folder created:', response.data);
+            setCreate('')
+
+
+        })
+        .catch(error => {
+            console.error('Error creating folder:', error);
+        });
+
+    }
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            submit();
+        }
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
+    };
+
 
     return (
-        <div className={cx('card','floating')}>
+        <>
+        {!create && (
+            <div className={cx('card','floating')}>
             <div className={cx('card-title')}>
-                <h2>Prompts Move</h2>
+                <h2>Move</h2>
             </div>
+            {path != '/files' &&
+            <div className={cx('back')} onClick={() => handleBack()}>
+                <img src="/back.svg" alt="" />
+            </div>
+            }
+            
 
             <div className={cx("card-content")}>
-            <FileList updateSelected={function (val: string | null): void {
-                throw new Error('Function not implemented.');
-            }}/>
+                <ul className={cx('file-list')}>
+                {items[0] ? items.map((item) => (
+                    <li
+                        className={cx('li')}
+                        key={item.name}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={item.name}
+                        aria-url={item.url}
+                        onDoubleClick={() => handleClick(item.name)}
+                    >
+                        <img src="/folder.svg" alt="" />
+
+                        <span className={cx('name')}>
+                            {item.name}
+                        </span>
+
+          
+                    </li>
+                )): (
+                    <div>No folder here</div>
+                )}
+                </ul>
             </div >
 
             <div
@@ -100,7 +224,9 @@ const Move: React.FC<MoveProps> = () => {
                 {/* {user.perm.create && ( */}
                     <button
                         className={cx('button','button--flat')}
-                        // onClick={() => this.refs.fileList.createDir()}
+                        onClick={ () => {
+                            setCreate('new')
+                        }}
                         aria-label="New Folder"
                         title="New Folder"
                         style={{ justifySelf: 'left' }}
@@ -111,7 +237,7 @@ const Move: React.FC<MoveProps> = () => {
                 <div>
                     <button
                         className={cx('button','button--flat',"button--grey")}
-                        // onClick={() => dispatch({ type: 'CLOSE_HOVERS' })}
+                        onClick={toggleShowMove}
                         aria-label="Cancel"
                         title="Cancel"
                     >
@@ -119,8 +245,8 @@ const Move: React.FC<MoveProps> = () => {
                     </button>
                     <button
                         className={cx('button','button--flat')}
-                        // onClick={move}
-                        // disabled={history.location.pathname === dest}
+                        onClick={handleMove}
+                        disabled={path == pathname}
                         aria-label="Move"
                         title="Move"
                     >
@@ -129,6 +255,50 @@ const Move: React.FC<MoveProps> = () => {
                 </div>
             </div>
         </div >
+        )}
+        
+        {create && (
+            <div className={cx('card','floating')}>
+            <div className={cx('card-title')}>
+                <h2>New directory</h2>
+            </div>
+
+            <div className={cx("card-content")}>
+                <p>Write the name of the new directory.</p>
+                <input
+                    className={cx('input','input--block')}
+                    type='text'
+                    onKeyDown={handleKeyPress}
+                    onChange={handleInputChange}
+                    name={name}
+                />
+            </div>
+
+            <div className={cx("card-action")}>
+                <button
+                    className={cx('button','button--flat',"button--grey")}
+                    onClick={() => {
+                        setCreate('')
+                        }
+                    }
+                    aria-label='Cancel'
+                    title='Cancel'>
+                    Cancel
+                </button>
+                <button
+                    className={cx('button','button--flat')}
+                    aria-label='Create'
+                    title='Create'
+                    onClick={submit}
+                    >
+                    Create
+                </button>
+            </div>
+        </div>
+        )}
+        
+        </>
+        
     );
 };
 

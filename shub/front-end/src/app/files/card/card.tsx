@@ -16,6 +16,7 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
        
       } = useShub();
 
+
     let dateObject
     if(date) dateObject = new Date(date);
     return (
@@ -26,7 +27,7 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
                     <div className={styles.imgFolder}>{option && selected ? <img src='/folderW.svg' style={{width: '70px'}}></img> : <img src='/folder.svg' style={{width: '70px'}}></img>}</div> : 
                         type1 == 'mp4' ? 
                     <div className={styles.imgFile}><img src='/video.svg' style={{width: '70px'}}></img></div> :
-                        type1=='jpeg' || type1=='png' ?
+                        type1=='jpeg' || type1=='png' || type1=='svg+xml' ?
                     <div className={styles.imgFile}><img src='/img.svg' style={{width: '70px'}}></img></div> :
                         type1=='pdf' ?
                     <div className={styles.imgFile}><img src='/pdf.svg' style={{width: '70px'}}></img></div> :

@@ -1,4 +1,4 @@
-import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles} from '@nestjs/common';
+import { Post, Get, Param, Body, Controller, ValidationPipe, Query, Delete, UseInterceptors, UploadedFile, Inject, UseGuards, UploadedFiles, Put, Res} from '@nestjs/common';
 import { FileService } from './file.service';
 import { Request, Response } from "express";
 
@@ -107,7 +107,7 @@ export class FileController {
         return this.fileService.getFilesByPrefix(this.contract,prefix);
     }
 
-    @Put('updatePath')
+    @Put('/updatePath')
     @UseGuards(JwtAuthGuard)
     async updateFilePath(@Body() params: {file_id: string, newPath: string}) {
         const {file_id,newPath} = params;
