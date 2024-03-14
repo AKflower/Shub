@@ -1,11 +1,10 @@
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { usePathname, useRouter } from 'next/navigation'
 import styles from './Move.module.scss'
 import Cookies from 'js-cookie';
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
-import NewDir from './NewDir';
 
 const cx = classNames.bind(styles);
 
@@ -31,7 +30,6 @@ const Move: React.FC<MoveProps> = () => {
         handleChange,
         toggleCurrentPromptName,
         toggleShowMove,
-        toggleShowNewDir
     } = useShub();
 
     const handleClick = (name: string) => {

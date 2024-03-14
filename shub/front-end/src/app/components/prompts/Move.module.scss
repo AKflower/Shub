@@ -101,6 +101,13 @@
     color: #6f6f6f;
   }
   
+  .button--flat:disabled:hover{
+    color: #6f6f6f;
+    background: transparent;
+    box-shadow: 0 0 0;
+    border: 0;
+    text-transform: uppercase;
+  }
   .button--flat:disabled{
     color: #6f6f6f;
     background: transparent;
