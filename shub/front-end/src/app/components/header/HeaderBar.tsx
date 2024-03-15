@@ -298,23 +298,23 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
       {currentPromptName === 'more' && (
         <div className={cx('overlay')}
       // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
-        onClick={
-          ()=>{
-            toggleCurrentPromptName()
-            if(showDownload){toggleShowDownload()}
-            if(showInfo){toggleShowInfo()}
-            if(showUpload){toggleShowUpload()}
-            if(showNewFile){toggleShowNewFile()}
-            if(showNewDir){toggleShowNewDir()}
-            if(showShare){toggleShowShare()}
-            if(showRename){toggleShowRename()}
-            if(showCopy){toggleShowCopy()}
-            if(showMove){toggleShowMove()}
-            if(showDelete){toggleShowDelete()}
-            if(stream){handleStream()}
-            if(showChangePassword){toggleShowChangePassword()}
-          }
-        }
+        // onClick={
+        //   ()=>{
+        //     toggleCurrentPromptName()
+        //     if(showDownload){toggleShowDownload()}
+        //     if(showInfo){toggleShowInfo()}
+        //     if(showUpload){toggleShowUpload()}
+        //     if(showNewFile){toggleShowNewFile()}
+        //     if(showNewDir){toggleShowNewDir()}
+        //     if(showShare){toggleShowShare()}
+        //     if(showRename){toggleShowRename()}
+        //     if(showCopy){toggleShowCopy()}
+        //     if(showMove){toggleShowMove()}
+        //     if(showDelete){toggleShowDelete()}
+        //     if(stream){handleStream()}
+        //     if(showChangePassword){toggleShowChangePassword()}
+        //   }
+        // }
       />
       )}
     

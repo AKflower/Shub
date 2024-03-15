@@ -5,6 +5,7 @@ import styles from './Move.module.scss'
 import Cookies from 'js-cookie';
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
@@ -43,6 +44,8 @@ const Move: React.FC<MoveProps> = () => {
     }
     
     const handleMove = () => {
+        const load = toast.loading('Loading...')
+
         if (type == 'folder'){
             const data = {
                 folder_id: selected,
@@ -57,9 +60,11 @@ const Move: React.FC<MoveProps> = () => {
                 },
               })
               .then(response => {
-                console.log('Folder moved');
+                toast.success('Folder Moved')
+                toast.dismiss(load);
                 handleChange()
-      
+                toggleCurrentPromptName()
+                
               })
               .catch(error => {
                 console.error('Error moving folder:', error);
@@ -78,18 +83,19 @@ const Move: React.FC<MoveProps> = () => {
                 },
               })
               .then(response => {
-                console.log('File moved');
-                handleChange()
+                toast.success('Folder Moved')
                 toggleCurrentPromptName()
-                toggleShowMove()
+                toast.dismiss(load)
+                handleChange()
+                
       
               })
               .catch(error => {
                 console.error('Error moving file:', error);
               });
         }
-        
 
+        toggleShowMove()
     }
     
 
@@ -140,6 +146,8 @@ const Move: React.FC<MoveProps> = () => {
     
 
     const submit = () => {
+        const load = toast.loading('Loading...')
+
         const folderData = {
             folder_name: name,
             folder_path: path,
@@ -153,7 +161,9 @@ const Move: React.FC<MoveProps> = () => {
             },
         })
         .then(response => {
-            console.log('Folder created:', response.data);
+            toast.success('Folder Created')
+            toast.dismiss(load);
+            
             setCreate('')
 
 

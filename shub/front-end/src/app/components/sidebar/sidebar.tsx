@@ -191,6 +191,7 @@ const Sidebar = () => {
                 className={styles.buttonBlue}
                 onClick={()=>{
                     toggleShowUpload()
+                    toggleCurrentPromptName()
                     
                 }}
                 aria-label="Upload"

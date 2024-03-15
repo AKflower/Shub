@@ -6,6 +6,7 @@ import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
 import { usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
@@ -23,6 +24,8 @@ const NewDir: React.FC<NewDirProps> = () => {
     
 
     const submit = () => {
+        const load = toast.loading('Loading...')
+
         const folderData = {
             
             folder_name: name,
@@ -37,7 +40,10 @@ const NewDir: React.FC<NewDirProps> = () => {
             },
         })
         .then(response => {
-            console.log('Folder created:', response.data);
+            toast.success('Folder Created')
+            toast.dismiss(load);
+            toggleCurrentPromptName()
+
             handleChange()
 
         })
@@ -45,7 +51,6 @@ const NewDir: React.FC<NewDirProps> = () => {
             console.error('Error creating folder:', error);
         });
 
-        toggleCurrentPromptName()
         toggleShowNewDir()
     }
 

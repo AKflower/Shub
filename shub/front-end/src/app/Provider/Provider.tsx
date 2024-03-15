@@ -72,19 +72,19 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const [showNewFile, setShowNewFile] = useState('');
   const toggleShowNewFile = () => {
     setShowNewFile(showNewFile == '' ? 'more' : '');
-    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   };  
 
   const [showNewDir, setShowNewDir] = useState('');
   const toggleShowNewDir = () => {
     setShowNewDir(showNewDir == '' ? 'more' : '');
-    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   }; 
 
   const [showUpload, setShowUpload] = useState('');
   const toggleShowUpload = () => {
     setShowUpload(showUpload == '' ? 'more' : '');
-    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   }; 
 
  
@@ -114,50 +114,50 @@ const resetSelect = () => {
 
 const [showDelete, setShowDelete] = useState("");
 const toggleShowDelete = () => {
-    setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
     setShowDelete(showDelete == '' ? 'more' : '');
 };
 
 const [showRename, setShowRename] = useState("");
 const toggleShowRename = () => {
   setShowRename(showRename == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [showCopy, setShowCopy] = useState("");
 const toggleShowCopy = () => {
   setShowCopy(showCopy == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [showMove, setShowMove] = useState("");
 const toggleShowMove = () => {
   setShowMove(showMove == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [showShare, setShowShare] = useState("");
 const toggleShowShare = () => {
   setShowShare(showShare == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [showDownload, setShowDownload] = useState("");
 const toggleShowDownload = () => {
   setShowDownload(showDownload == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [showInfo, setShowInfo] = useState("");
 const toggleShowInfo = () => {
   setShowInfo(showInfo == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [stream, setStream] = useState("");
 const handleStream = () => {
   setStream(stream == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [data, setData] = useState("");

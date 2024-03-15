@@ -6,6 +6,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { usePathname } from 'next/navigation';
 import { useShub } from '@/app/Provider/Provider';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
@@ -13,11 +14,12 @@ interface UploadProps {}
 
 const Upload: React.FC<UploadProps> = () => {
   const pathname = usePathname()
-  const {  toggleShowUpload, handleChange } = useShub();
+  const {  toggleShowUpload, handleChange, toggleCurrentPromptName } = useShub();
   const userId = Cookies.get('userId');
   const accessToken = Cookies.get('accessToken');
   const [directories, setDirectories] = useState<string[]>([]);
   const [trans, setTrans] = useState('');
+  const [hide, setHide] = useState('');
   const [files, setFiles] = useState<{file: File, path: string}[]>([]);
 
 
@@ -30,7 +32,12 @@ const Upload: React.FC<UploadProps> = () => {
 
   useEffect(() => {
     const uploadFile = async () => {
+
         if (selectedFile) {
+          toggleShowUpload()
+
+          const load = toast.loading('Loading...')
+
           const data = {
             userId: userId,
             filePath: pathname
@@ -45,9 +52,10 @@ const Upload: React.FC<UploadProps> = () => {
                 },
             })
             .then(response => {
-                console.log('File uploaded:', response.data);
+                toast.success('File Uploaded')
+                toast.dismiss(load);
                 handleChange()
-                toggleShowUpload()
+                toggleCurrentPromptName() 
 
 
             })
@@ -57,6 +65,7 @@ const Upload: React.FC<UploadProps> = () => {
 
             
         }
+
     };
     uploadFile()
   },[selectedFile])
@@ -74,10 +83,14 @@ const Upload: React.FC<UploadProps> = () => {
         const directoryHandle = await (window as any).showDirectoryPicker();
         const directories = await getDirectoriesInDirectory(directoryHandle, '/'+directoryHandle.name);
         directories.push('/'+directoryHandle.name);
-        setDirectories(directories);
+        await setDirectories(directories);
         const files = await getFilesInDirectory(directoryHandle, '/'+directoryHandle.name);
-        setFiles(files);
-        setTrans('1')
+        await setFiles(files);
+        await setTrans('1')
+        await toast.loading('Loading...')
+        await setHide('hide')
+        // await toggleShowUpload()
+
       } catch (err) {
         console.error(err);
       }
@@ -172,6 +185,13 @@ const Upload: React.FC<UploadProps> = () => {
         await uploadFolder(folder.slice(folder.lastIndexOf('/')+1, folder.length), folder);
 
     }
+    if (!files[0] && directories[0]){
+      await toast.dismiss();
+      await toast.success('Folder Uploaded')
+      await toggleShowUpload() 
+      await handleChange()
+      await toggleCurrentPromptName()
+    }
   
   };
 
@@ -180,8 +200,11 @@ const Upload: React.FC<UploadProps> = () => {
       for (const file of files) {
           await uploadFile(file.file, file.path);
           if(file == files[files.length - 1]) {
-            toggleShowUpload() 
             handleChange()
+            toggleCurrentPromptName()
+            toggleShowUpload()
+            toast.dismiss();
+            toast.success('Folder Uploaded')
           }
 
       }
@@ -189,6 +212,8 @@ const Upload: React.FC<UploadProps> = () => {
     const uploadAllSequentially = async () => {
       await uploadFoldersSequentially();
       await uploadFilesSequentially();
+     
+
     }
 
     uploadAllSequentially();
@@ -197,7 +222,9 @@ const Upload: React.FC<UploadProps> = () => {
   },[trans])
 
   return (
-    <div className={cx('card', 'floating')}>
+    <>
+    {!hide && (
+      <div className={cx('card', 'floating')}>
       <div className={cx('card-title')}>
         <h2>Upload</h2>
       </div>
@@ -228,8 +255,23 @@ const Upload: React.FC<UploadProps> = () => {
           <div className={cx('title')}>Folder</div>
         </div>
       </div>
+      <div className={cx('cancel')}>
+        <button
+          className={cx('button','button--flat',"button--grey")}
+          onClick={() => {toggleShowUpload()
+          toggleCurrentPromptName()}}
+          aria-label="Cancel"
+          title="Cancel"
+        >
+        Cancel
+        </button>
+      </div>
+      </div>
       
-    </div>
+    )}
+    </>
+    
+    
   );
 };
 

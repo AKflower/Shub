@@ -5,6 +5,7 @@ import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
 import { usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 
 const cx = classNames.bind(styles);
@@ -15,7 +16,7 @@ const Delete: React.FC<DeleteProps> = () => {
   const pathname = usePathname()
   const userId = Cookies.get('userId');
   const accessToken = Cookies.get('accessToken');
-  const { selected, toggleShowDelete, handleChange, type } = useShub();
+  const { selected, toggleShowDelete, handleChange, type, toggleCurrentPromptName } = useShub();
   
   const toggle = () => {
     toggleShowDelete()
@@ -23,6 +24,8 @@ const Delete: React.FC<DeleteProps> = () => {
   
   const submit = () => {
     const path = pathname.replaceAll('/','+')
+    const load = toast.loading('Loading...')
+
     if (type == 'folder'){
       const foldersString = Cookies.get('folders');
 
@@ -44,6 +47,9 @@ const Delete: React.FC<DeleteProps> = () => {
         .then(response => {
           console.log('Folder deleted');
           handleChange()
+          toggleCurrentPromptName()
+          toast.success('Folder Deleted')
+          toast.dismiss(load);
 
         })
         .catch(error => {
@@ -62,6 +68,9 @@ const Delete: React.FC<DeleteProps> = () => {
       .then(response => {
         console.log('File deleted');
         handleChange()
+        toggleCurrentPromptName()
+        toast.success('File Deleted')
+        toast.dismiss(load);
 
       })
       .catch(error => {

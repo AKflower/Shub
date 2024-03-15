@@ -11,6 +11,9 @@ import classNames from 'classnames/bind';
 import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import Tool from '../components/tool/Tool';
+import Skeleton from 'react-loading-skeleton';
+import { Bounce, ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
@@ -127,6 +130,13 @@ const File = () => {
                  */}
                  {url}
             </div>
+            <Toaster 
+                position="top-center"
+                reverseOrder={false}
+            />
+            
+            
+             
         </div>
     )
 }

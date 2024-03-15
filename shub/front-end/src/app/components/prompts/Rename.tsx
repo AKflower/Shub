@@ -5,6 +5,7 @@ import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { usePathname } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
@@ -14,13 +15,14 @@ const Rename: React.FC<RenameProps> = () => {
     const userId = Cookies.get('userId');
     const pathname = usePathname()
 
+
     const [name, setName] = useState<string>("");
     const { 
         selected, 
         toggleCurrentPromptName, 
         toggleShowRename, 
         handleChange,
-        type 
+        type,
     } = useShub();
     const accessToken = Cookies.get('accessToken');
 
@@ -39,7 +41,7 @@ const Rename: React.FC<RenameProps> = () => {
     };
 
     const submit = () => {
-        
+        const load = toast.loading('Loading...')
         if(type == 'folder'){
             const data = {
                 new_folder_name: name,
@@ -47,18 +49,20 @@ const Rename: React.FC<RenameProps> = () => {
                 folder_path: pathname,
                 folder_id: selected,
             };
-            axios.put(`http://localhost:3001/folders/rename`, data, {
+             axios.put(`http://localhost:3001/folders/rename`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`, 
                 },
             })
             .then(response => {
-                console.log('Folder created:', response.data);
+                toast.success('Folder Renamed')
+                toast.dismiss(load);
+                toggleCurrentPromptName()
                 handleChange()
             })
             .catch(error => {
-                console.error('Error creating folder:', error);
+                console.error('Error Renaming folder:', error);
             });
         }
         else {
@@ -72,18 +76,19 @@ const Rename: React.FC<RenameProps> = () => {
                 },
             })
             .then(response => {
-                console.log('Folder created:', response.data);
+                toast.success('File Renamed')
+                toast.dismiss(load);
+                toggleCurrentPromptName()
                 handleChange()
             })
             .catch(error => {
-                console.error('Error creating folder:', error);
+                console.error('Error Renaming file:', error);
             });
         }
         
-        
-        toggleCurrentPromptName()
         toggleShowRename()
     }
+
     const [oldName, setOldName] = useState<string>("");
     useEffect(() => {
         if(type == 'folder'){
@@ -115,7 +120,6 @@ const Rename: React.FC<RenameProps> = () => {
 
             <div className={cx("card-content")}>
                 <p>Insert a new name for <code>{oldName}</code>
-                    {/* {oldName()} */}
                 </p>
                 <input
                     className={cx("input",'input--block')}

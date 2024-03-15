@@ -16,6 +16,12 @@ cd test-network
 ./network.sh up createChannel -c mychannel -ca -s couchdb
 ./network.sh deployCC -ccn basic -ccp ../shub/back-end/chaincode/ -ccl typescript
 </pre>
+**Run IPFS**
+<pre>
+cd ipfs-network
+docker-compose down
+docker-compose up
+</pre>
 **Run API**
 <pre>
 cd shub/back-end/api
