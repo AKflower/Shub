@@ -15,6 +15,21 @@ export class FolderService {
         await contract.submitTransaction('CreateFolder',newFolder.folder_name,newFolder.folder_path,newFolder.user_id,''+newFolder.created_date,''+newFolder.updated_date);
         return 'Create thanh cong';
     }
+    async uploadFolder(contract: Contract,foldersArray: Folder[],filesArray: File[]): Promise<string> {
+        for (const folder of foldersArray) {
+            folder.created_date = new Date();
+            folder.updated_date = new Date();
+        }
+        for (const file of filesArray) {
+            file.created_date = new Date();
+            file.updated_date = new Date();
+        }
+        const foldersArrayString = JSON.stringify(foldersArray)
+        const filesArrayString = JSON.stringify(filesArray)
+        await contract.submitTransaction('UploadFolderandFile',foldersArrayString,filesArrayString);
+        return 'Upload folder thanh cong'
+
+    }
     async getFoldersByPath(contract: Contract,path:string): Promise<Folder[]> {
         const resultBytes= await contract.evaluateTransaction('GetFoldersByPath',path);
         const utf8Decoder = new TextDecoder();
@@ -81,4 +96,8 @@ export class FolderService {
         await contract.submitTransaction('UpdateFoldersAndFilesPath',folder_id,newPath,user_id);
        
     }
+    async copyFolder(contract: Contract, folder_id: string, newPath: string,user_id:string): Promise<void> {
+        await contract.submitTransaction('CopyFolder',folder_id,newPath,user_id,"true");
+    }
+
 }

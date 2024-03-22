@@ -343,6 +343,26 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         };
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newFolder))));
     }
+    async UploadFolderandFile(ctx, foldersArrayString, filesArrayString, user_id) {
+        const foldersArray = JSON.parse(foldersArrayString);
+        const filesArray = JSON.parse(filesArrayString);
+        for (const folder of foldersArray) {
+            await this.CreateFolder(ctx, folder.folder_name, folder.folder_path, user_id, folder.created_date, folder.updated_date);
+        }
+        for (const file of filesArray) {
+            await this.UploadFile(ctx, file.file_name, file.file_path, file.cid, user_id, file.created_date, file.updated_date, file.size, file.type);
+        }
+    }
+    async UploadFolderandFileWithNewPath(ctx, foldersArrayString, filesArrayString, newPath, user_id) {
+        const foldersArray = JSON.parse(foldersArrayString);
+        const filesArray = JSON.parse(filesArrayString);
+        for (const folder of foldersArray) {
+            await this.CreateFolder(ctx, folder.folder_name, newPath, user_id, folder.created_date, folder.updated_date);
+        }
+        for (const file of filesArray) {
+            await this.UploadFile(ctx, file.file_name, newPath, file.cid, user_id, file.created_date, file.updated_date, file.size, file.type);
+        }
+    }
     async GetFolder(ctx, folder_id) {
         const folderJSON = await ctx.stub.getState(folder_id);
         if (!folderJSON || folderJSON.length === 0) {
@@ -386,6 +406,28 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folderJSON = await ctx.stub.getState(folder_id);
         return folderJSON && folderJSON.length > 0;
     }
+    async CopyFolder(ctx, folder_id, newPath, user_id, firstAccess = true) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        const oldPath = folderJSON.folder_path;
+        if (firstAccess) {
+            const created_date = new Date() + '';
+            const updated_date = new Date() + '';
+            await this.CreateFolder(ctx, folderJSON.folder_name, newPath, user_id, created_date, updated_date);
+            firstAccess = false;
+        }
+        //Get subFolders
+        const subFoldersString = await this.GetSubFolders(ctx, user_id, oldPath, folder_id);
+        const subFolders = JSON.parse(subFoldersString);
+        //Get subfiles
+        const filePath = await this.ConcatenatePathAndNameById(ctx, oldPath, folder_id);
+        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        newPath = newPath + '/' + folderJSON.folder_name;
+        await this.UploadFolderandFileWithNewPath(ctx, subFoldersString, subFilesString, newPath, user_id);
+        for (const subFolder of subFolders) {
+            await this.CopyFolder(ctx, subFolder.folder_id, newPath, user_id, firstAccess);
+        }
+    }
     async UpdateFoldersAndFilesPath(ctx, folder_id, newPath, user_id) {
         const folderString = await this.GetFolder(ctx, folder_id);
         const folderJSON = JSON.parse(folderString);
@@ -417,10 +459,10 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return newPath;
     }
     async UpdateFolderPath(ctx, folder_id, newPath) {
-        const fileString = await this.GetFolder(ctx, folder_id);
-        const fileJSON = JSON.parse(fileString);
-        fileJSON.folder_path = newPath;
-        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        folderJSON.folder_path = newPath;
+        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
     }
     async GetSubFolders(ctx, user_id, folder_path, folder_id) {
         folder_path = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
@@ -682,6 +724,18 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UploadFolderandFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UploadFolderandFileWithNewPath", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFolder", null);
@@ -705,6 +759,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "FolderExists", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, Boolean]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "CopyFolder", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),

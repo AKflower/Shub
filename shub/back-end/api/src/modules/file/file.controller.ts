@@ -68,6 +68,7 @@ export class FileController {
         const { filePath, userId} = params;
         console.log('fsagfsa');
         const { cid } = await this.ipfsClient.add(file.buffer)
+        console.log(cid);
         // this.ipfsCluster.pin.add(cid)
         console.log('fsagfsa1');
         const fileDTO: FileDTO =  {
@@ -106,6 +107,10 @@ export class FileController {
     async updateFilePath(@Body() params: {file_id: string, newPath: string}) {
         const {file_id,newPath} = params;
         return this.fileService.updateFilePath(this.contract,file_id,newPath)
+    }
+    @Post('/copy')
+    async copyFile(@Body() file: FileDTO) {
+        return this.fileService.copyFile(this.contract,file);
     }
 
     @Post('/ipfslong')

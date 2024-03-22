@@ -8,7 +8,7 @@ import { Folder } from 'src/model/folder.model';
 import { Context } from 'vm';
 import { ShubService } from 'src/config/shub.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-
+import { File } from 'src/model/file.model';
 @Controller('/folders')
 export class FolderController {
     private contract: Contract;
@@ -23,6 +23,10 @@ export class FolderController {
         console.log(newFolder)
         return this.folderService.createFolder(this.contract,newFolder);
 
+    }
+    @Post('/upload')
+    uploadFolder(@Body() data: {foldersArray : Folder[], filesArray : File[]}) {
+        return this.folderService.uploadFolder(this.contract,data.foldersArray,data.filesArray)
     }
     @Get('/bypath')
     @UseGuards(JwtAuthGuard)
@@ -62,5 +66,10 @@ export class FolderController {
     updateFolderPath(@Body() params : {folder_id: string,newPath: string,user_id: string}) {
         const {folder_id, newPath,user_id} = params;
         return this.folderService.updateFolderPath(this.contract,folder_id,newPath,user_id)
+    }
+    @Post('/copy')
+    copyFolder(@Query() params : {folder_id: string, newPath: string, user_id: string}) {
+        const {folder_id,newPath,user_id} = params;
+        return this.folderService.copyFolder(this.contract,folder_id,newPath,user_id);
     }
 }

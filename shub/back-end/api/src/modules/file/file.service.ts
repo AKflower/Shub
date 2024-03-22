@@ -161,6 +161,10 @@ export class FileService {
       
     return files;
   }
+  async copyFile(contract:Contract, file: FileDTO): Promise<File> {
+      const res = await this.upload(contract,file);
+      return res;
+  }
   async updateFilePath(contract: Contract,file_id: string, newPath: string): Promise<string> {
     await contract.submitTransaction('UpdateFilePath',file_id,newPath);
     return 'Update Successful!'
