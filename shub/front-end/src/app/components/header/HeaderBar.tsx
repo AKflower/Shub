@@ -302,15 +302,15 @@ const [showToast, setShowToast] = useState("");
         onClick={
           ()=>{
             toggleCurrentPromptName()
-            if(showDownload){setShowDownload('')}
-            if(showInfo){setShowInfo('')}
+            // if(showDownload){setShowDownload('')}
+            // if(showInfo){setShowInfo('')}
             if(showUpload){toggleShowUpload()}
             if(showNewFile){toggleShowNewFile()}
             if(showNewDir){toggleShowNewDir()}
-            if(showShare){setShowShare('')}
+            // if(showShare){setShowShare('')}
             if(showRename){toggleShowRename()}
-            if(showCopy){setShowCopy('')}
-            if(showMove){setShowMove('')}
+            // if(showCopy){setShowCopy('')}
+            // if(showMove){setShowMove('')}
             if(showDelete){toggleShowDelete()}
             if(stream){handleStream()}
             if(showChangePassword){toggleShowChangePassword()}
