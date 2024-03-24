@@ -3,20 +3,22 @@ export class User {
     user_id?: string;
 
    
-    username?: string;
+    email?: string;
 
     
     password?: string;
 
+    firstName?: string;
     
-    email?: string;
+    lastName?: string;
 
-    constructor({username,password,email}) {
+    constructor({email,password,firstName,lastName}) {
         
-        if (username!=null) this.username=username;
+        if (email!=null) this.email=email;
         
         if (password!=null) this.password=password;
-        if (email!=null) this.email=email;
+        if (firstName!=null) this.firstName=firstName;
+        if (lastName!=null) this.lastName=lastName;
         
     }
     

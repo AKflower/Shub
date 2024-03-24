@@ -56,23 +56,24 @@ export class UserContract extends Contract {
         return newId;
     }
     @Transaction()
-    public async NewUser(ctx: Context, username:string, password: string, email: string): Promise<void>{
+    public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string): Promise<string>{
         const user_id = await this.generateUniqueId(ctx, 'user_');
-        const exists =await this.UserExists(ctx, user_id);
+        const exists =await this.UserEmailExists(ctx, email);
         if (exists) {
-            throw new Error(`The file ${user_id} already exists`);
+            throw new Error(`The user ${email} already exists`);
+            
         }
         
         
         const newUser = {
             user_id: user_id,
-            username: username,
-            password: password,
             email: email,
-
+            password: password,
+            firstName: firstName,
+            lastName: lastName
         };
         await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(newUser))));
-        
+        return JSON.stringify(newUser)
 
     }
     @Transaction(false)
@@ -84,11 +85,11 @@ export class UserContract extends Contract {
         } 
         return fileJSON.toString();
     }
-    @Transaction()
-    public async GetUserByUserName(ctx: Context, userName: string): Promise<string> {
+    @Transaction(false)
+    public async GetUserByEmail(ctx: Context, email: string): Promise<string> {
         const queryString = {
             selector: {
-                username: userName,
+                email: email,
             },
         };
 
@@ -96,7 +97,7 @@ export class UserContract extends Contract {
         const result = await iterator.next();
 
         if (result.done) {
-            throw new Error(`User with username ${userName} not found`);
+            throw new Error(`User with email ${email} not found`);
         }
 
         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
@@ -113,8 +114,37 @@ export class UserContract extends Contract {
     @Transaction(false)
     @Returns('boolean')
     public async UserExists(ctx:Context, user_id: string): Promise<boolean>{
-        const fileJSON = await ctx.stub.getState(user_id);
-        return fileJSON && fileJSON.length>0;
+        const userJSON = await ctx.stub.getState(user_id);
+        return userJSON && userJSON.length>0;
+    }
+    @Transaction(false)
+    @Returns('boolean')
+    public async UserEmailExists(ctx: Context, user_email: string): Promise<boolean> {
+        const queryString = {
+            selector: {
+                email: user_email,
+            },
+        };
+
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+
+        // Return false if no user is found
+        if (result.done) {
+            return false;
+        }
+
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
+        } catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+
+        // Return true if a user with the email is found
+        return true;
     }
     @Transaction(false)
     @Returns('string')
@@ -132,7 +162,7 @@ export class UserContract extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            if (record.file_id && record.file_id.startsWith('user_')) {
+            if (record.user_id && record.user_id.startsWith('user_')) {
                 allResults.push(record);
             }
             result = await iterator.next();
@@ -152,6 +182,17 @@ export class UserContract extends Contract {
           return ctx.stub.deleteState(user_id);
       }
 
+      @Transaction()
+      public async ChangePassword(ctx: Context, user_id: string, newPassword: string): Promise<void> {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.password=newPassword;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
       
 
 }

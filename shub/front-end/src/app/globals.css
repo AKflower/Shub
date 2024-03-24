@@ -87,3 +87,9 @@ header img {
 header img {
   /* height: 2.5em; */
 }
+.Toastify__progress-bar--success {
+  background: green !important;
+}
+.Toastify__toast-body {
+  text-align: left !important;
+}

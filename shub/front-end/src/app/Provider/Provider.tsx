@@ -47,6 +47,7 @@ interface ShubContextProps {
     handleType: (type: string) => void;
     showChangePassword: string;
     toggleShowChangePassword: () => void;
+    
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);

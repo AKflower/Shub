@@ -6,6 +6,7 @@ import { BlacklistService } from './blacklist.service';
 import { FabricService } from '../fabric/fabric.service';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { ShubService } from 'src/config/shub.service';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -23,10 +24,12 @@ export class AuthService {
   }
  
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.userService.getUserByUserName(this.contract,username);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.userService.getUserByEmail(this.contract,email);
+    console.log('User: ',user);
     
-    if (user && user.password === password) {
+
+    if (user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
 
       return result;
@@ -36,7 +39,7 @@ export class AuthService {
   }
 
   async login(user: any): Promise<string> {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { email: user.email, sub: user.userId };
     return this.jwtService.sign(payload);
   }
 

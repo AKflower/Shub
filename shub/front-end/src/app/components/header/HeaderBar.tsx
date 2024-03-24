@@ -23,6 +23,7 @@ import ChangePassword from '../prompts/ChangePassword';
 import axios from 'axios';
 import Dropdown from '../prompts/DropDown';
 
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +42,7 @@ interface Option {
 
 
 const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
-
+const [showToast, setShowToast] = useState("");
   const pathname = usePathname()
   const isLogin = (pathname=='/') 
   const [searchQuery, setSearchQuery] = useState('');
@@ -298,24 +299,38 @@ const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
       {currentPromptName === 'more' && (
         <div className={cx('overlay')}
       // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
-        // onClick={
-        //   ()=>{
-        //     toggleCurrentPromptName()
-        //     if(showDownload){toggleShowDownload()}
-        //     if(showInfo){toggleShowInfo()}
-        //     if(showUpload){toggleShowUpload()}
-        //     if(showNewFile){toggleShowNewFile()}
-        //     if(showNewDir){toggleShowNewDir()}
-        //     if(showShare){toggleShowShare()}
-        //     if(showRename){toggleShowRename()}
-        //     if(showCopy){toggleShowCopy()}
-        //     if(showMove){toggleShowMove()}
-        //     if(showDelete){toggleShowDelete()}
-        //     if(stream){handleStream()}
-        //     if(showChangePassword){toggleShowChangePassword()}
-        //   }
-        // }
-      />
+        onClick={
+          ()=>{
+            toggleCurrentPromptName()
+            if(showDownload){setShowDownload('')}
+            if(showInfo){setShowInfo('')}
+            if(showUpload){toggleShowUpload()}
+            if(showNewFile){toggleShowNewFile()}
+            if(showNewDir){toggleShowNewDir()}
+            if(showShare){setShowShare('')}
+            if(showRename){toggleShowRename()}
+            if(showCopy){setShowCopy('')}
+            if(showMove){setShowMove('')}
+            if(showDelete){toggleShowDelete()}
+            if(stream){handleStream()}
+            if(showChangePassword){toggleShowChangePassword()}
+          }
+        }
+      >
+        <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition= {Bounce}
+          />
+      </div>
       )}
     
       

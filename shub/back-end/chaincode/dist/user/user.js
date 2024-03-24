@@ -20,15 +20,19 @@ __decorate([
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], User.prototype, "email", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], User.prototype, "firstName", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], User.prototype, "lastName", void 0);
 __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    (0, fabric_contract_api_1.Property)(),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
 User = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], User);

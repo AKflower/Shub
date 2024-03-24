@@ -1,6 +1,74 @@
 .container{
-    .header {
-       font-size: 1.5rem;
-       color: #6a6a6a;
+    .headerContainer{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        .header {
+            font-size: 2rem;
+            padding: 1rem 0;
+            color: #6a6a6a;
+        }
+       
+        button{
+            margin: 0 11rem 0 0;
+            background: #15acff;
+            padding: 1em;
+            color: white;
+            font-size: .8rem;
+            border-radius: 5px;
+        }
     }
+    .tableContainer{
+        margin: 1.5em 0 0 0;
+        .table{
+            border-collapse: collapse; 
+            border-spacing: 5px;
+            width: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            .thead{
+                background: #3fc4ff;
+                height: 2.5em;
+                font-weight: 600;
+                color: white;
+                tr {
+                    border-radius: 10px;
+                }
+                
+            }
+            td {
+                padding: 1em;
+            }
+            tbody {
+                color: gray;
+                tr {
+                    background-color: white;
+                    border-top: 1px solid silver;
+                    
+                    .action {
+                        display: flex;
+                        justify-content: center;
+                        .edit {
+                            cursor: pointer;
+                            border-radius: 50%;
+                            padding: 0.1em;
+                            &:hover{
+                                background-color: silver;
+                            }
+                        }
+                       
+                    }
+                }
+                
+                
+                
+            }
+        }
+    }
+    
+   
+}
+.blue{
+    color: #0080ff;
 }

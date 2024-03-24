@@ -13,19 +13,22 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(@Body('username') username: string, @Body('password') password: string) {
-    const user = await this.authService.validateUser(username, password);
-
+  async login(@Body('email') email: string, @Body('password') password: string) {
+    console.log(email,password);
+    const user = await this.authService.validateUser(email, password);
+    
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     // If the user is valid, generate a JWT token
-    const token = this.jwtService.sign({ username: user.username, sub: user.userId });
+    const token = this.jwtService.sign({ email: user.email, sub: user.userId });
 
     return { 
       user_id: user.user_id,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       access_token: token 
     };
   }

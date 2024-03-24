@@ -16,11 +16,6 @@ export declare class StorageFileContract extends Contract {
     DeleteFile(ctx: Context, file_id: string): Promise<void>;
     UpdateFilePath(ctx: Context, file_id: string, newPath: string): Promise<void>;
     /*************************************User ***************************/
-    GetUserById(ctx: Context, user_id: string): Promise<string>;
-    GetUserByUserName(ctx: Context, userName: string): Promise<string>;
-    UserExists(ctx: Context, user_id: string): Promise<boolean>;
-    GetAllUser(ctx: Context): Promise<string>;
-    DeleteUser(ctx: Context, user_id: string): Promise<void>;
     /**************** Folder************************/
     CreateFolder(ctx: Context, folder_name: string, folder_path: string, user_id: string, created_date: string, updated_date: string): Promise<void>;
     UploadFolderandFile(ctx: Context, foldersArrayString: string, filesArrayString: string, user_id: string): Promise<void>;

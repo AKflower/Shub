@@ -47,19 +47,21 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         await ctx.stub.putState('counter', Buffer.from(idCounter.toString()));
         return newId;
     }
-    async NewUser(ctx, username, password, email) {
+    async NewUser(ctx, email, password, firstName, lastName) {
         const user_id = await this.generateUniqueId(ctx, 'user_');
-        const exists = await this.UserExists(ctx, user_id);
+        const exists = await this.UserEmailExists(ctx, email);
         if (exists) {
-            throw new Error(`The file ${user_id} already exists`);
+            throw new Error(`The user ${email} already exists`);
         }
         const newUser = {
             user_id: user_id,
-            username: username,
-            password: password,
             email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName
         };
         await ctx.stub.putState(user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newUser))));
+        return JSON.stringify(newUser);
     }
     async GetUserById(ctx, user_id) {
         console.log('Check');
@@ -69,16 +71,16 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         }
         return fileJSON.toString();
     }
-    async GetUserByUserName(ctx, userName) {
+    async GetUserByEmail(ctx, email) {
         const queryString = {
             selector: {
-                username: userName,
+                email: email,
             },
         };
         const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
         const result = await iterator.next();
         if (result.done) {
-            throw new Error(`User with username ${userName} not found`);
+            throw new Error(`User with email ${email} not found`);
         }
         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
         let record;
@@ -92,8 +94,32 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         return JSON.stringify(record);
     }
     async UserExists(ctx, user_id) {
-        const fileJSON = await ctx.stub.getState(user_id);
-        return fileJSON && fileJSON.length > 0;
+        const userJSON = await ctx.stub.getState(user_id);
+        return userJSON && userJSON.length > 0;
+    }
+    async UserEmailExists(ctx, user_email) {
+        const queryString = {
+            selector: {
+                email: user_email,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        // Return false if no user is found
+        if (result.done) {
+            return false;
+        }
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
+        }
+        catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+        // Return true if a user with the email is found
+        return true;
     }
     async GetAllUser(ctx) {
         const allResults = [];
@@ -110,7 +136,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
                 console.log(err);
                 record = strValue;
             }
-            if (record.file_id && record.file_id.startsWith('user_')) {
+            if (record.user_id && record.user_id.startsWith('user_')) {
                 allResults.push(record);
             }
             result = await iterator.next();
@@ -124,11 +150,21 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         }
         return ctx.stub.deleteState(user_id);
     }
+    async ChangePassword(ctx, user_id, newPassword) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx, user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.password = newPassword;
+        await ctx.stub.putState(user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(userJSON))));
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "NewUser", null);
 __decorate([
@@ -138,11 +174,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "GetUserById", null);
 __decorate([
-    (0, fabric_contract_api_1.Transaction)(),
+    (0, fabric_contract_api_1.Transaction)(false),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
-], UserContract.prototype, "GetUserByUserName", null);
+], UserContract.prototype, "GetUserByEmail", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('boolean'),
@@ -150,6 +186,13 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "UserExists", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('boolean'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "UserEmailExists", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
@@ -163,6 +206,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "DeleteUser", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "ChangePassword", null);
 UserContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageUser', description: 'Smart contract for User' })
 ], UserContract);

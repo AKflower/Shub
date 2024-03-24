@@ -30,9 +30,10 @@ export class StorageFileContract extends Contract {
           const admin : User = 
           {
             user_id: 'user_1',
-            username: 'admin',
-            password: 'admin',
-            email: 'admin@hcmut.edu.vn'
+            email: 'admin@hcmut.edu.vn',
+            password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
+            firstName: 'Admin',
+            lastName:''
           }
            
           const folder : Folder =
@@ -318,82 +319,82 @@ export class StorageFileContract extends Contract {
           
       }
       /*************************************User ***************************/
-      @Transaction(false)
-    public async GetUserById(ctx:Context, user_id:string): Promise<string>{
-        console.log('Check');
-        const fileJSON = await ctx.stub.getState(user_id);
-        if (!fileJSON || fileJSON.length===0) {
-            throw new Error(`The user ${user_id} does not exist`);
-        } 
-        return fileJSON.toString();
-    }
-    @Transaction()
-    public async GetUserByUserName(ctx: Context, userName: string): Promise<string> {
-        const queryString = {
-            selector: {
-                username: userName,
-            },
-        };
+    //   @Transaction(false)
+    // public async GetUserById(ctx:Context, user_id:string): Promise<string>{
+    //     console.log('Check');
+    //     const fileJSON = await ctx.stub.getState(user_id);
+    //     if (!fileJSON || fileJSON.length===0) {
+    //         throw new Error(`The user ${user_id} does not exist`);
+    //     } 
+    //     return fileJSON.toString();
+    // }
+    // @Transaction()
+    // public async GetUserByUserName(ctx: Context, userName: string): Promise<string> {
+    //     const queryString = {
+    //         selector: {
+    //             username: userName,
+    //         },
+    //     };
 
-        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        const result = await iterator.next();
+    //     const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+    //     const result = await iterator.next();
 
-        if (result.done) {
-            throw new Error(`User with username ${userName} not found`);
-        }
+    //     if (result.done) {
+    //         throw new Error(`User with username ${userName} not found`);
+    //     }
 
-        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-        let record;
-        try {
-            record = JSON.parse(strValue);
-        } catch (err) {
-            console.log(err);
-            record = strValue;
-        }
+    //     const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+    //     let record;
+    //     try {
+    //         record = JSON.parse(strValue);
+    //     } catch (err) {
+    //         console.log(err);
+    //         record = strValue;
+    //     }
 
-        return JSON.stringify(record);
-    }
-    @Transaction(false)
-    @Returns('boolean')
-    public async UserExists(ctx:Context, user_id: string): Promise<boolean>{
-        const fileJSON = await ctx.stub.getState(user_id);
-        return fileJSON && fileJSON.length>0;
-    }
-    @Transaction(false)
-    @Returns('string')
-    public async GetAllUser(ctx: Context): Promise<string> {
-        const allResults = [];
-        // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
-        const iterator = await ctx.stub.getStateByRange('', '');
-        let result = await iterator.next();
-        while (!result.done) {
-            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-            let record;
-            try {
-                record = JSON.parse(strValue);
-            } catch (err) {
-                console.log(err);
-                record = strValue;
-            }
-            if (record.file_id && record.file_id.startsWith('user_')) {
-                allResults.push(record);
-            }
-            result = await iterator.next();
-        }
-        return JSON.stringify(allResults);
-    }
+    //     return JSON.stringify(record);
+    // }
+    // @Transaction(false)
+    // @Returns('boolean')
+    // public async UserExists(ctx:Context, user_id: string): Promise<boolean>{
+    //     const fileJSON = await ctx.stub.getState(user_id);
+    //     return fileJSON && fileJSON.length>0;
+    // }
+    // @Transaction(false)
+    // @Returns('string')
+    // public async GetAllUser(ctx: Context): Promise<string> {
+    //     const allResults = [];
+    //     // range query with empty string for startKey and endKey does an open-ended query of all assets in the chaincode namespace.
+    //     const iterator = await ctx.stub.getStateByRange('', '');
+    //     let result = await iterator.next();
+    //     while (!result.done) {
+    //         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+    //         let record;
+    //         try {
+    //             record = JSON.parse(strValue);
+    //         } catch (err) {
+    //             console.log(err);
+    //             record = strValue;
+    //         }
+    //         if (record.file_id && record.file_id.startsWith('user_')) {
+    //             allResults.push(record);
+    //         }
+    //         result = await iterator.next();
+    //     }
+    //     return JSON.stringify(allResults);
+    // }
     
       
       
     
-      @Transaction()
-      public async DeleteUser(ctx: Context, user_id: string): Promise<void> {
-          const exists = await this.UserExists(ctx, user_id);
-          if (!exists) {
-              throw new Error(`The user ${user_id} does not exist`);
-          }
-          return ctx.stub.deleteState(user_id);
-      }
+    //   @Transaction()
+    //   public async DeleteUser(ctx: Context, user_id: string): Promise<void> {
+    //       const exists = await this.UserExists(ctx, user_id);
+    //       if (!exists) {
+    //           throw new Error(`The user ${user_id} does not exist`);
+    //       }
+    //       return ctx.stub.deleteState(user_id);
+    //   }
 
       /**************** Folder************************/
       @Transaction()
