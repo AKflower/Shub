@@ -3,7 +3,9 @@ import { connect, Contract, Signer, signers } from '@hyperledger/fabric-gateway'
 import { promises as fs } from 'fs';
 import { File } from 'src/model/file.model';
 import { FileDTO } from 'src/dto/file.dto';
-
+import * as cd from "fs";
+import * as crypto from "crypto";
+import * as zlib from "zlib";
 
 @Injectable()
 export class FileService {
@@ -172,6 +174,28 @@ export class FileService {
     } catch (error) {
       throw new Error(`Error reading directory: ${error.message}`);
     }
+  }
+
+  getCipherKey() {
+    if (!process.env.IPFS_SYMMECTRIC_KEY) throw Error("IPFS_SYMMECTRIC_KEY environment variable is required");
+    return crypto.createHash("sha256").update(process.env.IPFS_SYMMECTRIC_KEY).digest();
+  }
+
+  encryptFile(fileStream: cd.ReadStream) {
+    const initVect = Buffer.alloc(16, 0);
+    const key = this.getCipherKey();
+    const encryptedData = crypto.createCipheriv("aes-256-cbc", key, initVect);
+    const gzip = zlib.createGzip();
+    // const appendInitVect = new AppendInitVect(initVect);
+    return fileStream.pipe(gzip).pipe(encryptedData);
+  }
+
+  decryptFile(fileStream: cd.ReadStream) {
+    const initVect = Buffer.alloc(16, 0);
+    const decryptedData = crypto.createDecipheriv("aes-256-cbc", this.getCipherKey(), initVect);
+    const unzip = zlib.createUnzip();
+
+    return fileStream.pipe(decryptedData).pipe(unzip);
   }
 
 }

@@ -72,10 +72,10 @@ export class FileController {
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
-        console.log('fsagfsa');
-        const { cid } = await this.ipfsClient.add(file.buffer)
+        const fileEncrypted = this.fileService.encryptFile(file.buffer);
+
+        const { cid } = await this.ipfsClient.add(fileEncrypted)
         // this.ipfsCluster.pin.add(cid)
-        console.log('fsagfsa1');
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
             file_path: filePath,
