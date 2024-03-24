@@ -113,6 +113,10 @@ export class FileController {
         const {file_id,newPath} = params;
         return this.fileService.updateFilePath(this.contract,file_id,newPath)
     }
+    @Post('/copy')
+    async copyFile(@Body() file: FileDTO) {
+        return this.fileService.copyFile(this.contract,file);
+    }
 
     @Post('/ipfslong')
     @UseInterceptors(FileInterceptor('file'))

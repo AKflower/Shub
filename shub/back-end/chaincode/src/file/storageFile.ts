@@ -415,6 +415,30 @@ export class StorageFileContract extends Contract {
         await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(newFolder))));
       }
       @Transaction()
+      public async UploadFolderandFile(ctx: Context,foldersArrayString: string,filesArrayString: string, user_id: string): Promise<void> {
+        const foldersArray = JSON.parse(foldersArrayString);
+        const filesArray = JSON.parse(filesArrayString);
+        for (const folder of foldersArray) {
+          await this.CreateFolder(ctx,folder.folder_name,folder.folder_path,user_id,folder.created_date,folder.updated_date)
+        }
+        for (const file of filesArray) {
+          await this.UploadFile(ctx,file.file_name,file.file_path,file.cid,user_id,file.created_date,file.updated_date,file.size,file.type)
+        }
+      }
+      @Transaction()
+      public async UploadFolderandFileWithNewPath(ctx: Context,foldersArrayString: string,filesArrayString: string, newPath:string, user_id: string): Promise<void> {
+        const foldersArray = JSON.parse(foldersArrayString);
+        const filesArray = JSON.parse(filesArrayString);
+        for (const folder of foldersArray) {
+          
+          await this.CreateFolder(ctx,folder.folder_name,newPath,user_id,folder.created_date,folder.updated_date);
+        }
+        for (const file of filesArray) {
+         
+          await this.UploadFile(ctx,file.file_name,newPath,file.cid,user_id,file.created_date,file.updated_date,file.size,file.type);
+        }
+      }
+      @Transaction()
       public async GetFolder(ctx:Context, folder_id:string): Promise<string>{
           const folderJSON = await ctx.stub.getState(folder_id);
           if (!folderJSON || folderJSON.length===0) {
@@ -466,6 +490,37 @@ export class StorageFileContract extends Contract {
           return folderJSON && folderJSON.length > 0;
       }
       @Transaction()
+      public async CopyFolder(ctx: Context,folder_id: string,newPath:string,user_id:string,firstAccess:boolean = true) : Promise<void> {
+        const folderString = await this.GetFolder(ctx,folder_id);
+        const folderJSON = JSON.parse(folderString);
+        const oldPath = folderJSON.folder_path;
+        if (firstAccess) {
+          const created_date=new Date()+'';
+
+          const updated_date=new Date()+'';
+          await this.CreateFolder(ctx,folderJSON.folder_name,newPath,user_id,created_date,updated_date);
+          firstAccess=false;
+        }
+        //Get subFolders
+         const subFoldersString = await this.GetSubFolders(ctx,user_id,oldPath,folder_id);
+         const subFolders = JSON.parse(subFoldersString);
+         
+         //Get subfiles
+         const filePath = await this.ConcatenatePathAndNameById(ctx,oldPath,folder_id);
+         const subFilesString=await this.GetFilesByPath(ctx,filePath);
+         
+
+         newPath = newPath +'/'+ folderJSON.folder_name;
+         await this.UploadFolderandFileWithNewPath(ctx,subFoldersString,subFilesString,newPath,user_id);
+         
+        for (const subFolder of subFolders) {
+
+           await this.CopyFolder(ctx,subFolder.folder_id,newPath,user_id,firstAccess);
+        }
+
+      }
+
+      @Transaction()
       public async UpdateFoldersAndFilesPath(ctx: Context,folder_id: string,newPath:string, user_id:string) : Promise<void> {
         const folderString = await this.GetFolder(ctx,folder_id);
         const folderJSON = JSON.parse(folderString);
@@ -503,10 +558,10 @@ export class StorageFileContract extends Contract {
       @Transaction()
       public async UpdateFolderPath(ctx: Context, folder_id: string,newPath: string): Promise<void> {
           
-         const fileString = await this.GetFolder(ctx,folder_id);
-          const fileJSON = JSON.parse(fileString);
-          fileJSON.folder_path= newPath;
-          await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+         const folderString = await this.GetFolder(ctx,folder_id);
+          const folderJSON = JSON.parse(folderString);
+          folderJSON.folder_path= newPath;
+          await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
       }
       @Transaction(false)
       @Returns('string')
