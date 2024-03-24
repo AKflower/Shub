@@ -50,4 +50,5 @@ export class FolderController {
         const {user_id,folder_path,folder_id,new_folder_name} = params;
         return this.folderService.renameFolder(this.contract,user_id,folder_path,folder_id,new_folder_name);
     }
+
 }

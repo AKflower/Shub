@@ -9,6 +9,7 @@ import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
+import { error } from 'console';
 
 
 type User = {
@@ -19,13 +20,19 @@ type User = {
 }    
 const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userAffected?:User | null,isAddNew?: boolean}) => {
   const router = useRouter();
-
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
   const [password,setPassword] = useState<string>("");
   const [email,setEmail] = useState<string>("");
   const [firstName,setFirstName] = useState<string>("");
   const [lastName,setLastName] = useState<string>("");
+  useEffect(() => {
+    console.log('test: ', errorEmail);
+  }, [errorEmail]);
+  
   const handleSubmit = (event : any) => {
     event.preventDefault();
+    setIsSaving(true);
     console.log(email,password,firstName,lastName);
      const newUser = {
         email: email,
@@ -37,6 +44,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
               
           })
           .then(response => {
+            console.log('Res:', response)
             toast.success('User has been created!', {
               position: "bottom-right",
               autoClose: 5000,
@@ -47,10 +55,31 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
               progress: undefined,
               theme: "light",
               transition: Bounce,
-              });  
+              });
+              setPassword('');
+              setEmail('');
+              setFirstName('');
+              setLastName('');
+              setErrorEmail(false);
+              setIsSaving(false)
+
           })
           .catch(error => {
               console.error('Error creating user:', error);
+              setErrorEmail(true);
+              
+              toast.error(`${email} already exists!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+                });
+                setIsSaving(false);
           });
    
     } 
@@ -111,10 +140,10 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         <form action="" className={fonts.poppins.className}>
                 
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
-            <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName}/>
-            <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName}/>
-            <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail}/>
-            <Input label='Password' type='password' isDisabled={false} value={password} onChange={setPassword}/>
+            <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName} isProcessing={isSaving}/>
+            <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName} isProcessing={isSaving}/>
+            <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail} isError={errorEmail} isProcessing={isSaving}/>
+            <Input label='Password' type='password' isDisabled={false} value={password} onChange={setPassword} isProcessing={isSaving}/>
             <Select label='Role' list={roles}/>
         </div>
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
@@ -123,8 +152,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         </div>
         
         <div className={styles.buttonContainer}>
-            <Button1 name='Cancel' type='' onClick={handleCancel}/>
-            <Button1 name='Save' type='success' onClick={handleSubmit}/>
+            <Button1 name='Cancel' type='' onClick={handleCancel} isDisabled={isSaving}/>
+            <Button1 name='Save' type='success' onClick={handleSubmit} isDisabled={isSaving}/>
            <ToastContainer
             position="bottom-right"
             autoClose={5000}
@@ -163,8 +192,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         </div>
         
         <div className={styles.buttonContainer}>
-            <Button1 name='Cancel' type=''/>
-            <Button1 name='Save' type='success'/>
+            <Button1 name='Cancel' type='' isDisabled={isSaving}/>
+            <Button1 name='Save' type='success' isDisabled={isSaving}/>
         </div>
            
      

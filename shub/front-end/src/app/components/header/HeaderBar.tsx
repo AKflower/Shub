@@ -31,6 +31,7 @@ import Move from '../prompts/Move';
 import Delete from '../prompts/Delete';
 import Content from '../content/Content';
 import ChangePassword from '../prompts/ChangePassword';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 
@@ -53,7 +54,7 @@ const [showInfo, setShowInfo] = useState("");
 const [showShare, setShowShare] = useState("");
 const [showCopy, setShowCopy] = useState("");
 const [showMove, setShowMove] = useState("");
-
+const [showToast, setShowToast] = useState("");
 const [showView, setShowView] = useState('grid');
 const pathname = usePathname()
 const isLogin = (pathname=='/') //check login page ? not render : render
@@ -300,7 +301,21 @@ const {
             if(showChangePassword){toggleShowChangePassword()}
           }
         }
-      />
+      >
+        <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition= {Bounce}
+          />
+      </div>
       )}
       
     </header>

@@ -33,7 +33,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const admin = {
             user_id: 'user_1',
             email: 'admin@hcmut.edu.vn',
-            password: 'admin',
+            password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
             firstName: 'Admin',
             lastName: ''
         };
