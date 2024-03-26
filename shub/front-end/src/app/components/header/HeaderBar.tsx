@@ -206,7 +206,7 @@ const [showToast, setShowToast] = useState("");
 
         <div className={cx('right')}>
           
-          <img className={cx('noti')} src='/noti.svg'></img>
+          <img className={cx('noti')} src='/noti.png'></img>
           
           <div className={cx('id')}>
             <img className={cx('ava')} src='/dan.jpg'></img>
@@ -301,19 +301,19 @@ const [showToast, setShowToast] = useState("");
       // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
         onClick={
           ()=>{
-            toggleCurrentPromptName()
+            // toggleCurrentPromptName()
             // if(showDownload){setShowDownload('')}
             // if(showInfo){setShowInfo('')}
-            if(showUpload){toggleShowUpload()}
-            if(showNewFile){toggleShowNewFile()}
-            if(showNewDir){toggleShowNewDir()}
+            // if(showUpload){toggleShowUpload()}
+            // if(showNewFile){toggleShowNewFile()}
+            // if(showNewDir){toggleShowNewDir()}
             // if(showShare){setShowShare('')}
-            if(showRename){toggleShowRename()}
+            // if(showRename){toggleShowRename()}
             // if(showCopy){setShowCopy('')}
             // if(showMove){setShowMove('')}
-            if(showDelete){toggleShowDelete()}
-            if(stream){handleStream()}
-            if(showChangePassword){toggleShowChangePassword()}
+            // if(showDelete){toggleShowDelete()}
+            // if(stream){handleStream()}
+            // if(showChangePassword){toggleShowChangePassword()}
           }
         }
       >

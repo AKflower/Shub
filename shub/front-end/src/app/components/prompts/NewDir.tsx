@@ -25,10 +25,26 @@ const NewDir: React.FC<NewDirProps> = () => {
 
     const submit = () => {
         const load = toast.loading('Loading...')
-
+        const foldersString = Cookies.get('folders');
+        let i = 1;
+        let j = true;
+        let nameCheck = name
+        if (foldersString) {
+            const folders = JSON.parse(foldersString);
+            while(j){
+                let result = folders.some((el: { folder_name: string; }) => el.folder_name == nameCheck);
+                if (result) {
+                    nameCheck = name
+                    nameCheck = nameCheck + ` (${i})`
+                    i = i + 1
+                }
+                else j = false
+            }
+            
+        }
         const folderData = {
             
-            folder_name: name,
+            folder_name: nameCheck,
             folder_path: pathname,
             user_id: userId, 
         };
@@ -61,7 +77,16 @@ const NewDir: React.FC<NewDirProps> = () => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
+        const newName = event.target.value;
+        if (/[\/\\?:"<>|]/.test(newName)) {
+            toast.error('Tên không được chứa các ký tự:\n / \\ ? : " < > |', {
+                style: {
+                  whiteSpace: 'pre-wrap',
+                },
+              });
+            event.target.value = event.target.value.slice(0,-1)
+        }
+        else setName(event.target.value);
     };
 
     return (

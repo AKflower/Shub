@@ -17,12 +17,33 @@ import { Toaster } from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
+interface FileProps {
+    file_id: string,
+    file_name: string,
+    file_path: string,
+    file_data: string,
+    file_type: string,
+    user_id: number,
+    created_date: string,
+    updated_date: string
+}
+
+interface FoldersProps {
+    folder_id: string,
+    folder_name: string,
+    folder_path: string,
+    owner: string,
+    created_date: string,
+    updated_date: string,
+}
+
+
 const File = () => {
     const {  change, resetSelect, hideOption } = useShub();
     const [url, setUrl] = useState('');
     const [blank, setBlank] = useState('');
-    const [folder, setFolder] = useState([]);
-    const [file, setFile] = useState([]);
+    const [folder, setFolder] = useState<FoldersProps[]>([]);
+    const [file, setFile] = useState<FileProps[]>([]);
     const pathname = usePathname()
     const accessToken = Cookies.get('accessToken');
     const router = useRouter();
@@ -116,8 +137,8 @@ const File = () => {
             <Breadcrumbs />
             <Tool />
             
-            {folder[0] && <FolderSection folders={folder}/>}
-            {file[0] && <FileSection files={file}/>}
+            {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
+            {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}
             {blank && (<div className={cx('content')}>
                 <div className="">
                     <SentimentDissatisfiedIcon  style={{fontSize: '100px'}}/>
