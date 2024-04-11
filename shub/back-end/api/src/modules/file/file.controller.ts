@@ -72,9 +72,9 @@ export class FileController {
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
-        const fileEncrypted = this.fileService.encryptFile(file.buffer);
+        // const fileEncrypted = this.fileService.encryptFile(file.buffer);
 
-        const { cid } = await this.ipfsClient.add(fileEncrypted)
+        const { cid } = await this.ipfsClient.add(file.buffer)
         // this.ipfsCluster.pin.add(cid)
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
