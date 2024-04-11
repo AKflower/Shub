@@ -128,10 +128,10 @@ export class StorageFileContract extends Contract {
 
     }
     @Transaction(false)
-    public async GetFile(ctx:Context, id:string): Promise<string>{
-        const fileJSON = await ctx.stub.getState(id);
+    public async GetFile(ctx:Context, file_id:string): Promise<string>{
+        const fileJSON = await ctx.stub.getState(file_id);
         if (!fileJSON || fileJSON.length===0) {
-            throw new Error(`The file ${id} does not exist`);
+            throw new Error(`The file ${file_id} does not exist`);
         } 
         return fileJSON.toString();
     }
@@ -728,6 +728,60 @@ export class StorageFileContract extends Contract {
 
       
    }
+    @Transaction(false)
+    @Returns('string')
+    public async GetFilesAndFoldersFavourite(ctx: Context, user_id: string): Promise<string> {
+      
+      const queryString = {
+        selector: {
+          owner: user_id,
+          isFavourite: true,
+        },
+      };
+  
+      const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+      const allResults = [];
+  
+      let result = await iterator.next();
+      while (!result.done) {
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+          record = JSON.parse(strValue);
+        } catch (err) {
+          console.log(err);
+          record = strValue;
+        }
+        allResults.push(record);
+        result = await iterator.next();
+      }
+      const files=[];
+      const folders=[];
+      allResults.forEach((record) => {
+        if (record.file_id && record.file_id.startsWith('file_')) {
+          files.push(record);
+        }
+        if (record.folder_id && record.folder_id.startsWith('folder_')) {
+          folders.push(record);
+        }
+      })
+      const filesAndFolders = {files,folders}
+      return JSON.stringify(filesAndFolders);
+    }
+    @Transaction(true)
+    public async UpdateFavourtieFile(ctx: Context,user_id:string,file_id:string, isFavourite: boolean): Promise<void> {
+      const fileString = await this.GetFile(ctx,file_id);
+      const fileJSON = JSON.parse(fileString);
+      fileJSON.isFavourite = isFavourite;
+      await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+    }
+    @Transaction(true)
+    public async UpdateFavourtieFolder(ctx: Context,user_id:string,folder_id:string, isFavourite: boolean): Promise<void> {
+      const folderString = await this.GetFolder(ctx,folder_id);
+      const folderJSON = JSON.parse(folderString);
+      folderJSON.isFavourite = isFavourite;
+      await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
+    }
 
 }
    

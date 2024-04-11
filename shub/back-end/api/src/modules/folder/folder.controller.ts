@@ -72,4 +72,18 @@ export class FolderController {
         const {folder_id,newPath,user_id} = params;
         return this.folderService.copyFolder(this.contract,folder_id,newPath,user_id);
     }
+    
+    @Get('/favourite')
+    getFilesAndFoldersFavourite(@Query('user_id') user_id: string) {
+        return this.folderService.getFilesAndFoldersFavourite(this.contract,user_id);
+    }
+
+    @Put('/updateFavourite')
+    updateFavourtieFolder(@Body() params : {user_id: string, folder_id: string, isFavourite: boolean}) {
+        console.log('heeee');
+        console.log(params);
+        const {user_id,folder_id,isFavourite} = params;
+        console.log(folder_id,user_id,isFavourite);
+        return this.folderService.updateFavouriteFolder(this.contract,user_id,folder_id,isFavourite);
+    }
 }

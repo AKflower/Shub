@@ -5,7 +5,7 @@ export declare class StorageFileContract extends Contract {
     private generateUniqueId;
     /**************************File *****************/
     UploadFile(ctx: Context, file_name: string, file_path: string, cid: string, user_id: string, created_date: string, updated_date: string, file_size: string, file_type: string): Promise<void>;
-    GetFile(ctx: Context, id: string): Promise<string>;
+    GetFile(ctx: Context, file_id: string): Promise<string>;
     FileExists(ctx: Context, file_id: string): Promise<boolean>;
     GetAllFile(ctx: Context): Promise<string>;
     GetFilesByName(ctx: Context, fileName: string): Promise<string>;
@@ -37,4 +37,7 @@ export declare class StorageFileContract extends Contract {
     ConcatenatePathAndNameById(ctx: Context, folder_path: string, folder_id: string): Promise<string>;
     private getFolderNameById;
     GetFoldersByPrefix(ctx: Context, prefix: string): Promise<string>;
+    GetFilesAndFoldersFavourite(ctx: Context, user_id: string): Promise<string>;
+    UpdateFavourtieFile(ctx: Context, user_id: string, file_id: string, isFavourite: boolean): Promise<void>;
+    UpdateFavourtieFolder(ctx: Context, user_id: string, folder_id: string, isFavourite: boolean): Promise<void>;
 }

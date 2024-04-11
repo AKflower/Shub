@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.File = void 0;
 const fabric_contract_api_1 = require("fabric-contract-api");
 let File = class File {
+    constructor() {
+        this.isFavourite = false;
+        this.isDelete = false;
+        this.share = [];
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Property)(),
@@ -53,6 +58,18 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], File.prototype, "file_type", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], File.prototype, "isFavourite", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], File.prototype, "isDelete", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Array)
+], File.prototype, "share", void 0);
 File = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], File);

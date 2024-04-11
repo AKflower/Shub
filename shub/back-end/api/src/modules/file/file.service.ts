@@ -90,8 +90,10 @@ export class FileService {
       created_date: item.created_date,
       updated_date: item.updated_date,
       file_size: item.file_size,
-      file_type: item.file_type
-
+      file_type: item.file_type,
+      isFavourite: item.isFavourite,
+      isDelete: item.isDelete,
+      share: item.share,
   }));
   return files;
     
@@ -179,6 +181,11 @@ export class FileService {
       throw new Error(`Error reading directory: ${error.message}`);
     }
   }
+  async updateFavouriteFile(contract: Contract, user_id: string, file_id: string, isFavourite: boolean): Promise<string> {
+    await contract.submitTransaction('UpdateFavourtieFile',user_id,file_id,''+isFavourite);
+    return 'Update Successful!';
+  }
+
 
   getCipherKey() {
     if (!process.env.IPFS_SYMMECTRIC_KEY) throw Error("IPFS_SYMMECTRIC_KEY environment variable is required");

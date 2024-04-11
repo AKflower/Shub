@@ -9,4 +9,7 @@ export declare class File {
     updated_date: string;
     file_size: string;
     file_type: string;
+    isFavourite?: boolean;
+    isDelete?: boolean;
+    share?: string[];
 }
