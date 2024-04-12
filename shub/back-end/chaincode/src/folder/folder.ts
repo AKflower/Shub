@@ -25,6 +25,13 @@ export class Folder {
     @Property()
     public updated_date: string;
 
-    
+    @Property()
+    public isFavourite?: boolean = false;
+
+    @Property()
+    public isDelete?: boolean = false;
+
+    @Property()
+    public share?: string[] = [];
    
 }

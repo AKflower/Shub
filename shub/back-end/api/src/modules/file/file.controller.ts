@@ -150,6 +150,11 @@ export class FileController {
         
         res.send(a)
     }
+    @Put('/updateFavourite')
+    updateFavourtieFolder(@Query() params : {user_id: string, file_id: string, isFavourite: boolean}) {
+        const {file_id,user_id,isFavourite} = params;
+        return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isFavourite);
+    }
 }
 
  

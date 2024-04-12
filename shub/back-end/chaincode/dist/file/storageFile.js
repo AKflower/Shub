@@ -108,10 +108,10 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         };
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
     }
-    async GetFile(ctx, id) {
-        const fileJSON = await ctx.stub.getState(id);
+    async GetFile(ctx, file_id) {
+        const fileJSON = await ctx.stub.getState(file_id);
         if (!fileJSON || fileJSON.length === 0) {
-            throw new Error(`The file ${id} does not exist`);
+            throw new Error(`The file ${file_id} does not exist`);
         }
         return fileJSON.toString();
     }
@@ -602,6 +602,54 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
+    async GetFilesAndFoldersFavourite(ctx, user_id) {
+        const queryString = {
+            selector: {
+                owner: user_id,
+                isFavourite: true,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        const files = [];
+        const folders = [];
+        allResults.forEach((record) => {
+            if (record.file_id && record.file_id.startsWith('file_')) {
+                files.push(record);
+            }
+            if (record.folder_id && record.folder_id.startsWith('folder_')) {
+                folders.push(record);
+            }
+        });
+        const filesAndFolders = { files, folders };
+        return JSON.stringify(filesAndFolders);
+    }
+    async UpdateFavourtieFile(ctx, user_id, file_id, isFavourite) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.isFavourite = isFavourite;
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+    }
+    async UpdateFavourtieFolder(ctx, user_id, folder_id, isFavourite) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        folderJSON.isFavourite = isFavourite;
+        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
@@ -790,6 +838,25 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFoldersByPrefix", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFilesAndFoldersFavourite", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, Boolean]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateFavourtieFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, Boolean]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateFavourtieFolder", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);

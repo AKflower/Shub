@@ -6,4 +6,7 @@ export declare class Folder {
     owner: string;
     created_date: string;
     updated_date: string;
+    isFavourite?: boolean;
+    isDelete?: boolean;
+    share?: string[];
 }

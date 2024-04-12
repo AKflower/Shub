@@ -99,5 +99,16 @@ export class FolderService {
     async copyFolder(contract: Contract, folder_id: string, newPath: string,user_id:string): Promise<void> {
         await contract.submitTransaction('CopyFolder',folder_id,newPath,user_id,"true");
     }
+    async getFilesAndFoldersFavourite(contract: Contract, user_id: string): Promise<any> {
+        const resultBytes = await contract.evaluateTransaction('GetFilesAndFoldersFavourite',user_id);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        const result = JSON.parse(resultJson);
+        return result;
+    }
+    async updateFavouriteFolder(contract: Contract, user_id: string, folder_id: string,isFavourite: boolean): Promise<string> {
+        await contract.submitTransaction('UpdateFavourtieFolder',user_id,folder_id,''+isFavourite);
+        return 'Update Successful!';
+    }
 
 }

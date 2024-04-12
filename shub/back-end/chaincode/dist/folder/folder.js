@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Folder = void 0;
 const fabric_contract_api_1 = require("fabric-contract-api");
 let Folder = class Folder {
+    constructor() {
+        this.isFavourite = false;
+        this.isDelete = false;
+        this.share = [];
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Property)(),
@@ -41,6 +46,18 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], Folder.prototype, "updated_date", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], Folder.prototype, "isFavourite", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], Folder.prototype, "isDelete", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Array)
+], Folder.prototype, "share", void 0);
 Folder = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], Folder);

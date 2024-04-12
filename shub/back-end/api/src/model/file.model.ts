@@ -10,8 +10,11 @@ export class File {
     updated_date?:Date;
     file_size?:string;
     file_type?:string;
+    isFavourite?: boolean = false;
+    isDelete?: boolean = false;
+    share?: string [] = [];
 
-    constructor({file_id,file_name,file_path,cid,user_id,file_size,file_type}) {
+    constructor({file_id,file_name,file_path,cid,user_id,file_size,file_type,isFavourite,isDelete,share}) {
         if(file_id != null) this.file_id=file_id;
         if (file_name!=null) this.file_name=file_name;
         if (file_path!=null) this.file_path=file_path;
@@ -21,6 +24,10 @@ export class File {
         // this.updated_date= new Date();
         if (file_size!=null) this.file_size=file_size;
         if (file_type!=null) this.file_type=file_type;
+        if (isFavourite != null) this.isFavourite = isFavourite;
+        if (isDelete!= null) this.isDelete = isDelete;
+        if (share != null) this.share = share;
+     
     }
     
 }

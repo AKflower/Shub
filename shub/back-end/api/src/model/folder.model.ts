@@ -15,12 +15,19 @@ export class Folder {
 
     updated_date?: Date;
 
-    constructor({folder_id,folder_name,folder_path,user_id}) {
+    isFavourite?: boolean = false;
+    isDelete?: boolean = false;
+    share?: string [] = [];
+
+    constructor({folder_id,folder_name,folder_path,user_id,isFavourite,isDelete,share}) {
         if(folder_id!= null) this.folder_id=folder_id;
         if (folder_name!=null) this.folder_name=folder_name;
         
         if (folder_path!=null) this.folder_path=folder_path;
         if (user_id!=null) this.user_id=user_id;
+        if (isFavourite != null) this.isFavourite = isFavourite;
+        if (isDelete!= null) this.isDelete = isDelete;
+        if (share != null) this.share = share;
         // this.created_date= new Date();
         // this.updated_date= new Date();
         

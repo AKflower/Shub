@@ -33,4 +33,14 @@ export class File {
 
     @Property()
     public file_type: string;
+
+    @Property()
+    public isFavourite?: boolean = false;
+
+    @Property()
+    public isDelete?: boolean = false;
+
+    @Property()
+    public share?: string[] = [];
+    
 }
