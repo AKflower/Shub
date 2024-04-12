@@ -42,7 +42,10 @@ export class FolderService {
             folder_path: item.folder_path,
             user_id: item.owner,
             created_date: item.created_date,
-            updated_date: item.updated_date
+            updated_date: item.updated_date,
+            isFavourite: item.isFavourite,
+            isDelete: item.isDelete,
+            share: item.share,
     }));
     return folders;
     

@@ -228,9 +228,24 @@ export class StorageFileContract extends Contract {
 
         
      }
+    private async checkDelete(ctx: Context,path: string): Promise<boolean> {
+      const folderNames= path.split('/');
+      folderNames.reverse();
+      folderNames.pop();
+      for (const folderName of folderNames) {
+        path = path.substring(0, path.lastIndexOf('/'));
+        var folderString = await this.GetFolderByName(ctx,path,folderName);
+        var folderJSON = JSON.parse(folderString);
+        if (folderJSON.isDelete) return true;
+      }
+
+      return false;
+    }
     @Transaction(false)
     @Returns('string')
     public async GetFilesByPath(ctx: Context, path: string): Promise<string> {
+        const check = await this.checkDelete(ctx,path);
+        if (check) return;
         const queryString = {
           selector: {
             file_path: path,
@@ -256,20 +271,71 @@ export class StorageFileContract extends Contract {
     
         return JSON.stringify(allResults);
       }
-
       @Transaction(false)
       @Returns('string')
       public async GetFileByName(ctx: Context, path: string, fileName: string): Promise<string> {
-        const filesByPath = await this.GetFilesByPath(ctx, path);
-        const files = JSON.parse(filesByPath);
-    
-        const desiredFile = files.find((file) => file.file_name === fileName);
-        if (!desiredFile) {
-          throw new Error(`File with name ${fileName} not found in path ${path}`);
+        const queryString = {
+          selector: {
+            file_path: path,
+            file_name: fileName
+          },
         }
-    
-        return JSON.stringify(desiredFile);
+          const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+          const result = await iterator.next();
+      
+        
+      
+          const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+          let record;
+          try {
+            record = JSON.parse(strValue);
+          } catch (err) {
+            console.log(err);
+            record = strValue;
+          }
+      
+          return JSON.stringify(record);
+        
       }
+      @Transaction(false)
+      @Returns('string')
+      public async GetFolderByName(ctx: Context, path: string, folderName: string): Promise<string> {
+        const queryString = {
+          selector: {
+            folder_path: path,
+            folder_name: folderName
+          },
+        }
+          const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+          const result = await iterator.next();
+      
+        
+      
+          const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+          let record;
+          try {
+            record = JSON.parse(strValue);
+          } catch (err) {
+            console.log(err);
+            record = strValue;
+          }
+      
+          return JSON.stringify(record);
+        
+      }
+      // @Transaction(false)
+      // @Returns('string')
+      // public async GetFileByName(ctx: Context, path: string, fileName: string): Promise<string> {
+      //   const filesByPath = await this.GetFilesByPath(ctx, path);
+      //   const files = JSON.parse(filesByPath);
+    
+      //   const desiredFile = files.find((file) => file.file_name === fileName);
+      //   if (!desiredFile) {
+      //     throw new Error(`File with name ${fileName} not found in path ${path}`);
+      //   }
+    
+      //   return JSON.stringify(desiredFile);
+      // }
     
       
       @Transaction(false)
@@ -450,6 +516,8 @@ export class StorageFileContract extends Contract {
     @Transaction(false)
     @Returns('string')
     public async GetFoldersByPath(ctx: Context, path: string): Promise<string> {
+      const check = await this.checkDelete(ctx,path);
+        if (check) return;
         const queryString = {
           selector: {
             folder_path: path,
@@ -781,6 +849,17 @@ export class StorageFileContract extends Contract {
       const folderJSON = JSON.parse(folderString);
       folderJSON.isFavourite = isFavourite;
       await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
+    }
+    @Transaction(false)
+    @Returns('string')
+    public async GetTrashFoldersAndFiles(ctx: Context, user_id: string): Promise<string> {
+      const queryString = {
+        selector: {
+          owner: user_id,
+          isDelete: true,
+        },
+      };
+      return 
     }
 
 }
