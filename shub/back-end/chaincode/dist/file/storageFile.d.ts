@@ -10,8 +10,10 @@ export declare class StorageFileContract extends Contract {
     GetAllFile(ctx: Context): Promise<string>;
     GetFilesByName(ctx: Context, fileName: string): Promise<string>;
     GetFilesByPrefix(ctx: Context, prefix: string): Promise<string>;
+    private checkDelete;
     GetFilesByPath(ctx: Context, path: string): Promise<string>;
     GetFileByName(ctx: Context, path: string, fileName: string): Promise<string>;
+    GetFolderByName(ctx: Context, path: string, folderName: string): Promise<string>;
     GetFileByCID(ctx: Context, cid: string): Promise<string>;
     DeleteFile(ctx: Context, file_id: string): Promise<void>;
     UpdateFilePath(ctx: Context, file_id: string, newPath: string): Promise<void>;
@@ -40,4 +42,7 @@ export declare class StorageFileContract extends Contract {
     GetFilesAndFoldersFavourite(ctx: Context, user_id: string): Promise<string>;
     UpdateFavourtieFile(ctx: Context, user_id: string, file_id: string, isFavourite: boolean): Promise<void>;
     UpdateFavourtieFolder(ctx: Context, user_id: string, folder_id: string, isFavourite: boolean): Promise<void>;
+    GetTrashFoldersAndFiles(ctx: Context, user_id: string): Promise<string>;
+    UpdateTrashFile(ctx: Context, user_id: string, file_id: string, isDelete: boolean): Promise<void>;
+    UpdateTrashFolder(ctx: Context, user_id: string, folder_id: string, isDelete: boolean): Promise<void>;
 }

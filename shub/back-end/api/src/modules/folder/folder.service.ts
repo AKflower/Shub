@@ -113,5 +113,16 @@ export class FolderService {
         await contract.submitTransaction('UpdateFavourtieFolder',user_id,folder_id,''+isFavourite);
         return 'Update Successful!';
     }
+    async getTrashFolderAndFiles(contract: Contract, user_id: string): Promise<any> {
+        const resultBytes = await contract.evaluateTransaction('GetTrashFoldersAndFiles',user_id);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        const result = JSON.parse(resultJson);
+        return result;
+    }
+    async updateTrashFolder(contract: Contract, user_id: string, folder_id: string,isDelete: boolean): Promise<string> {
+        await contract.submitTransaction('UpdateTrashFolder',user_id,folder_id,''+isDelete);
+        return 'Update Successful!';
+    }
 
 }

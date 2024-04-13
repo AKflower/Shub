@@ -155,6 +155,11 @@ export class FileController {
         const {file_id,user_id,isFavourite} = params;
         return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isFavourite);
     }
+    @Put('/updateTrash')
+    updateTrashFile(@Query() params : {user_id: string, file_id: string, isDelete: boolean}) {
+        const {file_id,user_id,isDelete} = params;
+        return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isDelete);
+    }
 }
 
  

@@ -9,6 +9,7 @@ import { Context } from 'vm';
 import { ShubService } from 'src/config/shub.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { File } from 'src/model/file.model';
+import { isDataURI } from 'class-validator';
 @Controller('/folders')
 export class FolderController {
     private contract: Contract;
@@ -80,10 +81,18 @@ export class FolderController {
 
     @Put('/updateFavourite')
     updateFavourtieFolder(@Body() params : {user_id: string, folder_id: string, isFavourite: boolean}) {
-        console.log('heeee');
-        console.log(params);
         const {user_id,folder_id,isFavourite} = params;
         console.log(folder_id,user_id,isFavourite);
         return this.folderService.updateFavouriteFolder(this.contract,user_id,folder_id,isFavourite);
+    }
+    @Get('/trash')
+    getTrashFolderAndFiles(@Query('user_id') user_id: string) {
+        return this.folderService.getTrashFolderAndFiles(this.contract,user_id);
+    }
+    @Put('/updateTrash')
+    updateTrashFolder(@Body() params : {user_id: string, folder_id: string, isDelete: boolean}) {
+        const {user_id,folder_id,isDelete} = params;
+        console.log(folder_id,user_id,isDelete);
+        return this.folderService.updateTrashFolder(this.contract,user_id,folder_id,isDelete);
     }
 }

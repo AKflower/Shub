@@ -163,6 +163,7 @@ const Move: React.FC<MoveProps> = () => {
         .then(response => {
             toast.success('Folder Created')
             toast.dismiss(load);
+            handleChange();
             
             setCreate('')
 
@@ -287,6 +288,7 @@ const Move: React.FC<MoveProps> = () => {
                     className={cx('button','button--flat',"button--grey")}
                     onClick={() => {
                         setCreate('')
+                        toggleCurrentPromptName()
                         }
                     }
                     aria-label='Cancel'

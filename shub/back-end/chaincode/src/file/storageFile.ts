@@ -46,6 +46,7 @@ export class StorageFileContract extends Contract {
             owner: 'user_1',
             created_date: '456',
             updated_date: '123',
+  
           }
             
     
@@ -244,8 +245,8 @@ export class StorageFileContract extends Contract {
     @Transaction(false)
     @Returns('string')
     public async GetFilesByPath(ctx: Context, path: string): Promise<string> {
-        const check = await this.checkDelete(ctx,path);
-        if (check) return;
+        // const check = await this.checkDelete(ctx,path);
+        // if (check) return;
         const queryString = {
           selector: {
             file_path: path,
@@ -516,8 +517,8 @@ export class StorageFileContract extends Contract {
     @Transaction(false)
     @Returns('string')
     public async GetFoldersByPath(ctx: Context, path: string): Promise<string> {
-      const check = await this.checkDelete(ctx,path);
-        if (check) return;
+      // const check = await this.checkDelete(ctx,path);
+      //   if (check) return;
         const queryString = {
           selector: {
             folder_path: path,
@@ -859,7 +860,48 @@ export class StorageFileContract extends Contract {
           isDelete: true,
         },
       };
-      return 
+      const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+      const allResults = [];
+  
+      let result = await iterator.next();
+      while (!result.done) {
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+          record = JSON.parse(strValue);
+        } catch (err) {
+          console.log(err);
+          record = strValue;
+        }
+        allResults.push(record);
+        result = await iterator.next();
+      }
+      const files=[];
+      const folders=[];
+      allResults.forEach((record) => {
+        if (record.file_id && record.file_id.startsWith('file_')) {
+          files.push(record);
+        }
+        if (record.folder_id && record.folder_id.startsWith('folder_')) {
+          folders.push(record);
+        }
+      })
+      const filesAndFolders = {files,folders}
+      return JSON.stringify(filesAndFolders);
+    }
+    @Transaction(true)
+    public async UpdateTrashFile(ctx: Context,user_id:string,file_id:string, isDelete: boolean): Promise<void> {
+      const fileString = await this.GetFile(ctx,file_id);
+      const fileJSON = JSON.parse(fileString);
+      fileJSON.isDelete = isDelete;
+      await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+    }
+    @Transaction(true)
+    public async UpdateTrashFolder(ctx: Context,user_id:string,folder_id:string, isDelete: boolean): Promise<void> {
+      const folderString = await this.GetFolder(ctx,folder_id);
+      const folderJSON = JSON.parse(folderString);
+      folderJSON.isDelete = isDelete;
+      await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
     }
 
 }
