@@ -50,7 +50,6 @@ const Favorite = () => {
     const router = useRouter();
 
     const userId = Cookies.get('userId');
-    console.log(pathname)
     useEffect(() => {
         if (pathname != '/favourite'){
             router.push(pathname.replace("favourite","files"));
@@ -64,19 +63,11 @@ const Favorite = () => {
         }
         const fetchData = async () => {
             const newPath = pathname.replace("favourite","files")
-            console.log(newPath)
-            const data = { path: newPath };
+            const data = { user_id: userId };
 
-            const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
-                params: data, // Truyền dữ liệu qua query parameters
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
-                },
-              },
-             );
+           
 
-            const res = await axios.get(`http://localhost:3001/files/bypath`,{
+            const res = await axios.get(`http://localhost:3001/folders/favourite`,{
                 params: data, // Truyền dữ liệu qua query parameters
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,21 +75,21 @@ const Favorite = () => {
                 },
             });
 
-            setFile(res.data)
-            setFolder(resF.data)
+            setFile(res.data.files)
+            setFolder(res.data.folders)
 
             
 
-            if (!resF.data[0] && !res.data[0]) {
+            if (!res.data.files[0] && !res.data.folders[0]) {
                 setBlank('show')
             }
             else setBlank('')
             
-            const folders = JSON.stringify(resF.data);
-            Cookies.set('folders', folders, { secure: true, sameSite: 'strict' });
+            const foldersF = JSON.stringify(res.data.folders);
+            Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
             
-            const files = JSON.stringify(res.data);
-            Cookies.set('files', files, { secure: true, sameSite: 'strict' });
+            const filesF = JSON.stringify(res.data.files);
+            Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
 
 
 

@@ -130,6 +130,8 @@ const File = () => {
         resetSelect()
         hideOption()
     },[change])
+
+    console.log(folder)
     
     return (
 

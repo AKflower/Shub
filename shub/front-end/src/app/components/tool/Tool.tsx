@@ -5,11 +5,14 @@ import classNames from 'classnames/bind';
 import { useShub } from '@/app/Provider/Provider';
 import Action from '../header/Action';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
 const Tool = () => {
   const [showView, setShowView] = useState('grid');
+  const userId = Cookies.get('userId');
+
 
   const { 
     toggleCurrentPromptName,
@@ -21,7 +24,15 @@ const Tool = () => {
     toggleShowDelete,
     toggleShowDownload,
     toggleShowInfo,
+    selected,
   } = useShub();
+
+  const handleFavourite = () => {
+    const data = {
+      user_id: userId,
+      folder_id: selected,
+  };
+  }
       
   
   return (
@@ -140,9 +151,9 @@ const Tool = () => {
       <div className={cx('icon')}>
       <Action 
           icon={<img src='/star.svg'></img>}
-          label='Select Multiple'
+          label='Favourite'
           counter={0}        
-
+          onAction={handleFavourite}
         />
       </div>
 

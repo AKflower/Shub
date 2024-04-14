@@ -20,6 +20,7 @@ const Delete: React.FC<DeleteProps> = () => {
   
   const toggle = () => {
     toggleShowDelete()
+    toggleCurrentPromptName()
   }
   
   const submit = () => {
