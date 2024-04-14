@@ -193,7 +193,22 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
+    async checkDelete(ctx, path) {
+        const folderNames = path.split('/');
+        folderNames.reverse();
+        folderNames.pop();
+        for (const folderName of folderNames) {
+            path = path.substring(0, path.lastIndexOf('/'));
+            var folderString = await this.GetFolderByName(ctx, path, folderName);
+            var folderJSON = JSON.parse(folderString);
+            if (folderJSON.isDelete)
+                return true;
+        }
+        return false;
+    }
     async GetFilesByPath(ctx, path) {
+        // const check = await this.checkDelete(ctx,path);
+        // if (check) return;
         const queryString = {
             selector: {
                 file_path: path,
@@ -218,14 +233,56 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return JSON.stringify(allResults);
     }
     async GetFileByName(ctx, path, fileName) {
-        const filesByPath = await this.GetFilesByPath(ctx, path);
-        const files = JSON.parse(filesByPath);
-        const desiredFile = files.find((file) => file.file_name === fileName);
-        if (!desiredFile) {
-            throw new Error(`File with name ${fileName} not found in path ${path}`);
+        const queryString = {
+            selector: {
+                file_path: path,
+                file_name: fileName
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
         }
-        return JSON.stringify(desiredFile);
+        catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+        return JSON.stringify(record);
     }
+    async GetFolderByName(ctx, path, folderName) {
+        const queryString = {
+            selector: {
+                folder_path: path,
+                folder_name: folderName
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
+        }
+        catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+        return JSON.stringify(record);
+    }
+    // @Transaction(false)
+    // @Returns('string')
+    // public async GetFileByName(ctx: Context, path: string, fileName: string): Promise<string> {
+    //   const filesByPath = await this.GetFilesByPath(ctx, path);
+    //   const files = JSON.parse(filesByPath);
+    //   const desiredFile = files.find((file) => file.file_name === fileName);
+    //   if (!desiredFile) {
+    //     throw new Error(`File with name ${fileName} not found in path ${path}`);
+    //   }
+    //   return JSON.stringify(desiredFile);
+    // }
     async GetFileByCID(ctx, cid) {
         const queryString = {
             selector: {
@@ -377,6 +434,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         return folderJSON.toString();
     }
     async GetFoldersByPath(ctx, path) {
+        // const check = await this.checkDelete(ctx,path);
+        //   if (check) return;
         const queryString = {
             selector: {
                 folder_path: path,
@@ -650,6 +709,54 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         folderJSON.isFavourite = isFavourite;
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
     }
+    async GetTrashFoldersAndFiles(ctx, user_id) {
+        const queryString = {
+            selector: {
+                owner: user_id,
+                isDelete: true,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        const files = [];
+        const folders = [];
+        allResults.forEach((record) => {
+            if (record.file_id && record.file_id.startsWith('file_')) {
+                files.push(record);
+            }
+            if (record.folder_id && record.folder_id.startsWith('folder_')) {
+                folders.push(record);
+            }
+        });
+        const filesAndFolders = { files, folders };
+        return JSON.stringify(filesAndFolders);
+    }
+    async UpdateTrashFile(ctx, user_id, file_id, isDelete) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.isDelete = isDelete;
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+    }
+    async UpdateTrashFolder(ctx, user_id, folder_id, isDelete) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        folderJSON.isDelete = isDelete;
+        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
@@ -718,6 +825,13 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFileByName", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFolderByName", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
@@ -857,6 +971,25 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, Boolean]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "UpdateFavourtieFolder", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    (0, fabric_contract_api_1.Returns)('string'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetTrashFoldersAndFiles", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, Boolean]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateTrashFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, Boolean]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateTrashFolder", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);

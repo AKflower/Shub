@@ -185,7 +185,10 @@ export class FileService {
     await contract.submitTransaction('UpdateFavourtieFile',user_id,file_id,''+isFavourite);
     return 'Update Successful!';
   }
-
+  async updateTrashFile(contract: Contract, user_id: string, file_id: string, isDelete: boolean): Promise<string> {
+    await contract.submitTransaction('UpdateTrashFile',user_id,file_id,''+isDelete);
+    return 'Update Successful!';
+  }
 
   getCipherKey() {
     if (!process.env.IPFS_SYMMECTRIC_KEY) throw Error("IPFS_SYMMECTRIC_KEY environment variable is required");
