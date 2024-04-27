@@ -100,7 +100,7 @@ export class FolderController {
         return this.folderService.getShareFolders(this.contract,user_id);
     }
     @Put('/updateShare')
-    updateShareFile(@Body() params : {user_id: string, folder_id: string,share: string[]}) {
+    updateShareFolder(@Body() params : {user_id: string, folder_id: string,share: string[]}) {
         const {user_id,folder_id,share} = params;
         console.log(user_id, folder_id, share);
         return this.folderService.updateShareFolder(this.contract,user_id,folder_id,share);

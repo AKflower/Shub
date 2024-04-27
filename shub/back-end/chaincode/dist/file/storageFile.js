@@ -471,11 +471,12 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         if (path === '/files') {
             const queryString = {
                 selector: {
-                    $or: [
-                        { owner: user_id },
-                        { share: { $elemMatch: { $eq: user_id } } }
-                    ],
+                    // $or: [
+                    //   { owner: user_id },
+                    //   { share: { $elemMatch: { $eq: user_id } } }
+                    // ],
                     folder_path: path,
+                    owner: user_id
                 },
             };
             const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
@@ -814,11 +815,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async UpdateTrashFile(ctx, user_id, file_id, isDelete) {
         const fileString = await this.GetFile(ctx, file_id);
         const fileJSON = JSON.parse(fileString);
-        var check = false;
-        if (isDelete === false)
-            check = await this.checkDelete(ctx, fileJSON.file_path);
-        if (check)
-            fileJSON.file_path = `/files`;
+        if (isDelete === false) {
+            var check = await this.checkDelete(ctx, fileJSON.file_path);
+            if (check)
+                fileJSON.file_path = `/files`;
+        }
         fileJSON.isDelete = isDelete;
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }

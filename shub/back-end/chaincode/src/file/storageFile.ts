@@ -554,11 +554,12 @@ export class StorageFileContract extends Contract {
       if (path==='/files') {
         const queryString = {
           selector: {
-            $or: [
-              { owner: user_id },
-              { share: { $elemMatch: { $eq: user_id } } }
-            ],
+            // $or: [
+            //   { owner: user_id },
+            //   { share: { $elemMatch: { $eq: user_id } } }
+            // ],
             folder_path: path,
+            owner: user_id
           },
         };
         const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
