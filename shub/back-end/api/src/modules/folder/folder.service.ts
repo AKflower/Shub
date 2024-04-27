@@ -30,8 +30,9 @@ export class FolderService {
         return 'Upload folder thanh cong'
 
     }
-    async getFoldersByPath(contract: Contract,path:string): Promise<Folder[]> {
-        const resultBytes= await contract.evaluateTransaction('GetFoldersByPath',path);
+    async getFoldersByPath(contract: Contract,user_id:string,path:string): Promise<Folder[]> {
+        const resultBytes= await contract.evaluateTransaction('GetFoldersByPath',user_id,path);
+        console.log('Guuuuu');
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
         const result = JSON.parse(resultJson);
@@ -124,5 +125,24 @@ export class FolderService {
         await contract.submitTransaction('UpdateTrashFolder',user_id,folder_id,''+isDelete);
         return 'Update Successful!';
     }
+    async getShareFolders(contract: Contract, user_id: string) : Promise<string> {
+        const resultBytes =await contract.evaluateTransaction('GetShareFolders',user_id);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        const result = JSON.parse(resultJson);
+        return result;
+    }
+    async updateShareFolder(contract: Contract, user_id: string, folder_id: string,share: string[]): Promise<string> {
+        await contract.submitTransaction('UpdateShareFolder',user_id,folder_id,JSON.stringify(share));
+        return 'Update Successful!';
+    }
+    async getFolderByName(contract:Contract, path: string, folderName: string): Promise<string>{
+        const resultBytes= await contract.evaluateTransaction('GetFolderByName',path,folderName);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        const result = JSON.parse(resultJson);
+        return result;
+    }
+    
 
 }

@@ -35,7 +35,7 @@ const File = () => {
             router.push('/');
         }
         const fetchData = async () => {
-          const data = { path: pathname };
+          const data = { user_id: userId, path: pathname };
 
             const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
                 params: data, // Truyền dữ liệu qua query parameters

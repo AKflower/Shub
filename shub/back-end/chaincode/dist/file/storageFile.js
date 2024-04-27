@@ -46,6 +46,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             owner: 'user_1',
             created_date: '456',
             updated_date: '123',
+            share: ['user_2'],
         };
         await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
         await ctx.stub.putState(admin.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(admin))));
@@ -104,7 +105,10 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             created_date: created_date,
             updated_date: updated_date,
             file_size: file_size,
-            file_type: file_type
+            file_type: file_type,
+            isDelete: false,
+            isFavourite: false,
+            share: []
         };
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
     }
@@ -197,20 +201,29 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folderNames = path.split('/');
         folderNames.reverse();
         folderNames.pop();
-        for (const folderName of folderNames) {
-            path = path.substring(0, path.lastIndexOf('/'));
-            var folderString = await this.GetFolderByName(ctx, path, folderName);
-            var folderJSON = JSON.parse(folderString);
-            if (folderJSON.isDelete)
-                return true;
-        }
+        folderNames.pop();
+        if (folderNames.length !== 0)
+            for (const folderName of folderNames) {
+                var name = folderName.split("%20").join(" ");
+                path = path.substring(0, path.lastIndexOf('/'));
+                var folderString = await this.GetFolderByName(ctx, path, name);
+                var folderJSON = JSON.parse(folderString);
+                if (folderJSON.isDelete)
+                    return true;
+            }
         return false;
     }
-    async GetFilesByPath(ctx, path) {
+    async GetFilesByPath(ctx, user_id, path) {
         // const check = await this.checkDelete(ctx,path);
-        // if (check) return;
+        const checkForShare = await this.checkForShare(ctx, user_id, path);
+        if (!checkForShare)
+            return "You don't have permission!";
         const queryString = {
             selector: {
+                $or: [
+                    { owner: user_id },
+                    { share: { $elemMatch: { $eq: user_id } } }
+                ],
                 file_path: path,
             },
         };
@@ -403,6 +416,9 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             owner: user_id,
             created_date: created_date,
             updated_date: updated_date,
+            isDelete: false,
+            isFavourite: false,
+            share: []
         };
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newFolder))));
     }
@@ -433,31 +449,81 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return folderJSON.toString();
     }
-    async GetFoldersByPath(ctx, path) {
-        // const check = await this.checkDelete(ctx,path);
-        //   if (check) return;
-        const queryString = {
-            selector: {
-                folder_path: path,
-            },
-        };
-        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        const allResults = [];
-        let result = await iterator.next();
-        while (!result.done) {
-            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-            let record;
-            try {
-                record = JSON.parse(strValue);
-            }
-            catch (err) {
-                console.log(err);
-                record = strValue;
-            }
-            allResults.push(record);
-            result = await iterator.next();
+    async checkForShare(ctx, user_id, path) {
+        const folderNames = path.split('/');
+        folderNames.reverse();
+        folderNames.pop();
+        folderNames.pop();
+        // if (folderNames.length===1) return true;
+        if (folderNames.length === 0)
+            return true;
+        for (const folderName of folderNames) {
+            var name = folderName.split('%20').join(" ");
+            path = path.substring(0, path.lastIndexOf('/'));
+            var folderString = await this.GetFolderByName(ctx, path, name);
+            var folderJSON = JSON.parse(folderString);
+            if (folderJSON.share.includes(user_id) || folderJSON.owner === user_id)
+                return true;
         }
-        return JSON.stringify(allResults);
+        return false;
+    }
+    async GetFoldersByPath(ctx, user_id, path) {
+        if (path === '/files') {
+            const queryString = {
+                selector: {
+                    $or: [
+                        { owner: user_id },
+                        { share: { $elemMatch: { $eq: user_id } } }
+                    ],
+                    folder_path: path,
+                },
+            };
+            const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+            const allResults = [];
+            let result = await iterator.next();
+            while (!result.done) {
+                const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+                let record;
+                try {
+                    record = JSON.parse(strValue);
+                }
+                catch (err) {
+                    console.log(err);
+                    record = strValue;
+                }
+                allResults.push(record);
+                result = await iterator.next();
+            }
+            return JSON.stringify(allResults);
+        }
+        else {
+            const check = await this.checkDelete(ctx, path);
+            const checkForShare = await this.checkForShare(ctx, user_id, path);
+            if (check || !checkForShare)
+                return JSON.stringify({ message: "You don't have permission!", checkDelete: check, checkForShare: checkForShare });
+            const queryString = {
+                selector: {
+                    folder_path: path,
+                },
+            };
+            const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+            const allResults = [];
+            let result = await iterator.next();
+            while (!result.done) {
+                const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+                let record;
+                try {
+                    record = JSON.parse(strValue);
+                }
+                catch (err) {
+                    console.log(err);
+                    record = strValue;
+                }
+                allResults.push(record);
+                result = await iterator.next();
+            }
+            return JSON.stringify(allResults);
+        }
     }
     async DeleteFolder(ctx, folder_id) {
         console.log('Delete file ', folder_id);
@@ -486,7 +552,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const subFolders = JSON.parse(subFoldersString);
         //Get subfiles
         const filePath = await this.ConcatenatePathAndNameById(ctx, oldPath, folder_id);
-        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFilesString = await this.GetFilesByPath(ctx, user_id, filePath);
         newPath = newPath + '/' + folderJSON.folder_name;
         await this.UploadFolderandFileWithNewPath(ctx, subFoldersString, subFilesString, newPath, user_id);
         for (const subFolder of subFolders) {
@@ -507,7 +573,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const subFolders = JSON.parse(subFoldersString);
         //Get subfiles
         const filePath = await this.ConcatenatePathAndNameById(ctx, folderJSON.folder_path, folder_id);
-        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFilesString = await this.GetFilesByPath(ctx, user_id, filePath);
         const subFiles = JSON.parse(subFilesString);
         for (const subFile of subFiles) {
             var newPathForSubFile = await this.genNewPath(ctx, subFile.file_path, oldPathPrefix, newPathPrefix);
@@ -564,7 +630,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const subFolders = JSON.parse(subFoldersString);
         //Get subfiles
         const filePath = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
-        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFilesString = await this.GetFilesByPath(ctx, user_id, filePath);
         const subFiles = JSON.parse(subFilesString);
         //Delete subfiles
         for (const subFile of subFiles) {
@@ -592,7 +658,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folderString = await this.GetFolder(ctx, folder_id);
         //Get subfiles
         const filePath = await this.ConcatenatePathAndNameById(ctx, folder_path, folder_id);
-        const subFilesString = await this.GetFilesByPath(ctx, filePath);
+        const subFilesString = await this.GetFilesByPath(ctx, user_id, filePath);
         const subFiles = JSON.parse(subFilesString);
         for (const subFile of subFiles) {
             subFile.file_path = await this.replacePath(ctx, filePath, old_name, new_parent_name, pathLength);
@@ -748,14 +814,74 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async UpdateTrashFile(ctx, user_id, file_id, isDelete) {
         const fileString = await this.GetFile(ctx, file_id);
         const fileJSON = JSON.parse(fileString);
+        var check = false;
+        if (isDelete === false)
+            check = await this.checkDelete(ctx, fileJSON.file_path);
+        if (check)
+            fileJSON.file_path = `/files`;
         fileJSON.isDelete = isDelete;
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }
     async UpdateTrashFolder(ctx, user_id, folder_id, isDelete) {
         const folderString = await this.GetFolder(ctx, folder_id);
         const folderJSON = JSON.parse(folderString);
-        folderJSON.isDelete = isDelete;
+        if (isDelete === false) {
+            var check = await this.checkDelete(ctx, folderJSON.folder_path);
+            if (check) {
+                await this.UpdateFoldersAndFilesPath(ctx, folder_id, '/files', user_id);
+                folderJSON.folder_path = '/files'; //Re-assign
+                folderJSON.isDelete = isDelete;
+                await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+            }
+        }
+        else {
+            folderJSON.isDelete = isDelete;
+            await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+        }
+    }
+    async GetShareFolders(ctx, user_id) {
+        const queryString = {
+            selector: {
+                share: {
+                    $elemMatch: {
+                        $eq: user_id
+                    }
+                }
+            }
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
+    }
+    async UpdateShareFolder(ctx, user_id, folder_id, share) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        const shareUser = JSON.parse(share);
+        for (const user of shareUser)
+            folderJSON.share.push(user);
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+    }
+    async UpdateShareFile(ctx, user_id, file_id, share) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        const shareUser = JSON.parse(share);
+        for (const user of shareUser)
+            fileJSON.share.push(user);
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }
 };
 __decorate([
@@ -815,7 +941,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFilesByPath", null);
 __decorate([
@@ -879,7 +1005,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFoldersByPath", null);
 __decorate([
@@ -990,6 +1116,24 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, Boolean]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "UpdateTrashFolder", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetShareFolders", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateShareFolder", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateShareFile", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);

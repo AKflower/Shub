@@ -11,7 +11,7 @@ export declare class StorageFileContract extends Contract {
     GetFilesByName(ctx: Context, fileName: string): Promise<string>;
     GetFilesByPrefix(ctx: Context, prefix: string): Promise<string>;
     private checkDelete;
-    GetFilesByPath(ctx: Context, path: string): Promise<string>;
+    GetFilesByPath(ctx: Context, user_id: string, path: string): Promise<string>;
     GetFileByName(ctx: Context, path: string, fileName: string): Promise<string>;
     GetFolderByName(ctx: Context, path: string, folderName: string): Promise<string>;
     GetFileByCID(ctx: Context, cid: string): Promise<string>;
@@ -23,7 +23,8 @@ export declare class StorageFileContract extends Contract {
     UploadFolderandFile(ctx: Context, foldersArrayString: string, filesArrayString: string, user_id: string): Promise<void>;
     UploadFolderandFileWithNewPath(ctx: Context, foldersArrayString: string, filesArrayString: string, newPath: string, user_id: string): Promise<void>;
     GetFolder(ctx: Context, folder_id: string): Promise<string>;
-    GetFoldersByPath(ctx: Context, path: string): Promise<string>;
+    private checkForShare;
+    GetFoldersByPath(ctx: Context, user_id: string, path: string): Promise<string>;
     DeleteFolder(ctx: Context, folder_id: string): Promise<void>;
     FolderExists(ctx: Context, folder_id: string): Promise<boolean>;
     CopyFolder(ctx: Context, folder_id: string, newPath: string, user_id: string, firstAccess?: boolean): Promise<void>;
@@ -45,4 +46,7 @@ export declare class StorageFileContract extends Contract {
     GetTrashFoldersAndFiles(ctx: Context, user_id: string): Promise<string>;
     UpdateTrashFile(ctx: Context, user_id: string, file_id: string, isDelete: boolean): Promise<void>;
     UpdateTrashFolder(ctx: Context, user_id: string, folder_id: string, isDelete: boolean): Promise<void>;
+    GetShareFolders(ctx: Context, user_id: string): Promise<string>;
+    UpdateShareFolder(ctx: Context, user_id: string, folder_id: string, share: string): Promise<void>;
+    UpdateShareFile(ctx: Context, user_id: string, file_id: string, share: string): Promise<void>;
 }
