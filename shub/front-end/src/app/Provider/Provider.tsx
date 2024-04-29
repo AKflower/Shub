@@ -52,6 +52,8 @@ interface ShubContextProps {
     isFavourite: boolean;
     handleIsFavourite: (isFavourite: boolean) => void;
     isDelete: boolean;
+    handleShare: (share: string[]) => void;
+    share: string[];
     handleIsDelete: (isFavourite: boolean) => void;
     showChangePassword: string;
     toggleShowChangePassword: () => void;
@@ -212,6 +214,12 @@ const handleIsDelete = (isDelete: boolean) =>{
   setIsDelete(isDelete)
 }
 
+const [share, setShare] = useState<string[]>([]);
+const handleShare = (share: string[]) =>{
+  setShare(share)
+}
+
+
 const value: ShubContextProps = {
     currentPromptName,
     toggleCurrentPromptName,
@@ -260,6 +268,8 @@ const value: ShubContextProps = {
     handleIsFavourite,
     isDelete,
     handleIsDelete,
+    handleShare,
+    share
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

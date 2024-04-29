@@ -14,6 +14,8 @@ interface FileProps {
     updated_date: string,
     isFavourite: boolean,
     isDelete: boolean,
+    share: string[],
+
 }
 
 
@@ -26,7 +28,8 @@ export default function FileSection ({files} : {files:FileProps[]}) {
         handleType,
         type,
         handleIsFavourite,
-        handleIsDelete
+        handleIsDelete,
+        handleShare
     } = useShub();
 
     
@@ -54,6 +57,9 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                             else {
                                 handleIsDelete(file.isDelete)
                             }
+
+                            handleShare(file.share)
+
                             
                             }}
                         onDoubleClick={() => {

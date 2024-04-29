@@ -83,7 +83,7 @@ const Move: React.FC<MoveProps> = () => {
                 },
               })
               .then(response => {
-                toast.success('Folder Moved')
+                toast.success('File Moved')
                 toggleCurrentPromptName()
                 toast.dismiss(load)
                 handleChange()

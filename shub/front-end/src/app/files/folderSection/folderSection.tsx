@@ -16,6 +16,8 @@ interface FoldersProps {
     updated_date: string,
     isFavourite: boolean,
     isDelete: boolean,
+    share: string[],
+
 }
 
 export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
@@ -26,7 +28,8 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
         type, 
         handleType,
         handleIsFavourite,
-        handleIsDelete
+        handleIsDelete,
+        handleShare
     } = useShub();
 
     return (
@@ -54,6 +57,9 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                             else {
                                 handleIsDelete(folder.isDelete)
                             }
+
+                            handleShare(folder.share)
+                            
                             
                         }}
                         onDoubleClick={() => {

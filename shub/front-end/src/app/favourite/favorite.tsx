@@ -29,6 +29,8 @@ interface FileProps {
     updated_date: string,
     isFavourite: boolean,
     isDelete: boolean,
+    share: string[],
+
 }
 
 interface FoldersProps {
@@ -40,6 +42,8 @@ interface FoldersProps {
     updated_date: string,
     isFavourite: boolean,
     isDelete: boolean,
+    share: string[],
+
 }
 
 
