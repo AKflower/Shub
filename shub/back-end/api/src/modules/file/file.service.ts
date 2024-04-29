@@ -75,8 +75,8 @@ export class FileService {
     console.log('*** Transaction committed successfully');
     return file;
   }
-  async getFilesByPath(contract: Contract, path: string): Promise<File[]> {
-    const resultBytes= await contract.evaluateTransaction('GetFilesByPath',path);
+  async getFilesByPath(contract: Contract, user_id:string,path: string): Promise<File[]> {
+    const resultBytes= await contract.evaluateTransaction('GetFilesByPath',user_id,path);
     const utf8Decoder = new TextDecoder();
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
@@ -189,7 +189,10 @@ export class FileService {
     await contract.submitTransaction('UpdateTrashFile',user_id,file_id,''+isDelete);
     return 'Update Successful!';
   }
-
+  async updateShareFile(contract: Contract, user_id: string, file_id: string,share: string[]): Promise<string> {
+    await contract.submitTransaction('UpdateShareFolder',user_id,file_id,JSON.stringify(share));
+    return 'Update Successful!';
+}
   getCipherKey() {
     if (!process.env.IPFS_SYMMECTRIC_KEY) throw Error("IPFS_SYMMECTRIC_KEY environment variable is required");
     return crypto.createHash("sha256").update(process.env.IPFS_SYMMECTRIC_KEY).digest();

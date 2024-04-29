@@ -31,11 +31,11 @@ export class FolderController {
     }
     @Get('/bypath')
     @UseGuards(JwtAuthGuard)
-    getFoldersByPath(@Query('path') path: string) {
-        return this.folderService.getFoldersByPath(this.contract,path);
+    getFoldersByPath(@Query() params : {user_id:string, path: string}) {
+        const {user_id,path} = params;
+        return this.folderService.getFoldersByPath(this.contract,user_id,path);
     }
     @Get()
-    
     getSubFolders(@Body() params: {user_id:string, folder_path:string,folder_id:string}){
         const {user_id,folder_path,folder_id} = params;
         console.log(typeof user_id,folder_id)
@@ -63,7 +63,7 @@ export class FolderController {
     }
 
     @Put('/updatePath')
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     updateFolderPath(@Body() params : {folder_id: string,newPath: string,user_id: string}) {
         const {folder_id, newPath,user_id} = params;
         return this.folderService.updateFolderPath(this.contract,folder_id,newPath,user_id)
@@ -94,5 +94,20 @@ export class FolderController {
         const {user_id,folder_id,isDelete} = params;
         console.log(folder_id,user_id,isDelete);
         return this.folderService.updateTrashFolder(this.contract,user_id,folder_id,isDelete);
+    }
+    @Get('/share')
+    getShareFolders(@Query('user_id') user_id: string) {
+        return this.folderService.getShareFolders(this.contract,user_id);
+    }
+    @Put('/updateShare')
+    updateShareFolder(@Body() params : {user_id: string, folder_id: string,share: string[]}) {
+        const {user_id,folder_id,share} = params;
+        console.log(user_id, folder_id, share);
+        return this.folderService.updateShareFolder(this.contract,user_id,folder_id,share);
+    }
+    @Get('/byName')
+    getFolderByName(@Body() params : {path: string, folderName: string}) {
+        const {path,folderName} = params;
+        return this.folderService.getFolderByName(this.contract,path,folderName);
     }
 }

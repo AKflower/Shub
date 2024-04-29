@@ -103,7 +103,7 @@ const Move: React.FC<MoveProps> = () => {
         const fetchData = async () => {
             const itm: Item[] = []
 
-            const data = { path: path };
+            const data = { user_id: userId, path: path };
 
             const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
                 params: data, // Truyền dữ liệu qua query parameters

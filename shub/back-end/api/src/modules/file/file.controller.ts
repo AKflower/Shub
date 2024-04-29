@@ -63,9 +63,9 @@ export class FileController {
     // }
     @Get('/bypath')
     @UseGuards(JwtAuthGuard)
-    getFilesByPath(@Query('path') path: string){
-        console.log('eeee: ',path);
-        return this.fileService.getFilesByPath(this.contract,path);
+    getFilesByPath(@Query() params: {user_id: string ,path: string}){
+        const {user_id,path} = params;
+        return this.fileService.getFilesByPath(this.contract,user_id,path); 
     }
     @Post('/new')
     @UseGuards(JwtAuthGuard)
@@ -159,6 +159,11 @@ export class FileController {
     updateTrashFile(@Query() params : {user_id: string, file_id: string, isDelete: boolean}) {
         const {file_id,user_id,isDelete} = params;
         return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isDelete);
+    }
+    @Put('/updateShare')
+    updateShareFile(@Body() params : {user_id: string, file_id: string,share: string[]}) {
+        const {user_id,file_id,share} = params;
+        return this.fileService.updateShareFile(this.contract,user_id,file_id,share);
     }
 }
 
