@@ -4,4 +4,7 @@ export declare class User {
     firstName: string;
     lastName: string;
     password: string;
+    role: string;
+    isFirstAccess: boolean;
+    isActive: boolean;
 }

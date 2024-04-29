@@ -12,6 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const fabric_contract_api_1 = require("fabric-contract-api");
 let User = class User {
+    constructor() {
+        this.isFirstAccess = true;
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Property)(),
@@ -33,6 +36,18 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], User.prototype, "isFirstAccess", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], User.prototype, "isActive", void 0);
 User = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], User);

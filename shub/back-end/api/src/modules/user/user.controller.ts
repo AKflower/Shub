@@ -1,4 +1,4 @@
-import { Put,Post, Get, Param, Body, Controller, ValidationPipe} from '@nestjs/common';
+import { Put,Post, Get, Param, Body, Controller, ValidationPipe, Query} from '@nestjs/common';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { FabricService } from '../fabric/fabric.service';
 import { UserService } from './user.service';
@@ -20,11 +20,17 @@ export class UserController {
     getAllUser(): Promise<User[]>{
         return this.userService.getAllUser(this.contract);
     }
+    @Get('/session')
+    getSession(@Query('user_id') user_id : string) {
+        return this.userService.getSession(this.contract,user_id);
+    }
     @Get('/:user_id')
     getUserByID(@Param('user_id') user_id: string): Promise<User>{
         console.log('khoa: ',user_id);
         return this.userService.getUserByID(this.contract,user_id);
     }
+
+    
     @Post('/new')
     async createNewUser(@Body() newUser: User) {
         // console.log('hhiiii');
@@ -49,6 +55,37 @@ export class UserController {
             throw new Error(error.message);
         }
     }
-    
-
+    @Put('/reset-password')
+    async resetPassword(@Body() params: {user_id:string}) {
+        const {user_id} = params;
+        try {
+            const res = await this.userService.resetPassword(this.contract,user_id);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        }
+        catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    @Put('/firstAccess')
+    async changeUserFirstAccess(@Body() params: {user_id: string, isFirstAccess: boolean}) {
+        const {user_id,isFirstAccess} = params;
+        try {
+            const res = await this.userService.changeUserFirstAccess(this.contract,user_id,isFirstAccess);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        }
+        catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    @Put('/changeStatus')
+    async changeUserStatus(@Body() params: {user_id: string, isActive: boolean}) {
+        const {user_id,isActive} = params;
+        try {
+            const res = await this.userService.changeUserStatus(this.contract,user_id,isActive);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        }
+        catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }

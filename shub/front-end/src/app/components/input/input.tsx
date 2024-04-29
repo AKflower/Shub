@@ -5,10 +5,14 @@ import Editor from '@/app/views/files/Editor';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useShub } from '@/app/Provider/Provider';
 import { Erica_One } from 'next/font/google';
+import { useEffect } from 'react';
 
 
-const Input = ({label,type,value,changePossible=false,isDisabled=true,isError=false, isProcessing=false,onChange}:{label: string, type: string, value?: string,changePossible?: boolean, isDisabled?: boolean, isError?: boolean, isProcessing?:boolean, onChange?: (value: string) => void}) => {
-    const { toggleCurrentPromptName, toggleShowChangePassword } = useShub()
+const Input = ({label,type,value,changePossible=false,isDisabled=true,isError=false, isProcessing=false,user_id="", onChange}:{label: string, type: string, value?: string,changePossible?: boolean, isDisabled?: boolean, isError?: boolean, isProcessing?:boolean, user_id?:string, onChange?: (value: string) => void}) => {
+    const { toggleCurrentPromptName, toggleShowChangePassword, toggleShowResetPassword, sessionInfo, fetchDataSession } = useShub()
+   
+    
+    console.log('Hello: ',user_id);
     return (
         <div className={styles.container}>
             <label className={styles.label}>{label}</label>
@@ -16,8 +20,15 @@ const Input = ({label,type,value,changePossible=false,isDisabled=true,isError=fa
                 <input type={type} className={styles.input} value={value} disabled={isDisabled} style={isError ? {borderColor: 'red'}: isProcessing ? {opacity: '50%'} : {}} onChange={e => onChange && onChange(e.target.value)}/>
                 {changePossible && <span className={styles.edit} 
                 onClick={() => {
+                    console.log(user_id,sessionInfo.user_id);
+                    if (sessionInfo.role==="Admin" && sessionInfo.user_id !== user_id) {
+                       toggleShowResetPassword()
+                       toggleCurrentPromptName()
+                    }
+                    else {
                     toggleShowChangePassword()
                     toggleCurrentPromptName()
+                    }
                     }}><EditOutlinedIcon /></span>}
                 {isError && <span style={{color: 'red'}}>
                     <ErrorIcon />

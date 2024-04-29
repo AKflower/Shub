@@ -1,6 +1,9 @@
 "use client"
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState, createContext, ReactNode, useContext, useEffect } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+
 type User = {
   access_token: string,
   user_id: string,
@@ -57,7 +60,10 @@ interface ShubContextProps {
     handleIsDelete: (isFavourite: boolean) => void;
     showChangePassword: string;
     toggleShowChangePassword: () => void;
-    
+    sessionInfo : any;
+    fetchDataSession: () => void;
+    showResetPassword: string;
+    toggleShowResetPassword: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -69,7 +75,25 @@ interface ShubProviderProps {
 export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const router = useRouter();
   const pathname = usePathname()
+  const userId = Cookies.get('userId');
+
+  const [sessionInfo, setSessionInfo] = useState()
+  const fetchDataSession = async () => {
+  const res = await axios.get(`http://localhost:3001/user/session`,{
+    params: {
+      user_id: userId
+    }
+  });
+    console.log(res.data);
+    setSessionInfo(res.data)
+  }
+  useEffect(() => {
+   
+    fetchDataSession();
+    
+  }, [pathname]
   
+  )
   const [change, setChange] = useState(0);
   const handleChange= () =>{
     setChange(change+1)
@@ -202,7 +226,13 @@ const [showChangePassword, setShowChangePassword] = useState("");
 const toggleShowChangePassword = () => {
   setShowChangePassword( showChangePassword== '' ? 'more' : '');
   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+const [showResetPassword, setShowResetPassword] = useState("");
+const toggleShowResetPassword = () => {
+  setShowResetPassword(showResetPassword == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 }
+
 
 const [isFavourite, setIsFavourite] = useState(false);
 const handleIsFavourite = (isFavourite: boolean) =>{
@@ -218,6 +248,8 @@ const [share, setShare] = useState<string[]>([]);
 const handleShare = (share: string[]) =>{
   setShare(share)
 }
+
+
 
 
 const value: ShubContextProps = {
@@ -264,12 +296,20 @@ const value: ShubContextProps = {
     handleType,
     showChangePassword,
     toggleShowChangePassword,
+
     isFavourite,
     handleIsFavourite,
     isDelete,
     handleIsDelete,
     handleShare,
-    share
+    share,
+
+    sessionInfo,
+    fetchDataSession,
+    showResetPassword,
+    toggleShowResetPassword,
+    
+
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

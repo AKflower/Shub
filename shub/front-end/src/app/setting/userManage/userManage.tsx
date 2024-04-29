@@ -5,6 +5,8 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Link from 'next/link';
 import { useEffect,useState} from 'react';
 import axios from 'axios';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 // const users= [
 //     {
 //       user_id: "user_1",
@@ -79,7 +81,7 @@ const UserManage = () => {
                         <td>Email</td>
                         <td>Organization</td>
                         <td>Role</td>
-                        <td>Action</td>
+                        <td style={{textAlign: 'center'}}>Action</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,7 +91,10 @@ const UserManage = () => {
                             <td className={styles.blue}>{item.email}</td>
                             <td>{item.organization}</td>
                             <td>{item.role}</td>
-                            <td className={styles.action}><Link href={`/setting/userManage/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link></td>
+                            <td className={styles.action}>
+                              <Link href={`/setting/userManage/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>
+                              <input type="checkbox" className={styles.checkActive} />
+                            </td>
                             
                         </tr>
                    ))}

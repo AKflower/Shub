@@ -70,7 +70,9 @@ export class UserContract extends Contract {
             email: email,
             password: password,
             firstName: firstName,
-            lastName: lastName
+            lastName: lastName,
+            isFirstAccess: true,
+            isActive: false
         };
         await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(newUser))));
         return JSON.stringify(newUser)
@@ -167,6 +169,7 @@ export class UserContract extends Contract {
             }
             result = await iterator.next();
         }
+ 
         return JSON.stringify(allResults);
     }
     
@@ -182,7 +185,7 @@ export class UserContract extends Contract {
           return ctx.stub.deleteState(user_id);
       }
 
-      @Transaction()
+      @Transaction(true)
       public async ChangePassword(ctx: Context, user_id: string, newPassword: string): Promise<void> {
         const exists = await this.UserExists(ctx, user_id);
         if (!exists) {
@@ -193,8 +196,61 @@ export class UserContract extends Contract {
         userJSON.password=newPassword;
         await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
       }
-      
 
+      @Transaction(true)
+      public async ChangeUserStatus(ctx: Context,user_id: string,status:boolean) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.isActive=status;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
+      
+      @Transaction(true)
+      public async ChangeUserFirstAccess(ctx: Context,user_id: string,isFirstAccess: boolean) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.isFirstAccess=isFirstAccess;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
+      @Transaction(true)
+      public async ResetPassword(ctx: Context,user_id:string,newPassword:string) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.isFirstAccess=true;
+        userJSON.isActive=false;
+        userJSON.password=newPassword;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
+
+      @Transaction()
+      public async GetSession(ctx: Context, user_id: string) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        const userInfo = {
+            user_id: userJSON.user_id,
+            email: userJSON.email,
+            role: userJSON.role,
+            fullName: userJSON.firstName + userJSON.lastName,
+            isActive: userJSON.isActive
+        }
+        return JSON.stringify(userInfo);
+      }
 }
    
     

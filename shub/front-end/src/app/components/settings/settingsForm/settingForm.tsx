@@ -10,7 +10,7 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import { error } from 'console';
-
+import { useShub } from '@/app/Provider/Provider';
 
 type User = {
   user_id: string,
@@ -36,7 +36,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     console.log(email,password,firstName,lastName);
      const newUser = {
         email: email,
-        password: password,
+        password: email,
         firstName: firstName,
         lastName: lastName,
      }
@@ -116,7 +116,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='First name' type='text' value={user.firstName} />
                 <Input label='Last name' type='text' value={user.lastName} />
                 <Input label='Email' type='email' value={user.email} />
-                <Input label='Password' type='password' value={encryptPassword} changePossible={true}/>
+                <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
                 <Select label='Role' list={roles}/>
             </div>
             <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
@@ -143,7 +143,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
             <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName} isProcessing={isSaving}/>
             <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName} isProcessing={isSaving}/>
             <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail} isError={errorEmail} isProcessing={isSaving}/>
-            <Input label='Password' type='password' isDisabled={false} value={password} onChange={setPassword} isProcessing={isSaving}/>
+            <Input label='Password' type='password' isDisabled={true} value={email} onChange={setPassword} isProcessing={isSaving}/>
             <Select label='Role' list={roles}/>
         </div>
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
@@ -180,10 +180,11 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         <form action="" className={fonts.poppins.className}>
                 
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
+         
             <Input label='First name' type='text' value={userAffected?.firstName}/>
             <Input label='Last name' type='text' value={userAffected?.lastName}/>
             <Input label='Email' type='email' value={userAffected?.email} />
-            <Input label='Password' type='password' value={encryptPassword} changePossible={true}/>
+            <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={userAffected?.user_id}/>
             <Select label='Role' list={roles}/>
         </div>
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
