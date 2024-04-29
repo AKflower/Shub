@@ -20,7 +20,16 @@ export class User {
     @Property()
     public password: string;
 
-    
+    @Property()
+    public role: string;
+
+    @Property()
+    public isFirstAccess: boolean = true;
+
+    @Property()
+    public isActive: boolean;
+
+   
     
    
 }

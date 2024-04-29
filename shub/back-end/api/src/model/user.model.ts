@@ -12,6 +12,10 @@ export class User {
     
     lastName?: string;
 
+    role?: string;
+
+    
+
     constructor({email,password,firstName,lastName}) {
         
         if (email!=null) this.email=email;

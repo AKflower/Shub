@@ -34,7 +34,11 @@ export class StorageFileContract extends Contract {
             email: 'admin@hcmut.edu.vn',
             password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
             firstName: 'Admin',
-            lastName:''
+            role: "Admin",
+            lastName:'',
+            isFirstAccess: true,
+            isActive: true,
+            
           }
            
           const folder : Folder =

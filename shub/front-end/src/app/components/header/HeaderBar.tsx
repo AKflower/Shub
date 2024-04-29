@@ -22,6 +22,7 @@ import Cookies from 'js-cookie';
 import ChangePassword from '../prompts/ChangePassword';
 import axios from 'axios';
 import Dropdown from '../prompts/DropDown';
+import ResetPassword from '../prompts/ResetPassword';
 
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 
@@ -42,12 +43,15 @@ interface Option {
 
 
 const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
+
 const [showToast, setShowToast] = useState("");
+
   const pathname = usePathname()
   const isLogin = (pathname=='/') 
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('');
   const [searchData, setSearchData] = useState<Option[] >([]);
+  
   const { 
     currentPromptName, 
     toggleCurrentPromptName,
@@ -77,10 +81,14 @@ const [showToast, setShowToast] = useState("");
     toggleShowDownload,
     showInfo,
     toggleShowInfo,
+    sessionInfo,
+    fetchDataSession,
+    showResetPassword,
+    toggleShowResetPassword,
   } = useShub();
   const accessToken = Cookies.get('accessToken');
   const router = useRouter();
-
+  
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
@@ -284,9 +292,10 @@ const [showToast, setShowToast] = useState("");
       )}
       {showChangePassword && (
         <ChangePassword />
-      )
-
-      }
+      )}
+      {showResetPassword && (
+        <ResetPassword />
+      )}
       {children && (
         <Action
                   id={cx('more')} 

@@ -28,9 +28,11 @@ export class UserService {
       const user : User = {
         user_id: item.user_id,
         email: item.email,
-        password: item.password,
+        // password: item.password,
         firstName: item.firstName,
         lastName: item.lastName,
+        role: item.role,
+        
       }
       users.push(user);
     }
@@ -73,6 +75,13 @@ export class UserService {
 
     return user;
   }
+  async getSession(contract: Contract, user_id: string) : Promise<string> {
+    const resultBytes= await contract.evaluateTransaction('GetSession',user_id);
+    const utf8Decoder = new TextDecoder();
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    return result;
+  }
   async createNewUser(contract: Contract, newUser : User): Promise<string> {
     console.log('check new user');
     const saltOfRounds = 10;
@@ -100,7 +109,7 @@ export class UserService {
   
   }
   async userEmailExists(contract: Contract, email: string): Promise<void> {
-    console.log('fasfafas');
+    
     const resultBytes= await contract.evaluateTransaction('UserEmailExists',email);
     const utf8Decoder = new TextDecoder();
     const resultJson = utf8Decoder.decode(resultBytes);
@@ -108,6 +117,36 @@ export class UserService {
     console.log(resultJson);
   }
 
-  
-
+  async resetPassword(contract: Contract, user_id:string) : Promise<string>{
+    try {
+      const user = await this.getUserByID(contract,user_id);
+      const saltOfRounds = 10;
+      const newPassword = await bcrypt.hash(user.email, saltOfRounds);
+      await contract.submitTransaction('ResetPassword',user_id, newPassword);
+      return `Reset password of ${user_id} successfully!`
+    }
+    catch (error) {
+      throw new Error("Failed!");
+  }
+    
+  }
+  async changeUserFirstAccess(contract: Contract, user_id: string,isFirstAccess: boolean) : Promise<string>{
+    try{
+      await contract.submitTransaction('ChangeUserFirstAccess',user_id, isFirstAccess+'');
+      return `First Access!`
+    }
+    catch (error) {
+      throw new Error('Failed!');
+    }
+  }
+  async changeUserStatus(contract: Contract, user_id: string,isActive: boolean) : Promise<string>{
+    try{
+      console.log('test: ',user_id,isActive);
+      await contract.submitTransaction('ChangeUserStatus',user_id, isActive+'');
+      return `Change successfuly!`
+    }
+    catch (error) {
+      throw new Error('Failed!');
+    }
+  }
 }
