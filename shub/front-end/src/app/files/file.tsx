@@ -25,7 +25,9 @@ interface FileProps {
     file_type: string,
     user_id: number,
     created_date: string,
-    updated_date: string
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
 }
 
 interface FoldersProps {
@@ -35,6 +37,8 @@ interface FoldersProps {
     owner: string,
     created_date: string,
     updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
 }
 
 

@@ -45,6 +45,10 @@ interface ShubContextProps {
     type: string;
     handleData: (data: string, type: string) => void;
     handleType: (type: string) => void;
+    isFavourite: boolean;
+    handleIsFavourite: (isFavourite: boolean) => void;
+    isDelete: boolean;
+    handleIsDelete: (isFavourite: boolean) => void;
     showChangePassword: string;
     toggleShowChangePassword: () => void;
     
@@ -181,9 +185,17 @@ const toggleShowChangePassword = () => {
   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 }
 
+const [isFavourite, setIsFavourite] = useState(false);
+const handleIsFavourite = (isFavourite: boolean) =>{
+  setIsFavourite(isFavourite)
+}
+
+const [isDelete, setIsDelete] = useState(false);
+const handleIsDelete = (isDelete: boolean) =>{
+  setIsDelete(isFavourite)
+}
 
 const value: ShubContextProps = {
-
     currentPromptName,
     toggleCurrentPromptName,
     showNewFile,
@@ -223,6 +235,10 @@ const value: ShubContextProps = {
     handleType,
     showChangePassword,
     toggleShowChangePassword,
+    isFavourite,
+    handleIsFavourite,
+    isDelete,
+    handleIsDelete,
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

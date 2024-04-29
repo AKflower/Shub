@@ -16,7 +16,14 @@ const Delete: React.FC<DeleteProps> = () => {
   const pathname = usePathname()
   const userId = Cookies.get('userId');
   const accessToken = Cookies.get('accessToken');
-  const { selected, toggleShowDelete, handleChange, type, toggleCurrentPromptName } = useShub();
+  const { 
+    selected, 
+    toggleShowDelete, 
+    handleChange, 
+    type, 
+    toggleCurrentPromptName,
+    isDelete 
+  } = useShub();
   
   const toggle = () => {
     toggleShowDelete()
@@ -24,61 +31,63 @@ const Delete: React.FC<DeleteProps> = () => {
   }
   
   const submit = () => {
-    const path = pathname.replaceAll('/','+')
     const load = toast.loading('Loading...')
 
     if (type == 'folder'){
-      const foldersString = Cookies.get('folders');
-
-      if (foldersString) {
-        const folders = JSON.parse(foldersString);
-        const name = folders.find((el: { folder_id: string; })  => el.folder_id == selected)
+      
         const data = {
           user_id: userId,
-          folder_path: pathname,
           folder_id: selected,
-      };
-        axios.delete(`http://localhost:3001/folders/delete`,  {
-          params: data,
+          isDelete: isDelete ? false : true
+        };
+
+        axios.put(`http://localhost:3001/folders/updateTrash`, data, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`, 
-          },
+          }
         })
         .then(response => {
-          console.log('Folder deleted');
           handleChange()
-          toggleCurrentPromptName()
-          toast.success('Folder Deleted')
+          toggle()
+
+          toast.success('Folder moved to Trash Files')
           toast.dismiss(load);
 
         })
         .catch(error => {
-          console.error('Error creating folder:', error);
-        });
-      }
+          console.error('Error:', error);
+        }); 
+
+        
       
     }
     else {
-      axios.delete(`http://localhost:3001/files/${selected}`,{
+      const data = {
+        user_id: userId,
+        file_id: selected,
+        isDelete: isDelete ? false : true
+      };
+
+      axios.put(`http://localhost:3001/files/updateTrash`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`, 
-        },
+        }
       })
       .then(response => {
-        console.log('File deleted');
         handleChange()
-        toggleCurrentPromptName()
-        toast.success('File Deleted')
+        toggle()
+
+        toast.success('File moved to Trash Files')
         toast.dismiss(load);
 
       })
       .catch(error => {
-        console.error('Error creating file:', error);
+        console.error('Error:', error);
       });
+
     }
-    toggle()
   }
 
   return (

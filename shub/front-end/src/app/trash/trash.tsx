@@ -27,7 +27,10 @@ interface FileProps {
     file_type: string,
     user_id: number,
     created_date: string,
-    updated_date: string
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
+
 }
 
 interface FoldersProps {
@@ -37,6 +40,9 @@ interface FoldersProps {
     owner: string,
     created_date: string,
     updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
+
 }
 
 
@@ -65,19 +71,9 @@ const Trash = () => {
         }
         const fetchData = async () => {
             const newPath = pathname.replace("trash","files")
-            console.log(newPath)
-            const data = { path: newPath };
+            const data = { user_id: userId };
 
-            const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
-                params: data, // Truyền dữ liệu qua query parameters
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
-                },
-              },
-             );
-
-            const res = await axios.get(`http://localhost:3001/files/bypath`,{
+            const res = await axios.get(`http://localhost:3001/folders/trash`,{
                 params: data, // Truyền dữ liệu qua query parameters
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,25 +81,19 @@ const Trash = () => {
                 },
             });
 
-            setFile(res.data)
-            setFolder(resF.data)
+            setFile(res.data.files)
+            setFolder(res.data.folders)
 
-            
-
-            if (!resF.data[0] && !res.data[0]) {
+            if (!res.data.files[0] && !res.data.folders[0]) {
                 setBlank('show')
             }
             else setBlank('')
             
-            const folders = JSON.stringify(resF.data);
-            Cookies.set('folders', folders, { secure: true, sameSite: 'strict' });
+            const foldersF = JSON.stringify(res.data.folders);
+            Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
             
-            const files = JSON.stringify(res.data);
-            Cookies.set('files', files, { secure: true, sameSite: 'strict' });
-
-
-
-
+            const filesF = JSON.stringify(res.data.files);
+            Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
 
             // const test = await fetch(`http://localhost:3001/files/file_3/download`)
 

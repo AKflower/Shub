@@ -11,7 +11,9 @@ interface FileProps {
     file_type: string,
     user_id: number,
     created_date: string,
-    updated_date: string
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
 }
 
 
@@ -22,7 +24,9 @@ export default function FileSection ({files} : {files:FileProps[]}) {
         selected,
         handleSelect,
         handleType,
-        type
+        type,
+        handleIsFavourite,
+        handleIsDelete
     } = useShub();
 
     
@@ -37,6 +41,20 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                         onClick={() => {
                             handleSelect(file.file_id, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
                             handleType(file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                            if(file.isFavourite == undefined) {
+                                handleIsFavourite(false)
+                            }
+                            else {
+                                handleIsFavourite(file.isFavourite)
+                            }
+
+                            if(file.isDelete == undefined) {
+                                handleIsDelete(false)
+                            }
+                            else {
+                                handleIsDelete(file.isDelete)
+                            }
+                            
                             }}
                         onDoubleClick={() => {
                             handleData(file.file_data, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))

@@ -26,7 +26,9 @@ interface FileProps {
     file_type: string,
     user_id: number,
     created_date: string,
-    updated_date: string
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
 }
 
 interface FoldersProps {
@@ -36,6 +38,8 @@ interface FoldersProps {
     owner: string,
     created_date: string,
     updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
 }
 
 
@@ -65,8 +69,6 @@ const Favorite = () => {
             const newPath = pathname.replace("favourite","files")
             const data = { user_id: userId };
 
-           
-
             const res = await axios.get(`http://localhost:3001/folders/favourite`,{
                 params: data, // Truyền dữ liệu qua query parameters
                 headers: {
@@ -78,8 +80,6 @@ const Favorite = () => {
             setFile(res.data.files)
             setFolder(res.data.folders)
 
-            
-
             if (!res.data.files[0] && !res.data.folders[0]) {
                 setBlank('show')
             }
@@ -90,9 +90,6 @@ const Favorite = () => {
             
             const filesF = JSON.stringify(res.data.files);
             Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
-
-
-
 
 
             // const test = await fetch(`http://localhost:3001/files/file_3/download`)
