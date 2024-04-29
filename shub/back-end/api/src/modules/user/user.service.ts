@@ -32,7 +32,8 @@ export class UserService {
         firstName: item.firstName,
         lastName: item.lastName,
         role: item.role,
-        
+        isActive: item.isActive,
+        isFirstAccess: item.isFirstAccess
       }
       users.push(user);
     }
