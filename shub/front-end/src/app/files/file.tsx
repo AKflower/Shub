@@ -142,7 +142,6 @@ const File = () => {
         hideOption()
     },[change])
 
-    console.log(folder)
     
     return (
 

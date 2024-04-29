@@ -113,10 +113,13 @@ const Share: React.FC<MoveProps> = () => {
             const itm:Item[] = []
             
             for (const pie in res.data){
-                await itm.push({
-                    id: res.data[pie].user_id,
-                    name: res.data[pie].email,
-                })
+                if(res.data[pie].user_id != userId){
+
+                    await itm.push({
+                        id: res.data[pie].user_id,
+                        name: res.data[pie].email,
+                    })
+                }
             }
             
             

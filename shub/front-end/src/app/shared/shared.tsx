@@ -80,12 +80,26 @@ const Shared = () => {
                     'Authorization': `Bearer ${accessToken}`, 
                 },
             });
+            const folderD:FoldersProps[] = []
+            const fileD:FileProps[] = []
 
+            for (const pie in res.data){
+                if (res.data[pie].file_id){
+                    await fileD.push(res.data[pie])
+                }
+                else {
+                    await folderD.push(res.data[pie])
+                }
+                
+            }
             // setFile(res.data.files)
-            setFolder(res.data)
+            
+
+            setFolder(folderD)
+            setFile(fileD) 
 
 
-            if (!res.data.files[0] && !res.data.folders[0]) {
+            if (!fileD[0] && !folderD[0]) {
                 setBlank('show')
             }
             else setBlank('')
@@ -140,7 +154,7 @@ const Shared = () => {
             <Tool />
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
-            {/* {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>} */}
+            {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}
             {blank && (<div className={cx('content')}>
                 <div className="">
                     <SentimentDissatisfiedIcon  style={{fontSize: '100px'}}/>

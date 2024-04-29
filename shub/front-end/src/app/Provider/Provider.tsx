@@ -84,7 +84,6 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
       user_id: userId
     }
   });
-    console.log(res.data);
     setSessionInfo(res.data)
   }
   useEffect(() => {
