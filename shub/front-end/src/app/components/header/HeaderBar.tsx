@@ -24,6 +24,8 @@ import axios from 'axios';
 import Dropdown from '../prompts/DropDown';
 
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import PermanentlyDelete from '../prompts/PermanentlyDelete';
+import Restore from '../prompts/Restore';
 
 const cx = classNames.bind(styles);
 
@@ -50,33 +52,22 @@ const [showToast, setShowToast] = useState("");
   const [searchData, setSearchData] = useState<Option[] >([]);
   const { 
     currentPromptName, 
-    toggleCurrentPromptName,
+    showRestore,
     showNewFile, 
-    toggleShowNewFile, 
     showNewDir, 
-    toggleShowNewDir, 
     showCopy,
     showMove,
     showShare,
     showDelete, 
-    toggleShowDelete, 
     showRename, 
-    toggleShowRename,
     stream,
-    handleStream,
     data,
     type,
     showUpload,
-    toggleShowUpload,
     showChangePassword,
-    toggleShowChangePassword, 
-    toggleShowShare,
-    toggleShowCopy,
-    toggleShowMove,
+    showPermanentlyDelete,
     showDownload,
-    toggleShowDownload,
     showInfo,
-    toggleShowInfo,
   } = useShub();
   const accessToken = Cookies.get('accessToken');
   const router = useRouter();
@@ -279,6 +270,15 @@ const [showToast, setShowToast] = useState("");
       {showDelete && (
         <Delete />
       )}
+
+      {showPermanentlyDelete && (
+        <PermanentlyDelete />
+      )}
+
+      {showRestore && (
+        <Restore />
+      )}
+
       {stream && data && type && (
         <Content data={data} type={type}/>
       )}

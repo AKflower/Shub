@@ -71,16 +71,20 @@ const File = () => {
               },
              );
 
-            const res = await axios.get(`http://localhost:3001/files/bypath`,{
-                params: data, // Truyền dữ liệu qua query parameters
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
-                },
-            });
+                const res = await axios.get(`http://localhost:3001/files/bypath`,{
+                    params: data, // Truyền dữ liệu qua query parameters
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`, 
+                    },
+                });
 
-            setFile(res.data)
-            setFolder(resF.data)
+            let filteredFolders = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+            let filteredFiles = res.data.filter((file: { isDelete: any; }) => !file.isDelete);
+
+
+            setFile(filteredFiles)
+            setFolder(filteredFolders)
 
             
 

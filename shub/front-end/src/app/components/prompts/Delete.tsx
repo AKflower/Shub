@@ -64,8 +64,8 @@ const Delete: React.FC<DeleteProps> = () => {
     }
     else {
       const data = {
-        user_id: userId,
         file_id: selected,
+        user_id: userId,
         isDelete: isDelete ? false : true
       };
 

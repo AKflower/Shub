@@ -25,6 +25,10 @@ interface ShubContextProps {
     handleSelect: (id: string, type1: string) => void;
     showDelete: string;
     toggleShowDelete: () => void;
+    showRestore: string;
+    toggleShowRestore: () => void;
+    showPermanentlyDelete: string;
+    toggleShowPermanentlyDelete: () => void;
     showRename: string;
     toggleShowRename: () => void;
     showCopy: string;
@@ -123,6 +127,19 @@ const toggleShowDelete = () => {
     setShowDelete(showDelete == '' ? 'more' : '');
 };
 
+const [showRestore, setShowRestore] = useState("");
+const toggleShowRestore = () => {
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    setShowRestore(showRestore == '' ? 'more' : '');
+};
+
+const [showPermanentlyDelete, setShowPermanentlyDelete] = useState("");
+const toggleShowPermanentlyDelete = () => {
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    setShowPermanentlyDelete(showPermanentlyDelete == '' ? 'more' : '');
+};
+
+
 const [showRename, setShowRename] = useState("");
 const toggleShowRename = () => {
   setShowRename(showRename == '' ? 'more' : '');
@@ -192,7 +209,7 @@ const handleIsFavourite = (isFavourite: boolean) =>{
 
 const [isDelete, setIsDelete] = useState(false);
 const handleIsDelete = (isDelete: boolean) =>{
-  setIsDelete(isFavourite)
+  setIsDelete(isDelete)
 }
 
 const value: ShubContextProps = {
@@ -211,6 +228,10 @@ const value: ShubContextProps = {
     handleSelect,
     showDelete,
     toggleShowDelete,
+    showRestore,
+    toggleShowRestore,
+    showPermanentlyDelete,
+    toggleShowPermanentlyDelete,
     showRename,
     toggleShowRename,
     showCopy,

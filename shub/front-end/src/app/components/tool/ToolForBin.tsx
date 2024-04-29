@@ -13,14 +13,9 @@ const ToolFB = () => {
 
   const { 
     toggleCurrentPromptName,
-    toggleShowShare,
     option, 
-    toggleShowCopy,
-    toggleShowRename,
-    toggleShowMove,
-    toggleShowDelete,
-    toggleShowDownload,
-    toggleShowInfo,
+    toggleShowRestore,
+    toggleShowPermanentlyDelete,
   } = useShub();
       
   
@@ -35,7 +30,7 @@ const ToolFB = () => {
           Restore'
           counter={0}
           onAction={()=>{
-            toggleShowDelete()
+            toggleShowRestore()
             toggleCurrentPromptName()
             }
           } 
@@ -49,7 +44,7 @@ const ToolFB = () => {
           Permanently Delete'
           counter={0}
           onAction={()=>{
-            toggleShowDelete()
+            toggleShowPermanentlyDelete()
             toggleCurrentPromptName()
             }
           } 
