@@ -1027,15 +1027,16 @@ export class StorageFileContract extends Contract {
       const folderString = await this.GetFolder(ctx,folder_id);
       const folderJSON = JSON.parse(folderString);
       const shareUser = JSON.parse(share);
-      for (const user of shareUser) folderJSON.share.push(user);
+      folderJSON.share = shareUser;
       await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
     }
+    
     @Transaction(true)
     public async UpdateShareFile(ctx: Context,user_id:string,file_id:string, share: string): Promise<void> {
       const fileString = await this.GetFile(ctx,file_id);
       const fileJSON = JSON.parse(fileString);
       const shareUser = JSON.parse(share);
-      for (const user of shareUser) fileJSON.share.push(user);
+      fileJSON.share = shareUser;
       await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
     }
 }
