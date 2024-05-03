@@ -81,18 +81,22 @@ const Favorite = () => {
                 },
             });
 
-            setFile(res.data.files)
-            setFolder(res.data.folders)
+            let filteredFolders = res.data.folders.filter((folder: { isDelete: any; }) => !folder.isDelete);
+            let filteredFiles = res.data.files.filter((file: { isDelete: any; }) => !file.isDelete);
+            
 
-            if (!res.data.files[0] && !res.data.folders[0]) {
+            setFile(filteredFiles)
+            setFolder(filteredFolders)
+
+            if (!filteredFiles[0] && !filteredFolders[0]) {
                 setBlank('show')
             }
             else setBlank('')
             
-            const foldersF = JSON.stringify(res.data.folders);
+            const foldersF = JSON.stringify(filteredFolders);
             Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
             
-            const filesF = JSON.stringify(res.data.files);
+            const filesF = JSON.stringify(filteredFiles);
             Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
 
 

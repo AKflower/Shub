@@ -91,15 +91,15 @@ const File = () => {
 
             
 
-            if (!resF.data[0] && !res.data[0]) {
+            if (!filteredFiles[0] && !filteredFolders[0]) {
                 setBlank('show')
             }
             else setBlank('')
             
-            const folders = JSON.stringify(resF.data);
+            const folders = JSON.stringify(filteredFolders);
             Cookies.set('folders', folders, { secure: true, sameSite: 'strict' });
             
-            const files = JSON.stringify(res.data);
+            const files = JSON.stringify(filteredFiles);
             Cookies.set('files', files, { secure: true, sameSite: 'strict' });
 
 
