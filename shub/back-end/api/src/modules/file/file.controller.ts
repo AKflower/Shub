@@ -156,9 +156,11 @@ export class FileController {
         return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isFavourite);
     }
     @Put('/updateTrash')
-    updateTrashFile(@Query() params : {user_id: string, file_id: string, isDelete: boolean}) {
+    updateTrashFile(@Body() params : {user_id: string, file_id: string, isDelete: boolean}) {
         const {file_id,user_id,isDelete} = params;
-        return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isDelete);
+        console.log(file_id,user_id,isDelete)
+
+        return this.fileService.updateTrashFile(this.contract,user_id,file_id,isDelete);
     }
     @Put('/updateShare')
     updateShareFile(@Body() params : {user_id: string, file_id: string,share: string[]}) {

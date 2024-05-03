@@ -185,9 +185,15 @@ export class FileService {
     await contract.submitTransaction('UpdateFavourtieFile',user_id,file_id,''+isFavourite);
     return 'Update Successful!';
   }
-  async updateTrashFile(contract: Contract, user_id: string, file_id: string, isDelete: boolean): Promise<string> {
-    await contract.submitTransaction('UpdateTrashFile',user_id,file_id,''+isDelete);
-    return 'Update Successful!';
+  async updateTrashFile(contract: Contract, user_id: string, file_id: string, isDelete: boolean): Promise<any> {
+    const resultBytes =await contract.submitTransaction('UpdateTrashFile',user_id,file_id,''+isDelete);
+    const utf8Decoder = new TextDecoder();
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    return {
+      message: 'Update Successful!', 
+      data: result
+    };
   }
   async updateShareFile(contract: Contract, user_id: string, file_id: string,share: string[]): Promise<string> {
     await contract.submitTransaction('UpdateShareFolder',user_id,file_id,JSON.stringify(share));

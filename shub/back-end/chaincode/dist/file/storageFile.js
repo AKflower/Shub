@@ -825,6 +825,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         fileJSON.isDelete = isDelete;
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+        return JSON.stringify(fileJSON);
     }
     async UpdateTrashFolder(ctx, user_id, folder_id, isDelete) {
         const folderString = await this.GetFolder(ctx, folder_id);
@@ -837,10 +838,12 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
                 folderJSON.isDelete = isDelete;
                 await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
             }
+            return JSON.stringify(folderJSON);
         }
         else {
             folderJSON.isDelete = isDelete;
             await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+            return JSON.stringify(folderJSON);
         }
     }
     async GetShareFolders(ctx, user_id) {
