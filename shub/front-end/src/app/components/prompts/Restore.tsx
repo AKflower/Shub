@@ -38,7 +38,7 @@ const Restore: React.FC<DeleteProps> = () => {
         const data = {
           user_id: userId,
           folder_id: selected,
-          isDelete: isDelete ? false : true
+          isDelete: false,
         };
 
         axios.put(`http://localhost:3001/folders/updateTrash`, data, {
@@ -48,6 +48,8 @@ const Restore: React.FC<DeleteProps> = () => {
           }
         })
         .then(response => {
+        console.log(response)
+
           handleChange()
           toggle()
 
@@ -59,14 +61,13 @@ const Restore: React.FC<DeleteProps> = () => {
           console.error('Error:', error);
         }); 
 
-        
       
     }
     else {
       const data = {
         file_id: selected,
         user_id: userId,
-        isDelete: isDelete ? false : true
+        isDelete: false 
       };
 
       axios.put(`http://localhost:3001/files/updateTrash`, data, {

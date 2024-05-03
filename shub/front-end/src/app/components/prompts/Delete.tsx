@@ -38,7 +38,7 @@ const Delete: React.FC<DeleteProps> = () => {
         const data = {
           user_id: userId,
           folder_id: selected,
-          isDelete: isDelete ? false : true
+          isDelete: true,
         };
 
         axios.put(`http://localhost:3001/folders/updateTrash`, data, {
@@ -66,7 +66,7 @@ const Delete: React.FC<DeleteProps> = () => {
       const data = {
         file_id: selected,
         user_id: userId,
-        isDelete: isDelete ? false : true
+        isDelete: true,
       };
 
       axios.put(`http://localhost:3001/files/updateTrash`, data, {
