@@ -14,7 +14,9 @@ export class User {
 
     role?: string;
 
-    
+    isActive?: boolean;
+
+    isFirstAccess?: boolean;
 
     constructor({email,password,firstName,lastName}) {
         

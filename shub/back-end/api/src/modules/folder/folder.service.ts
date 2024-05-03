@@ -121,9 +121,17 @@ export class FolderService {
         const result = JSON.parse(resultJson);
         return result;
     }
-    async updateTrashFolder(contract: Contract, user_id: string, folder_id: string,isDelete: boolean): Promise<string> {
-        await contract.submitTransaction('UpdateTrashFolder',user_id,folder_id,''+isDelete);
-        return 'Update Successful!';
+    async updateTrashFolder(contract: Contract, user_id: string, folder_id: string,isDelete: boolean): Promise<any> {
+        const resultBytes = await contract.submitTransaction('UpdateTrashFolder',user_id,folder_id,''+isDelete);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+        console.log('test: ',resultJson)
+        const result = JSON.parse(resultJson);
+        
+        return {
+            message: "Update successful",
+            data: result
+        };
     }
     async getShareFolders(contract: Contract, user_id: string) : Promise<string> {
         const resultBytes =await contract.evaluateTransaction('GetShareFolders',user_id);

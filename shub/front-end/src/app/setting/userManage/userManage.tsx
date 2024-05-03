@@ -7,6 +7,9 @@ import { useEffect,useState} from 'react';
 import axios from 'axios';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import Cookies from 'js-cookie';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // const users= [
 //     {
 //       user_id: "user_1",
@@ -42,7 +45,11 @@ const UserManage = () => {
     lastName: string,
     role: string,
     organization: string,
+    isActive: boolean,
+    isFirstAccess: boolean,
   }
+  const [reload,setReload] = useState(false)
+  const [isSaving,setIsSaving] = useState(false)
   const [users,setUsers]  = useState<User[]>([])
   useEffect(() => {
     const fetchData = async () => {
@@ -55,10 +62,57 @@ const UserManage = () => {
       console.log(users);
     }
     fetchData();
-  }, []
-  
+  }, [reload]
   )
-    
+  const accessToken = Cookies.get('accessToken');
+    const changeActive = (user: User) => {
+      const data={
+        user_id: user.user_id,
+        isActive: !user.isActive
+      }
+      console.log(data);
+      setIsSaving(true);
+      axios.put(`http://localhost:3001/user/changeStatus`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${accessToken}`, 
+                },
+              })
+              .then(response => {
+                toast.success('Successfully!', {
+                  position: "bottom-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                  });
+            
+                    
+                  
+                setReload(!reload)
+                setIsSaving(false);
+              })
+              .catch(error => {
+                console.error('Error change status:', error);
+                toast.error('Error change status of user', {
+                  position: "bottom-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                  });
+                setIsSaving(false);
+              });
+      
+    }
     const [more,setMore] = useState(false)
     const handleMore = (item:any) => {
         // setMore(!more);
@@ -93,7 +147,7 @@ const UserManage = () => {
                             <td>{item.role}</td>
                             <td className={styles.action}>
                               <Link href={`/setting/userManage/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>
-                              <input type="checkbox" className={styles.checkActive} />
+                              <input type="checkbox" className={styles.checkActive} checked={item.isActive} onClick={() =>changeActive(item)} disabled={isSaving}/>
                             </td>
                             
                         </tr>
@@ -101,7 +155,19 @@ const UserManage = () => {
                 </tbody>
            </table>
            </div>
-           
+           <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition= {Bounce}
+            />
         </div>
     )
 }

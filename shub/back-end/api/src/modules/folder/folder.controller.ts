@@ -92,7 +92,6 @@ export class FolderController {
     @Put('/updateTrash')
     updateTrashFolder(@Body() params : {user_id: string, folder_id: string, isDelete: boolean}) {
         const {user_id,folder_id,isDelete} = params;
-        console.log(folder_id,user_id,isDelete);
         return this.folderService.updateTrashFolder(this.contract,user_id,folder_id,isDelete);
     }
     @Get('/share')

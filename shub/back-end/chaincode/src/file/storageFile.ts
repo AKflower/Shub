@@ -961,7 +961,7 @@ export class StorageFileContract extends Contract {
       return JSON.stringify(filesAndFolders);
     }
     @Transaction(true)
-    public async UpdateTrashFile(ctx: Context,user_id:string,file_id:string, isDelete: boolean): Promise<void> {
+    public async UpdateTrashFile(ctx: Context,user_id:string,file_id:string, isDelete: boolean): Promise<string> {
       const fileString = await this.GetFile(ctx,file_id);
       const fileJSON = JSON.parse(fileString);
       if (isDelete===false) {
@@ -970,9 +970,10 @@ export class StorageFileContract extends Contract {
       }
       fileJSON.isDelete = isDelete;
       await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+      return JSON.stringify(fileJSON)
     }
     @Transaction(true)
-    public async UpdateTrashFolder(ctx: Context,user_id:string,folder_id:string, isDelete: boolean): Promise<void> {
+    public async UpdateTrashFolder(ctx: Context,user_id:string,folder_id:string, isDelete: boolean): Promise<string> {
       
       const folderString = await this.GetFolder(ctx,folder_id);
       const folderJSON = JSON.parse(folderString);
@@ -985,11 +986,14 @@ export class StorageFileContract extends Contract {
           folderJSON.isDelete = isDelete;
           await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
         }
+        return JSON.stringify(folderJSON);
       }
       else {
         folderJSON.isDelete = isDelete;
         await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
+        return JSON.stringify(folderJSON);
       }
+      
     }
     @Transaction(false)
     public async GetShareFolders(ctx: Context,user_id:string): Promise<string> {

@@ -44,8 +44,8 @@ export declare class StorageFileContract extends Contract {
     UpdateFavourtieFile(ctx: Context, user_id: string, file_id: string, isFavourite: boolean): Promise<void>;
     UpdateFavourtieFolder(ctx: Context, user_id: string, folder_id: string, isFavourite: boolean): Promise<void>;
     GetTrashFoldersAndFiles(ctx: Context, user_id: string): Promise<string>;
-    UpdateTrashFile(ctx: Context, user_id: string, file_id: string, isDelete: boolean): Promise<void>;
-    UpdateTrashFolder(ctx: Context, user_id: string, folder_id: string, isDelete: boolean): Promise<void>;
+    UpdateTrashFile(ctx: Context, user_id: string, file_id: string, isDelete: boolean): Promise<string>;
+    UpdateTrashFolder(ctx: Context, user_id: string, folder_id: string, isDelete: boolean): Promise<string>;
     GetShareFolders(ctx: Context, user_id: string): Promise<string>;
     UpdateShareFolder(ctx: Context, user_id: string, folder_id: string, share: string): Promise<void>;
     UpdateShareFile(ctx: Context, user_id: string, file_id: string, share: string): Promise<void>;
