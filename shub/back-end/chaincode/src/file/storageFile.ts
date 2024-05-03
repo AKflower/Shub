@@ -979,21 +979,24 @@ export class StorageFileContract extends Contract {
       const folderJSON = JSON.parse(folderString);
       
       if (isDelete===false) {
+        folderJSON.isDelete = isDelete;
+        await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
+         //Re-assign
         var check = await this.checkDelete(ctx,folderJSON.folder_path);
         if (check) {
+          
           await this.UpdateFoldersAndFilesPath(ctx,folder_id,'/files',user_id);
-          folderJSON.folder_path='/files'; //Re-assign
-          folderJSON.isDelete = isDelete;
-          await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
+          folderJSON.folder_path='/files';
         }
-        return JSON.stringify(folderJSON);
+        
       }
       else {
         folderJSON.isDelete = isDelete;
         await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
-        return JSON.stringify(folderJSON);
+        
       }
       
+      return JSON.stringify(folderJSON);
     }
     @Transaction(false)
     public async GetShareFolders(ctx: Context,user_id:string): Promise<string> {

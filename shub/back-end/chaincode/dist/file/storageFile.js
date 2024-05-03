@@ -831,20 +831,20 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folderString = await this.GetFolder(ctx, folder_id);
         const folderJSON = JSON.parse(folderString);
         if (isDelete === false) {
+            folderJSON.isDelete = isDelete;
+            await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+            //Re-assign
             var check = await this.checkDelete(ctx, folderJSON.folder_path);
             if (check) {
                 await this.UpdateFoldersAndFilesPath(ctx, folder_id, '/files', user_id);
-                folderJSON.folder_path = '/files'; //Re-assign
-                folderJSON.isDelete = isDelete;
-                await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+                folderJSON.folder_path = '/files';
             }
-            return JSON.stringify(folderJSON);
         }
         else {
             folderJSON.isDelete = isDelete;
             await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
-            return JSON.stringify(folderJSON);
         }
+        return JSON.stringify(folderJSON);
     }
     async GetShareFolders(ctx, user_id) {
         const queryString = {
