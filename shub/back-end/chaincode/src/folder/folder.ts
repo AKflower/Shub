@@ -33,5 +33,5 @@ export class Folder {
 
     @Property()
     public share?: string[] = [];
-   
+ 
 }

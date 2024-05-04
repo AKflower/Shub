@@ -43,4 +43,5 @@ export class File {
     @Property()
     public share?: string[] = [];
     
+
 }
