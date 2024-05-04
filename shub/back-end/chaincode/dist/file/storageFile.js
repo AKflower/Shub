@@ -681,7 +681,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
     }
     async replacePath(ctx, path, wordToReplace, replacementWord, startIndex) {
-        const replacedString = path.substring(0, startIndex) + replacementWord + path.substring(startIndex + wordToReplace.length);
+        var replacedString = path.substring(0, startIndex) + replacementWord + path.substring(startIndex + wordToReplace.length);
+        replacedString = replacedString.replace(/ /g, '%20');
         return replacedString;
     }
     async ConcatenatePathAndNameById(ctx, folder_path, folder_id) {
@@ -834,8 +835,6 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
     async UpdateTrashFolder(ctx, user_id, folder_id, isDelete) {
         const folderString = await this.GetFolder(ctx, folder_id);
         const folderJSON = JSON.parse(folderString);
-        folderJSON.folder_name = '#' + folderJSON.folder_name;
-        await this.RenameFolder(ctx, user_id, folderJSON.folder_path, folder_id, folderJSON.folder_name);
         if (isDelete === false) {
             folderJSON.isDelete = isDelete;
             await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
@@ -847,6 +846,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             }
         }
         else {
+            folderJSON.folder_name = '#' + folderJSON.folder_name;
+            await this.RenameFolder(ctx, user_id, folderJSON.folder_path, folder_id, folderJSON.folder_name);
             folderJSON.isDelete = isDelete;
             await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
         }

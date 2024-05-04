@@ -801,9 +801,8 @@ export class StorageFileContract extends Contract {
         }
     }
     private async replacePath(ctx:Context,path: string, wordToReplace: string, replacementWord: string, startIndex:number): Promise<string> {
-        
-        const replacedString = path.substring(0, startIndex) + replacementWord + path.substring(startIndex + wordToReplace.length);
-
+        var replacedString = path.substring(0, startIndex) + replacementWord + path.substring(startIndex + wordToReplace.length);
+        replacedString=replacedString.replace(/ /g,'%20')
         return replacedString;
 
     }
@@ -978,8 +977,7 @@ export class StorageFileContract extends Contract {
       
       const folderString = await this.GetFolder(ctx,folder_id);
       const folderJSON = JSON.parse(folderString);
-      folderJSON.folder_name = '#' + folderJSON.folder_name;
-      await this.RenameFolder(ctx,user_id,folderJSON.folder_path,folder_id,folderJSON.folder_name)
+      
       if (isDelete===false) {
         folderJSON.isDelete = isDelete;
         await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
@@ -993,7 +991,8 @@ export class StorageFileContract extends Contract {
         
       }
       else {
-        
+        folderJSON.folder_name = '#' + folderJSON.folder_name;
+        await this.RenameFolder(ctx,user_id,folderJSON.folder_path,folder_id,folderJSON.folder_name)
         folderJSON.isDelete = isDelete;
         await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
         
