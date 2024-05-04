@@ -29,7 +29,8 @@ export default function FileSection ({files} : {files:FileProps[]}) {
         type,
         handleIsFavourite,
         handleIsDelete,
-        handleShare
+        handleShare,
+        handleName
     } = useShub();
 
     
@@ -60,7 +61,10 @@ export default function FileSection ({files} : {files:FileProps[]}) {
 
                             handleShare(file.share)
 
-                            
+                            handleName(file.file_name)
+
+                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+
                             }}
                         onDoubleClick={() => {
                             handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))

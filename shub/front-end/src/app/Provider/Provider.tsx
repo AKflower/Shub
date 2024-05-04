@@ -26,6 +26,8 @@ interface ShubContextProps {
     hideOption: () => void;
     selected: string;
     handleSelect: (id: string, type1: string) => void;
+    name: string;
+    handleName: (name: string) => void;
     showDelete: string;
     toggleShowDelete: () => void;
     showRestore: string;
@@ -142,6 +144,12 @@ const handleSelect = (id: string, type1: string) => {
       showOption()
   }
 }
+
+const [name, setName] = useState('');
+const handleName = (name: string) => {
+  setName(name)
+}
+
 const resetSelect = () => {
   setSelected('')
 }
@@ -302,6 +310,8 @@ const value: ShubContextProps = {
     handleIsDelete,
     handleShare,
     share,
+    name,
+    handleName,
 
     sessionInfo,
     fetchDataSession,

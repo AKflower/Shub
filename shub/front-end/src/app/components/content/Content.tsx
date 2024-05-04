@@ -22,9 +22,8 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
 
 
   useEffect(() => {
-    // Replace 'your--Content-url' with the actual URL of your  Content
     const url = `http://localhost:3001/files/down`;
-    console.log(data)
+    
     const data1 = { cid: data };
 
     axios.get(url, {
@@ -53,7 +52,7 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
 
   return (
     <div className={cx('card','floating')}>
-      {type == 'video' &&
+      {type == 'mp4' &&
       
         <ReactPlayer
           url={src}
