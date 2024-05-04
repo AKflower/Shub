@@ -72,7 +72,7 @@ const [showToast, setShowToast] = useState("");
     showPermanentlyDelete,
     showDownload,
     showInfo,
-
+    handleStream,
     toggleShowInfo,
     sessionInfo,
     fetchDataSession,
@@ -293,6 +293,7 @@ const [showToast, setShowToast] = useState("");
       {stream && data && type && (
         <Content data={data} type={type}/>
       )}
+      
       {showChangePassword && (
         <ChangePassword />
       )}
@@ -324,7 +325,7 @@ const [showToast, setShowToast] = useState("");
             // if(showCopy){setShowCopy('')}
             // if(showMove){setShowMove('')}
             // if(showDelete){toggleShowDelete()}
-            // if(stream){handleStream()}
+            if(stream){handleStream()}
             // if(showChangePassword){toggleShowChangePassword()}
           }
         }

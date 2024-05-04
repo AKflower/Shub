@@ -204,7 +204,7 @@ const toggleShowInfo = () => {
 const [stream, setStream] = useState("");
 const handleStream = () => {
   setStream(stream == '' ? 'more' : '');
-  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [data, setData] = useState("");

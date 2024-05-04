@@ -7,7 +7,7 @@ interface FileProps {
     file_id: string,
     file_name: string,
     file_path: string,
-    file_data: string,
+    cid: string,
     file_type: string,
     user_id: number,
     created_date: string,
@@ -63,7 +63,7 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                             
                             }}
                         onDoubleClick={() => {
-                            handleData(file.file_data, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
                             handleStream()
                         }}
                     >

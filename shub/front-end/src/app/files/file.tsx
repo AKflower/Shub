@@ -11,8 +11,6 @@ import classNames from 'classnames/bind';
 import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import Tool from '../components/tool/Tool';
-import Skeleton from 'react-loading-skeleton';
-import { Bounce, ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
@@ -21,7 +19,7 @@ interface FileProps {
     file_id: string,
     file_name: string,
     file_path: string,
-    file_data: string,
+    cid: string,
     file_type: string,
     user_id: number,
     created_date: string,
@@ -55,9 +53,9 @@ const File = () => {
     const accessToken = Cookies.get('accessToken');
     const router = useRouter();
 
+
     const userId = Cookies.get('userId');
     useEffect(() => {
-        // console.log(accessToken)
 
         if ( accessToken == '') {
             router.push('/');
@@ -102,46 +100,12 @@ const File = () => {
             const files = JSON.stringify(filteredFiles);
             Cookies.set('files', files, { secure: true, sameSite: 'strict' });
 
-
-
-
-
-            // const test = await fetch(`http://localhost:3001/files/file_3/download`)
-
-//             const fileContent = await test.blob();
-//   const url = window.URL.createObjectURL(fileContent);
-//   setUrl(url)
-
-//   const downloadLink = document.createElement('a');
-//   downloadLink.href = url;
-//   downloadLink.download = `sad.jpg`;
-//   downloadLink.click();
-
-//   window.URL.revokeObjectURL(url);
-            // const url = 'http://localhost:3001/files/file_3/download';
-
-            // axios.get(url)
-            //   .then((response) => {
-            //     const img = document.createElement('img');
-            //     img.src = response.data.url;
-            //     document.body.appendChild(img);
-            //   })
-            //   .catch((error) => {
-            //     // Xử lý lỗi
-            //   });
-        
-        
-        
-        
-        
-        
         }
         fetchData()
         
         resetSelect()
         hideOption()
     },[change])
-
     
     return (
 
@@ -158,18 +122,12 @@ const File = () => {
                 <div className={cx('message')}>It feels lonely here...</div>
 
             </div>)}
-            <div>
-                {/* <img src={url} alt="" />
-                 */}
-                 {url}
-            </div>
+           
             <Toaster 
                 position="top-center"
                 reverseOrder={false}
             />
             
-            
-             
         </div>
     )
 }

@@ -23,7 +23,7 @@ interface FileProps {
     file_id: string,
     file_name: string,
     file_path: string,
-    file_data: string,
+    cid: string,
     file_type: string,
     user_id: number,
     created_date: string,
@@ -50,7 +50,6 @@ interface FoldersProps {
 
 const Trash = () => {
     const {  change, resetSelect, hideOption } = useShub();
-    const [url, setUrl] = useState('');
     const [blank, setBlank] = useState('');
     const [folder, setFolder] = useState<FoldersProps[]>([]);
     const [file, setFile] = useState<FileProps[]>([]);
@@ -96,35 +95,6 @@ const Trash = () => {
             const filesF = JSON.stringify(res.data.files);
             Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
 
-            // const test = await fetch(`http://localhost:3001/files/file_3/download`)
-
-//             const fileContent = await test.blob();
-//   const url = window.URL.createObjectURL(fileContent);
-//   setUrl(url)
-
-//   const downloadLink = document.createElement('a');
-//   downloadLink.href = url;
-//   downloadLink.download = `sad.jpg`;
-//   downloadLink.click();
-
-//   window.URL.revokeObjectURL(url);
-            // const url = 'http://localhost:3001/files/file_3/download';
-
-            // axios.get(url)
-            //   .then((response) => {
-            //     const img = document.createElement('img');
-            //     img.src = response.data.url;
-            //     document.body.appendChild(img);
-            //   })
-            //   .catch((error) => {
-            //     // Xử lý lỗi
-            //   });
-        
-        
-        
-        
-        
-        
         }
         fetchData()
         
@@ -147,11 +117,7 @@ const Trash = () => {
                 <div className={cx('message')}>It feels lonely here...</div>
 
             </div>)}
-            <div>
-                {/* <img src={url} alt="" />
-                 */}
-                 {url}
-            </div>
+            
             <Toaster 
                 position="top-center"
                 reverseOrder={false}

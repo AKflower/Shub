@@ -22,7 +22,7 @@ interface FileProps {
     file_id: string,
     file_name: string,
     file_path: string,
-    file_data: string,
+    cid: string,
     file_type: string,
     user_id: number,
     created_date: string,
