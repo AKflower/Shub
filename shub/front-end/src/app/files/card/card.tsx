@@ -39,7 +39,10 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
                 
                 </div>
                 <div className={styles.content}>
-                    <p className={styles.name}>{name}</p>
+                    <p className={styles.name}>{
+                        name.replace(/#/g, "")
+                        
+                    }</p>
                 
                     <p className={styles.date}>
                     {/* {date?.slice(0, date.indexOf('T'))} */}

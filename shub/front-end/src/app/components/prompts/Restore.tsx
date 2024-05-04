@@ -100,16 +100,17 @@ const Restore: React.FC<DeleteProps> = () => {
 
       let filteredFolders =  resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
       let oldName =  filteredFolders.find((el: { folder_id: string; })  => el.folder_id == selected)
-      let cout =  resF.data.filter((folder: { folder_name: any; }) => folder.folder_name == oldName.folder_name);
-      let nameCheck =  oldName.folder_name
+      let erase = filteredFolders.map((folder: { folder_name: any; }) => ({ ...folder, folder_name: folder.folder_name.replace(/#/g, "") }))
+      let cout =  erase.filter((folder: { folder_name: any; }) => folder.folder_name == oldName.folder_name.replace(/#/g, ""));
+      let nameCheck =  oldName.folder_name.replace(/#/g, "")
       
       if (cout.length >= 2){
         let i = 1;
         let j = true;
         while(j){
-          let result = await filteredFolders.some((el: { folder_name: string; }) => el.folder_name == nameCheck);
+          let result = await erase.some((el: { folder_name: string; }) => el.folder_name == nameCheck);
           if (result) {
-              nameCheck = oldName.folder_name
+              nameCheck = oldName.folder_name.replace(/#/g, "")
               nameCheck = nameCheck + ` (${i})`
               i = i + 1
           }
@@ -118,7 +119,7 @@ const Restore: React.FC<DeleteProps> = () => {
 
       }
 
-
+      
       const data2 = {
         new_folder_name: nameCheck,
         user_id: userId,

@@ -78,8 +78,8 @@ const NewDir: React.FC<NewDirProps> = () => {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newName = event.target.value;
-        if (/[\/\\?:"<>|]/.test(newName)) {
-            toast.error('Tên không được chứa các ký tự:\n / \\ ? : " < > |', {
+        if (/[\/\\?:"<>|#]/.test(newName)) {
+            toast.error('Tên không được chứa các ký tự:\n / \\ ? : " < > | #', {
                 style: {
                   whiteSpace: 'pre-wrap',
                 },
