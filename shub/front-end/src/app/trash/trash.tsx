@@ -59,7 +59,6 @@ const Trash = () => {
     const router = useRouter();
 
     const userId = Cookies.get('userId');
-    console.log(pathname)
     useEffect(() => {
         if (pathname != '/trash'){
             router.push(pathname.replace("trash","files"));

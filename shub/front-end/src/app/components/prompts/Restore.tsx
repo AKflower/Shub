@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Delete.module.scss'
 import { useShub } from '@/app/Provider/Provider';
@@ -29,39 +29,120 @@ const Restore: React.FC<DeleteProps> = () => {
     toggleShowRestore()
     toggleCurrentPromptName()
   }
+
+  // const change = async () => {
+  //   const data1 = { user_id: userId, path: path };
+
+  //     const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
+  //       params: data1, // Truyền dữ liệu qua query parameters
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${accessToken}`, 
+  //       },
+  //     },
+  //     );
+
+  //     let filteredFolders = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+  //     let oldName = filteredFolders.find((el: { folder_id: string; })  => el.folder_id == selected)
+  //     let cout = resF.data.filter((folder: { folder_name: any; }) => folder.folder_name == oldName.folder_name);
+  //     let nameCheck = oldName.folder_name
+      
+  //     if (cout.length >= 2){
+  //       let i = 1;
+  //       let j = true;
+  //       while(j){
+  //         let result = filteredFolders.some((el: { folder_name: string; }) => el.folder_name == nameCheck);
+  //         if (result) {
+  //             nameCheck = oldName.folder_name
+  //             nameCheck = nameCheck + ` (${i})`
+  //             i = i + 1
+  //         }
+  //         else j = false
+  //     }
+
+  //     }
+  // }
   
-  const submit = () => {
+  const submit = async () => {
     const load = toast.loading('Loading...')
 
     if (type == 'folder'){
       
-        const data = {
-          user_id: userId,
-          folder_id: selected,
-          isDelete: false,
-        };
+      const data = {
+        user_id: userId,
+        folder_id: selected,
+        isDelete: false,
+      };
+      let path
+      await axios.put(`http://localhost:3001/folders/updateTrash`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, 
+        }
+      })
+      .then( response => {
+        path = response.data.data.folder_path
+      })
+      .catch( error => {
+         console.error('Error:', error);
+      }); 
 
-        axios.put(`http://localhost:3001/folders/updateTrash`, data, {
-          headers: {
+      const data1 = { user_id: userId, path: path };
+
+      const resF = await axios.get(`http://localhost:3001/folders/bypath`,{
+        params: data1, // Truyền dữ liệu qua query parameters
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, 
+        },
+      },
+      );
+
+      let filteredFolders =  resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+      let oldName =  filteredFolders.find((el: { folder_id: string; })  => el.folder_id == selected)
+      let cout =  resF.data.filter((folder: { folder_name: any; }) => folder.folder_name == oldName.folder_name);
+      let nameCheck =  oldName.folder_name
+      
+      if (cout.length >= 2){
+        let i = 1;
+        let j = true;
+        while(j){
+          let result = await filteredFolders.some((el: { folder_name: string; }) => el.folder_name == nameCheck);
+          if (result) {
+              nameCheck = oldName.folder_name
+              nameCheck = nameCheck + ` (${i})`
+              i = i + 1
+          }
+          else j = false
+        } 
+
+      }
+
+
+      const data2 = {
+        new_folder_name: nameCheck,
+        user_id: userId,
+        folder_path: path,
+        folder_id: selected,
+      };
+
+      await axios.put(`http://localhost:3001/folders/rename`, data2, {
+        headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`, 
-          }
-        })
-        .then(response => {
-        console.log(response)
+        },
+      })
+      .then(response => {
+        handleChange()
+        toggle()
+        toast.success('Folder Restored')
+        toast.dismiss(load);
+      })
+      .catch(error => {
+        console.error('Error Renaming folder:', error);
+      });
 
-          handleChange()
-          toggle()
-
-          toast.success('Folder Restored')
-          toast.dismiss(load);
-
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        }); 
-
-      
+       
     }
     else {
       const data = {
