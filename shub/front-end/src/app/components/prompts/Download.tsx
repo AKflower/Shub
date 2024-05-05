@@ -35,6 +35,11 @@ const Download: FC<DownloadProps> = () => {
     tarsz: 'tar.sz',
   };
 
+  const toggle = () => {
+    toggleShowDownload()
+    toggleCurrentPromptName()
+  }
+
   const download =async() => {
     const url = `http://localhost:3001/files/down`;
     const data1 = { cid: data };
@@ -57,8 +62,7 @@ const Download: FC<DownloadProps> = () => {
       link.href = blobUrl;
       link.download = `${name}`; // Tên file
       link.click();
-      toggleShowDownload()
-      toggleCurrentPromptName()
+      toggle()
     })
     .catch((error) => {
       console.error('There has been a problem with your axios operation:', error);
@@ -99,7 +103,7 @@ const Download: FC<DownloadProps> = () => {
       </div>
       <div className={cx("card-action")}>
         <button
-          // onClick={() => toggle()}
+          onClick={() => toggle()}
           className={cx('button','button--flat',"button--grey")}
           aria-label="Cancel"
           title="Cancel"
