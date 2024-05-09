@@ -70,6 +70,7 @@ export class UserService {
         password: result.password,
         firstName: result.firstName,
         lastName: result.lastName,
+        isFirstAccess: result.isFirstAccess
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');

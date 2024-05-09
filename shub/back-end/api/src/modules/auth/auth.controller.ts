@@ -16,7 +16,7 @@ export class AuthController {
   async login(@Body('email') email: string, @Body('password') password: string) {
     console.log(email,password);
     const user = await this.authService.validateUser(email, password);
-    
+    console.log(user);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -29,6 +29,7 @@ export class AuthController {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      isFirstAccess: user.isFirstAccess,
       access_token: token 
     };
   }
