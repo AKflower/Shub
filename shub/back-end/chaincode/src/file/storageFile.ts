@@ -36,7 +36,7 @@ export class StorageFileContract extends Contract {
             firstName: 'Admin',
             role: "Admin",
             lastName:'',
-            isFirstAccess: true,
+            isFirstAccess: false,
             isActive: true,
             
           }
