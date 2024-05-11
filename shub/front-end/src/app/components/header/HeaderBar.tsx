@@ -224,10 +224,11 @@ const [showToast, setShowToast] = useState("");
           
           <div className={cx('id')}>
             <img className={cx('ava')} src='/dan.jpg'></img>
-            <div className={cx('info')}>
+            <Link href="/setting/profile"><div className={cx('info')}>
               <p className={cx('name')}>{user.firstName}</p>
               <p className={cx('mail')}>{user.email}</p>
             </div>
+            </Link>
           </div>
         </div>
         
