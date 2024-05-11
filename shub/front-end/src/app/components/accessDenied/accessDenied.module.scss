@@ -1,0 +1,21 @@
+.container{
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .error{
+        font-size: 4em;
+        color:#01a0a0;
+    }
+    .message{
+        font-size: 4em;
+        color:#626363;
+        font-weight: 700;
+    }
+    .link{
+        color:blue;
+        text-decoration: underline;
+        padding: 2em;
+    }
+}

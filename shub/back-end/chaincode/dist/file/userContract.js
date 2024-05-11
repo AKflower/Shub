@@ -47,7 +47,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         await ctx.stub.putState('counter', Buffer.from(idCounter.toString()));
         return newId;
     }
-    async NewUser(ctx, email, password, firstName, lastName) {
+    async NewUser(ctx, email, password, firstName, lastName, role) {
         const user_id = await this.generateUniqueId(ctx, 'user_');
         const exists = await this.UserEmailExists(ctx, email);
         if (exists) {
@@ -59,6 +59,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
             password: password,
             firstName: firstName,
             lastName: lastName,
+            role: role,
             isFirstAccess: true,
             isActive: false
         };
@@ -214,7 +215,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "NewUser", null);
 __decorate([

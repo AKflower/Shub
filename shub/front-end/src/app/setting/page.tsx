@@ -3,16 +3,13 @@ import Sidebar from "../components/sidebar/sidebar"
 import Profile from "./profile/profile"
 import Search from "../components/search/search"
 import fonts from "../../../public/fonts/fonts"
+import { ShubProvider } from '../Provider/Provider';
+import Setting from "./setting"
 
 export default function SettingPage() {
     return (
-        <div className={fonts.poppins.className}>
-            
-            
-            <Profile />
-            
-            
-        </div>
+        
+        <Setting />
         
     )
 }

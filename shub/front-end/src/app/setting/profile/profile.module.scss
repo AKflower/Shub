@@ -14,8 +14,18 @@
         background: #15acff;
         padding: 1em;
         color: white;
-        font-size: .75rem;
-        border-radius: 5px;
+        font-size: 0.75rem;
+        border-radius: 20px;
+        border: 1px solid #15acff;
+        background: linear-gradient(to right,  white 50%, #15acff 50%);
+        background-size: 200% 100%;
+        background-position: right;
+        transition: background-position 0.5s ease;
+        &:hover{
+            background-position: left;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
     }
 }
 .title{

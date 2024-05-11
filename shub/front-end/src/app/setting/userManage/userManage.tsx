@@ -10,6 +10,10 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import Cookies from 'js-cookie';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useShub } from '@/app/Provider/Provider';
+import { useRouter } from 'next/navigation';
+import AccessDenied from '@/app/components/accessDenied/accessDenied';
+
 // const users= [
 //     {
 //       user_id: "user_1",
@@ -36,7 +40,7 @@ import 'react-toastify/dist/ReactToastify.css';
 //     }
 //   ]
 
-const UserManage = () => {
+const UserManage = ({role}:{role:string}) => {
   interface User {
     user_id: number,
     email: string,
@@ -51,6 +55,9 @@ const UserManage = () => {
   const [reload,setReload] = useState(false)
   const [isSaving,setIsSaving] = useState(false)
   const [users,setUsers]  = useState<User[]>([])
+  
+  const router = useRouter()
+  
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get(`http://localhost:3001/user`);
@@ -120,7 +127,9 @@ const UserManage = () => {
         item.check= !item.check;
     }
     return (
-        <div className={fonts.poppins.className+' '+styles.container}>
+      <>
+      { role ==="Admin" ?
+       <div className={fonts.poppins.className+' '+styles.container}>
            <div className={styles.headerContainer}>
               <h1 className={styles.header}>User Manangement</h1>
               <Link href='/setting/userManage/newUser'><button className={styles.button}>Add User</button></Link>
@@ -169,6 +178,9 @@ const UserManage = () => {
             transition= {Bounce}
             />
         </div>
+          :
+          <AccessDenied />       }
+        </>
     )
 }
 export default UserManage;

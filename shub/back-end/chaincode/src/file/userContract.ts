@@ -56,7 +56,7 @@ export class UserContract extends Contract {
         return newId;
     }
     @Transaction()
-    public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string): Promise<string>{
+    public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string, role: string): Promise<string>{
         const user_id = await this.generateUniqueId(ctx, 'user_');
         const exists =await this.UserEmailExists(ctx, email);
         if (exists) {
@@ -71,6 +71,7 @@ export class UserContract extends Contract {
             password: password,
             firstName: firstName,
             lastName: lastName,
+            role: role,
             isFirstAccess: true,
             isActive: false
         };
