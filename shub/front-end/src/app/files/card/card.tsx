@@ -20,7 +20,7 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
     let dateObject
     if(date) dateObject = new Date(date);
     return (
-        <div className={ !selected ? styles.container : styles.containerSelect} >
+        <div className={ !selected ? cx('container') : styles.containerSelect} >
             <div className={cx('left')}>
                 <div className={ styles.img} >
                     {type1=='folder' ? 
@@ -39,7 +39,10 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
                 
                 </div>
                 <div className={styles.content}>
-                    <p className={styles.name}>{name}</p>
+                    <p className={styles.name}>{
+                        name.replace(/#/g, "")
+                        
+                    }</p>
                 
                     <p className={styles.date}>
                     {/* {date?.slice(0, date.indexOf('T'))} */}

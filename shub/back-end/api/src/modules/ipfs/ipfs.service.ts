@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as stream from 'stream';
 import { promisify } from 'util';
 import * as FileType from 'file-type';
-import { IPFSHTTPClient } from "ipfs-http-client";
+import { CID, IPFSHTTPClient } from "ipfs-http-client";
 
 @Injectable()
 export class IPFSService {
@@ -96,6 +96,23 @@ export class IPFSService {
 const file = new File([blob], filename, { type: mimeType });
     return file;
   }
+
+  async down(cid: string) {
+   
+    const asyncArr3 = await this.ipfsClient.cat(cid);
+
+    let dataArray = [];
+    for await (const chunk of asyncArr3) {
+      dataArray.push(chunk);
+    }
+
+    // Chuyển đổi mảng thành Buffer
+    const buffer = Buffer.concat(dataArray);
+    return buffer;
+}
+
+
+
   
 //   async download(cid: string) {
 //     const asyncArr = this.ipfsClient.cat(cid);

@@ -72,9 +72,9 @@ export class FileController {
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
-        const fileEncrypted = this.fileService.encryptFile(file.buffer);
+        // const fileEncrypted = this.fileService.encryptFile(file.buffer);
 
-        const { cid } = await this.ipfsClient.add(fileEncrypted)
+        const { cid } = await this.ipfsClient.add(file.buffer)
         // this.ipfsCluster.pin.add(cid)
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
@@ -127,39 +127,29 @@ export class FileController {
             return { cid: result.cid.toString() };
           }
 
-    @Get(':id/download')
-    async downloadFile(@Param('id') id: string, @Res() res: Response) {
-        // const filePath = `./assets/QmRdQWfRzf287N9pv6dcoKNYCcSjpsmQWAdsQ2monPwTVt.jpg`;
-        
-        const file1 = this.fileService.getFile(this.contract, id)
-        
+    @Get('/down')
+    @UseGuards(JwtAuthGuard)
+    async down(@Query() params: {cid: string}, @Res() res: Response) {
+    const {cid} = params;
 
+    const buffer = await this.ipfsService.down(cid); // Sử dụng từ khóa 'await' ở đây
+    res.writeHead(200, {
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': 'attachment; filename=file'
+    });
+    res.end(buffer);
+}
 
-        // const absoluteFilePath = path.join(__dirname, '../assets', `${(await file1).file_data}.${(await file1).file_type.slice((await file1).file_type.indexOf('/'), (await file1).file_type.length - 1)}}`);
-        // const absoluteFilePath = path.join('./assets', `QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv.jpg`);
-        // const file = await fs.promises.readFile(absoluteFilePath);
-        
-        // const file = await this.ipfsClient.get('QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv')
-        // const file = await this.ipfsClient.cat('QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv');
-        
-        // res.send(file);
-        // res.setHeader('Content-Type', `application/json`);
+    
 
-        const a = await this.ipfsService.downloadFile('QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv') 
-        res.setHeader('Content-Disposition', `attachment; filename="QmWFuBVHBWGDuVx7zJAWQkb4rnz4TCcZp7Dzf9BYNmd9kv.jpg"`);
-        
-        res.send(a)
-    }
     @Put('/updateFavourite')
-    updateFavourtieFolder(@Query() params : {user_id: string, file_id: string, isFavourite: boolean}) {
+    updateFavourtieFolder(@Body() params : {user_id: string, file_id: string, isFavourite: boolean}) {
         const {file_id,user_id,isFavourite} = params;
         return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isFavourite);
     }
     @Put('/updateTrash')
     updateTrashFile(@Body() params : {user_id: string, file_id: string, isDelete: boolean}) {
         const {file_id,user_id,isDelete} = params;
-        console.log(file_id,user_id,isDelete)
-
         return this.fileService.updateTrashFile(this.contract,user_id,file_id,isDelete);
     }
     @Put('/updateShare')

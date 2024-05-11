@@ -11,11 +11,37 @@ import classNames from 'classnames/bind';
 import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import Tool from '../components/tool/Tool';
-import Skeleton from 'react-loading-skeleton';
-import { Bounce, ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
+
+interface FileProps {
+    file_id: string,
+    file_name: string,
+    file_path: string,
+    cid: string,
+    file_type: string,
+    user_id: number,
+    created_date: string,
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
+    share: string[],
+}
+
+interface FoldersProps {
+    folder_id: string,
+    folder_name: string,
+    folder_path: string,
+    owner: string,
+    created_date: string,
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
+    share: string[],
+
+}
+
 
 const File = () => {
 
@@ -23,15 +49,15 @@ const File = () => {
     const {  change, resetSelect, hideOption } = useShub();
     const [url, setUrl] = useState('');
     const [blank, setBlank] = useState('');
-    const [folder, setFolder] = useState([]);
-    const [file, setFile] = useState([]);
+    const [folder, setFolder] = useState<FoldersProps[]>([]);
+    const [file, setFile] = useState<FileProps[]>([]);
     const pathname = usePathname()
     const accessToken = Cookies.get('accessToken');
     const router = useRouter();
 
+
     const userId = Cookies.get('userId');
     useEffect(() => {
-        // console.log(accessToken)
 
         if ( accessToken == '') {
             router.push('/');
@@ -48,63 +74,34 @@ const File = () => {
               },
              );
 
-            const res = await axios.get(`http://localhost:3001/files/bypath`,{
-                params: data, // Truyền dữ liệu qua query parameters
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
-                },
-            });
+                const res = await axios.get(`http://localhost:3001/files/bypath`,{
+                    params: data, // Truyền dữ liệu qua query parameters
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`, 
+                    },
+                });
 
-            setFile(res.data)
-            setFolder(resF.data)
+            let filteredFolders = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+            let filteredFiles = res.data.filter((file: { isDelete: any; }) => !file.isDelete);
+
+
+            setFile(filteredFiles)
+            setFolder(filteredFolders)
 
             
 
-            if (!resF.data[0] && !res.data[0]) {
+            if (!filteredFiles[0] && !filteredFolders[0]) {
                 setBlank('show')
             }
             else setBlank('')
             
-            const folders = JSON.stringify(resF.data);
+            const folders = JSON.stringify(filteredFolders);
             Cookies.set('folders', folders, { secure: true, sameSite: 'strict' });
             
-            const files = JSON.stringify(res.data);
+            const files = JSON.stringify(filteredFiles);
             Cookies.set('files', files, { secure: true, sameSite: 'strict' });
 
-
-
-
-
-            // const test = await fetch(`http://localhost:3001/files/file_3/download`)
-
-//             const fileContent = await test.blob();
-//   const url = window.URL.createObjectURL(fileContent);
-//   setUrl(url)
-
-//   const downloadLink = document.createElement('a');
-//   downloadLink.href = url;
-//   downloadLink.download = `sad.jpg`;
-//   downloadLink.click();
-
-//   window.URL.revokeObjectURL(url);
-            // const url = 'http://localhost:3001/files/file_3/download';
-
-            // axios.get(url)
-            //   .then((response) => {
-            //     const img = document.createElement('img');
-            //     img.src = response.data.url;
-            //     document.body.appendChild(img);
-            //   })
-            //   .catch((error) => {
-            //     // Xử lý lỗi
-            //   });
-        
-        
-        
-        
-        
-        
         }
         fetchData()
         
@@ -118,8 +115,8 @@ const File = () => {
             <Breadcrumbs />
             <Tool />
             
-            {folder[0] && <FolderSection folders={folder}/>}
-            {file[0] && <FileSection files={file}/>}
+            {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
+            {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}
             {blank && (<div className={cx('content')}>
                 <div className="">
                     <SentimentDissatisfiedIcon  style={{fontSize: '100px'}}/>
@@ -127,18 +124,12 @@ const File = () => {
                 <div className={cx('message')}>It feels lonely here...</div>
 
             </div>)}
-            <div>
-                {/* <img src={url} alt="" />
-                 */}
-                 {url}
-            </div>
+           
             <Toaster 
                 position="top-center"
                 reverseOrder={false}
             />
             
-            
-             
         </div>
     )
 }

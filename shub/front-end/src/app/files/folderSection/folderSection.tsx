@@ -2,6 +2,10 @@
 import styles from './folderSection.module.scss'
 import Card from '../card/card'
 import { useShub } from '@/app/Provider/Provider';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
+
 
 interface FoldersProps {
     folder_id: string,
@@ -10,21 +14,52 @@ interface FoldersProps {
     owner: string,
     created_date: string,
     updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
+    share: string[],
+
 }
 
 export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
-    const { selected, handleSelect, handleNavigation, type, handleType } = useShub();
+    const { 
+        selected, 
+        handleSelect, 
+        handleNavigation, 
+        type, 
+        handleType,
+        handleIsFavourite,
+        handleIsDelete,
+        handleShare
+    } = useShub();
 
     return (
             <div className={styles.part}>
                 <h3 className={styles.title}>Folders</h3>
-                <div className="grid grid-cols-4 gap-3">
+                <div 
+                className={cx('grid')}
+                >
                     {folders.map((folder) => (
                         
                         <div key={folder.folder_id}
                         onClick={() => {
                             handleSelect(folder.folder_id, 'folder')
                             handleType('folder')
+                            if(folder.isFavourite == undefined) {
+                                handleIsFavourite(false)
+                            }
+                            else {
+                                handleIsFavourite(folder.isFavourite)
+                            }
+
+                            if(folder.isDelete == undefined) {
+                                handleIsDelete(false)
+                            }
+                            else {
+                                handleIsDelete(folder.isDelete)
+                            }
+
+                            handleShare(folder.share)
+                            
                             
                         }}
                         onDoubleClick={() => {

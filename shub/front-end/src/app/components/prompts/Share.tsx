@@ -1,142 +1,268 @@
-import { FC, useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './Share.module.scss'
+import { usePathname, useRouter } from 'next/navigation'
+import styles from './Move.module.scss'
+import Cookies from 'js-cookie';
+import { useShub } from '@/app/Provider/Provider';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const cx = classNames.bind(styles);
 
-interface ShareProps {
+interface MoveProps { }
 
-}
+interface Item {
+    id: string;
+    name: string;
+  }
 
-const Share: React.FC<ShareProps> = () => {
+const Share: React.FC<MoveProps> = () => {
+    const pathname = usePathname()
+    const [path, setPath] = useState(pathname);
+    const [create, setCreate] = useState('');
+    const [items, setItems] = useState<Item[] >([]);
+    const router = useRouter();
+    const userId = Cookies.get('userId');
+    const accessToken = Cookies.get('accessToken');
+    const { 
+        type,
+        selected,
+        handleChange,
+        toggleCurrentPromptName,
+        toggleShowShare,
+        share
+    } = useShub();
 
-    const [listing, setListing] = useState('')
+    // const handleClick = (name: string) => {
+    //     const newPath = path + '/' + name 
+    //     setPath(newPath)
+    // }
+
+    const handleShare = () => {
+        const load = toast.loading('Loading...')
+
+        if (type == 'folder'){
+            const data = {
+                user_id: userId,
+                folder_id: selected,
+                share: checkedNames,
+            };
+
+            console.log(data)
+
+
+            axios.put(`http://localhost:3001/folders/updateShare`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${accessToken}`, 
+                },
+              })
+              .then(response => {
+                toast.success('Folder Shared')
+                toast.dismiss(load);
+                handleChange()
+                toggleCurrentPromptName()
+                
+              })
+              .catch(error => {
+                console.error('Error sharing folder:', error);
+              });
+        }
+        else{
+            const data = {
+                user_id: userId,
+                file_id: selected,
+                share: checkedNames,
+            };
+
+            axios.put(`http://localhost:3001/files/updateShare`, data, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${accessToken}`, 
+                },
+              })
+              .then(response => {
+                toast.success('File shared')
+                toggleCurrentPromptName()
+                toast.dismiss(load)
+                handleChange()
+                
+      
+              })
+              .catch(error => {
+                console.error('Error sharing file:', error);
+              });
+        }
+
+        toggleShowShare()
+    }
+    
+
+    useEffect(()=>{
+        const fetchData = async () => {
+
+            const res = await axios.get(`http://localhost:3001/user`,{
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              },
+             );
+            
+            const itm:Item[] = []
+            
+            for (const pie in res.data){
+                if(res.data[pie].user_id != userId){
+
+                    await itm.push({
+                        id: res.data[pie].user_id,
+                        name: res.data[pie].email,
+                    })
+                }
+            }
+            
+            
+            
+            setItems(itm)
+
+        }
+        fetchData()
+    },[path, create])
+
+   
+    
+
+   
+
+    // const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (event.key === 'Enter') {
+    //         submit();
+    //     }
+    // };
+
+    // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setName(event.target.value);
+    // };
+
+    const [checkedNames, setCheckedNames] = useState<string[]>(share);
+
+    const handleCheckboxChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) {
+        setCheckedNames([...checkedNames, event.target.name]);
+      } else {
+        setCheckedNames(checkedNames.filter(name => name !== event.target.name));
+      }
+    };
+  
+   
 
     return (
-        <div className={cx('card','floating','share__promt_card')} id={cx('share')}>
+        <>
+        {!create && (
+            <div className={cx('card','floating')}>
             <div className={cx('card-title')}>
-                <h2>Prompt Share</h2>
+                <h2>Share</h2>
             </div>
-
-            {listing && (
-                <>
-                    <div className={cx("card-content")}>
-                        <table>
-                            <tr>
-                                <th>#</th>
-                                <th>Share Duration</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-
-                            {/* {links.map((link) => (
-                                <tr key={link.hash}>
-                                    <td>{link.hash}</td>
-                                    {(links.expire !== 0) && (
-                                        <td>{humanTime(link.expire)}</td>
-                                    )}
-                                    {(links.expire == 0) && (
-                                        <td>Permanent</td>
-                                    )}
-                                    <td className='small'>
-                                        <button
-                                            className='action copy-clipboard'
-                                            data-clipboard-text={buildLink(link)}
-                                            aria-label='copyToClipboard'
-                                            title='copyToClipboard'>
-                                            <i className='material-icons'>content_paste</i>
-                                        </button>
-                                    </td>
-                                    {hasDownloadLink() && (
-                                        <td className='small'>
-                                            <button
-                                                className='action copy-clipboard'
-                                                data-clipboard-text={buildLink(link)}
-                                                aria-label='copyDownloadLinkToClipboard'
-                                                title='copyDownloadLinkToClipboard'>
-                                                <i className='material-icons'>content_paste_go</i>
-                                            </button>
-                                        </td>
-                                    )}
-                                    <td className='small'>
-                                        <button
-                                            className='action'
-                                            onClick={deleteLink(event, link)}
-                                            aria-label='delete'
-                                            title='delete'>
-                                            <i className='material-icons'>delete</i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))} */}
-                        </table>
-                    </div>
-                    <div className={cx("card-action")}>
-                        <button
-                            className={cx('button','button--flat',"button--grey")}
-                            // onClick={() => { dispatch({ type: "CLOSE_HOVER" }) }}
-                            aria-label='close'
-                            title='close'>
-                            Close
-                        </button>
-                        <button
-                            className={cx('button','button--flat',"button--blue")}
-                            // onClick={switchListing}
-                            aria-label='new'
-                            title='new'>
-                            New
-                        </button>
-                    </div>
-                </>
-            )}
+            
 
             <div className={cx("card-content")}>
-                <p>Share Duration</p>
-                <div className={cx("input-group", 'input')}>
-                    <input type='number'
-                        max={214748364}
-                        min={1}
-                        // onKeyPress={handleKeyPress}
-                        // onChange={handleInputChange}
-                        // value={time}
+                <form className={cx('file-list')}>
+                    {items[0] ? items.map((item) => (
+                        <label
+                            className={cx('li')}
+                            key={item.name}
                         >
-                            
-                        </input>
-                    <select className={cx("right")}
-                    // value={unit} onChange={handleUnitChange} 
-                    aria-label='timeUnit'>
-                        <option value="seconds">Seconds</option>
-                        <option value="minutes">Minutes</option>
-                        <option value="hours">Hours</option>
-                        <option value="days">Days</option>
-                    </select>
+                            <input type="checkbox" name={item.id} onChange={handleCheckboxChange} checked={checkedNames.includes(item.id)}/>
+                            <img src="/avt.svg" alt="" />
+                            <span className={cx('name')}>
+                                {item.name}
+                            </span>
+                        </label>
+                        
+                    )) : (
+                        <div>No user here</div>
+                    )}
+                </form>
+         
+                
+            </div >
+
+            <div
+                className={cx("card-action")}
+                style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }}
+            >
+                
+                <div>
+                    <button
+                        className={cx('button','button--flat',"button--grey")}
+                        onClick={() => {
+                            toggleShowShare()
+                            toggleCurrentPromptName()
+                        }}
+                        aria-label="Cancel"
+                        title="Cancel"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className={cx('button','button--flat')}
+                        onClick={handleShare}
+                        // disabled={path == pathname}
+                        aria-label="Share"
+                        title="Share"
+                    >
+                        Share
+                    </button>
                 </div>
-                <p>Optional Password</p>
+            </div>
+        </div >
+        )}
+        
+        {/* {create && (
+            <div className={cx('card','floating')}>
+            <div className={cx('card-title')}>
+                <h2>New directory</h2>
+            </div>
+
+            <div className={cx("card-content")}>
+                <p>Write the name of the new directory.</p>
                 <input
                     className={cx('input','input--block')}
-                    type='password'
-                    // value={password}
-                    >
-                        
-                    </input>
+                    type='text'
+                    onKeyDown={handleKeyPress}
+                    onChange={handleInputChange}
+                    name={name}
+                />
             </div>
 
             <div className={cx("card-action")}>
                 <button
                     className={cx('button','button--flat',"button--grey")}
-                    // onClick={switchListing}
-                    aria-label='cancel'
-                    title='cancel'>Cancel</button>
+                    onClick={() => {
+                        setCreate('')
+                        toggleCurrentPromptName()
+                        }
+                    }
+                    aria-label='Cancel'
+                    title='Cancel'>
+                    Cancel
+                </button>
                 <button
-                    className={cx('button','button--flat',"button--blue")}
-                    // onClick={submit}
-                    aria-label='share'
-                    title='share'
-                >Share</button>
+                    className={cx('button','button--flat')}
+                    aria-label='Create'
+                    title='Create'
+                    onClick={submit}
+                    >
+                    Create
+                </button>
             </div>
         </div>
-    )
-}
+        )} */}
+        
+        </>
+        
+    );
+};
 
 export default Share;

@@ -1,6 +1,6 @@
 .container {
     cursor: pointer;
-    width: 80%;
+    width: 250px;
     background-color: #fff;
     display: flex;
     padding: 1em;
@@ -53,7 +53,7 @@
 
 }
 .containerSelect{
-    width: 80%;
+    width: 250px;
 
     cursor: pointer;
     background-color: #2196f3;
@@ -117,3 +117,30 @@
 .right{
     width: 25%;
 }
+
+// /* Styles for tablets */
+// @media (min-width: 768px) and (max-width: 1024px) {
+//     .container {
+//         /* Adjust styles for tablet view */
+//         width: 100%;
+//     }
+//     .left, .right {
+//         /* Adjust width for tablet view */
+//         width: 50%;
+//     }
+// }
+
+// /* Styles for mobile phones */
+// @media (max-width: 767px) {
+//     .container {
+//         /* Adjust styles for mobile view */
+//         flex-direction: column;
+//         width: 100%;
+//     }
+//     .left, .right {
+//         /* Stack left and right on top of each other */
+//         width: 100%;
+//     }
+// }
+
+

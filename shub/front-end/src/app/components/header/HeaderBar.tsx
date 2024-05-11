@@ -25,6 +25,8 @@ import Dropdown from '../prompts/DropDown';
 import ResetPassword from '../prompts/ResetPassword';
 
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import PermanentlyDelete from '../prompts/PermanentlyDelete';
+import Restore from '../prompts/Restore';
 
 const cx = classNames.bind(styles);
 
@@ -55,37 +57,29 @@ const [showToast, setShowToast] = useState("");
   
   const { 
     currentPromptName, 
-    toggleCurrentPromptName,
+    showRestore,
     showNewFile, 
-    toggleShowNewFile, 
     showNewDir, 
-    toggleShowNewDir, 
     showCopy,
     showMove,
     showShare,
     showDelete, 
-    toggleShowDelete, 
     showRename, 
-    toggleShowRename,
     stream,
-    handleStream,
     data,
     type,
     showUpload,
-    toggleShowUpload,
     showChangePassword,
-    toggleShowChangePassword, 
-    toggleShowShare,
-    toggleShowCopy,
-    toggleShowMove,
+    showPermanentlyDelete,
     showDownload,
-    toggleShowDownload,
     showInfo,
+    handleStream,
     toggleShowInfo,
     sessionInfo,
     fetchDataSession,
     showResetPassword,
     toggleShowResetPassword,
+
   } = useShub();
   const accessToken = Cookies.get('accessToken');
   const router = useRouter();
@@ -220,7 +214,7 @@ const [showToast, setShowToast] = useState("");
 
         <div className={cx('right')}>
           
-          <img className={cx('noti')} src='/noti.svg'></img>
+          <img className={cx('noti')} src='/noti.png'></img>
           
           <div className={cx('id')}>
             <img className={cx('ava')} src='/dan.jpg'></img>
@@ -293,9 +287,19 @@ const [showToast, setShowToast] = useState("");
       {showDelete && (
         <Delete />
       )}
+
+      {showPermanentlyDelete && (
+        <PermanentlyDelete />
+      )}
+
+      {showRestore && (
+        <Restore />
+      )}
+
       {stream && data && type && (
         <Content data={data} type={type}/>
       )}
+      
       {showChangePassword && (
         <ChangePassword />
       )}
@@ -316,19 +320,19 @@ const [showToast, setShowToast] = useState("");
       // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
         onClick={
           ()=>{
-            toggleCurrentPromptName()
+            // toggleCurrentPromptName()
             // if(showDownload){setShowDownload('')}
             // if(showInfo){setShowInfo('')}
-            if(showUpload){toggleShowUpload()}
-            if(showNewFile){toggleShowNewFile()}
-            if(showNewDir){toggleShowNewDir()}
+            // if(showUpload){toggleShowUpload()}
+            // if(showNewFile){toggleShowNewFile()}
+            // if(showNewDir){toggleShowNewDir()}
             // if(showShare){setShowShare('')}
-            if(showRename){toggleShowRename()}
+            // if(showRename){toggleShowRename()}
             // if(showCopy){setShowCopy('')}
             // if(showMove){setShowMove('')}
-            if(showDelete){toggleShowDelete()}
+            // if(showDelete){toggleShowDelete()}
             if(stream){handleStream()}
-            if(showChangePassword){toggleShowChangePassword()}
+            // if(showChangePassword){toggleShowChangePassword()}
           }
         }
       >

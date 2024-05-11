@@ -26,8 +26,14 @@ interface ShubContextProps {
     hideOption: () => void;
     selected: string;
     handleSelect: (id: string, type1: string) => void;
+    name: string;
+    handleName: (name: string) => void;
     showDelete: string;
     toggleShowDelete: () => void;
+    showRestore: string;
+    toggleShowRestore: () => void;
+    showPermanentlyDelete: string;
+    toggleShowPermanentlyDelete: () => void;
     showRename: string;
     toggleShowRename: () => void;
     showCopy: string;
@@ -48,6 +54,12 @@ interface ShubContextProps {
     type: string;
     handleData: (data: string, type: string) => void;
     handleType: (type: string) => void;
+    isFavourite: boolean;
+    handleIsFavourite: (isFavourite: boolean) => void;
+    isDelete: boolean;
+    handleShare: (share: string[]) => void;
+    share: string[];
+    handleIsDelete: (isFavourite: boolean) => void;
     showChangePassword: string;
     toggleShowChangePassword: () => void;
     sessionInfo : any;
@@ -74,7 +86,6 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
       user_id: userId
     }
   });
-    console.log(res.data);
     setSessionInfo(res.data)
   }
   useEffect(() => {
@@ -133,6 +144,12 @@ const handleSelect = (id: string, type1: string) => {
       showOption()
   }
 }
+
+const [name, setName] = useState('');
+const handleName = (name: string) => {
+  setName(name)
+}
+
 const resetSelect = () => {
   setSelected('')
 }
@@ -142,6 +159,19 @@ const toggleShowDelete = () => {
     // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
     setShowDelete(showDelete == '' ? 'more' : '');
 };
+
+const [showRestore, setShowRestore] = useState("");
+const toggleShowRestore = () => {
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    setShowRestore(showRestore == '' ? 'more' : '');
+};
+
+const [showPermanentlyDelete, setShowPermanentlyDelete] = useState("");
+const toggleShowPermanentlyDelete = () => {
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+    setShowPermanentlyDelete(showPermanentlyDelete == '' ? 'more' : '');
+};
+
 
 const [showRename, setShowRename] = useState("");
 const toggleShowRename = () => {
@@ -182,7 +212,7 @@ const toggleShowInfo = () => {
 const [stream, setStream] = useState("");
 const handleStream = () => {
   setStream(stream == '' ? 'more' : '');
-  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [data, setData] = useState("");
@@ -210,8 +240,26 @@ const toggleShowResetPassword = () => {
   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 }
 
-const value: ShubContextProps = {
 
+const [isFavourite, setIsFavourite] = useState(false);
+const handleIsFavourite = (isFavourite: boolean) =>{
+  setIsFavourite(isFavourite)
+}
+
+const [isDelete, setIsDelete] = useState(false);
+const handleIsDelete = (isDelete: boolean) =>{
+  setIsDelete(isDelete)
+}
+
+const [share, setShare] = useState<string[]>([]);
+const handleShare = (share: string[]) =>{
+  setShare(share)
+}
+
+
+
+
+const value: ShubContextProps = {
     currentPromptName,
     toggleCurrentPromptName,
     showNewFile,
@@ -227,6 +275,10 @@ const value: ShubContextProps = {
     handleSelect,
     showDelete,
     toggleShowDelete,
+    showRestore,
+    toggleShowRestore,
+    showPermanentlyDelete,
+    toggleShowPermanentlyDelete,
     showRename,
     toggleShowRename,
     showCopy,
@@ -251,11 +303,22 @@ const value: ShubContextProps = {
     handleType,
     showChangePassword,
     toggleShowChangePassword,
+
+    isFavourite,
+    handleIsFavourite,
+    isDelete,
+    handleIsDelete,
+    handleShare,
+    share,
+    name,
+    handleName,
+
     sessionInfo,
     fetchDataSession,
     showResetPassword,
     toggleShowResetPassword,
     
+
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

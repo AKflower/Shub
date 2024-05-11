@@ -37,7 +37,16 @@ const Rename: React.FC<RenameProps> = () => {
     }; 
     
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
+        const newName = event.target.value;
+        if (/[\/\\?:"<>|#]/.test(newName)) {
+            toast.error('Tên không được chứa các ký tự:\n / \\ ? : " < > | #', {
+                style: {
+                  whiteSpace: 'pre-wrap',
+                },
+              });
+            event.target.value = event.target.value.slice(0,-1)
+        }
+        else setName(event.target.value);
     };
 
     const submit = () => {
