@@ -94,7 +94,7 @@ const [showToast, setShowToast] = useState("");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
-  }, []);
+  }, [pathname]);
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
