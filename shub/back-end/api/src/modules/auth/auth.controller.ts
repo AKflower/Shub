@@ -32,6 +32,7 @@ export class AuthController {
       isFirstAccess: user.isFirstAccess,
       access_token: token ,
       role: user.role,
+      isActive: user.isActive
     };
   }
 
