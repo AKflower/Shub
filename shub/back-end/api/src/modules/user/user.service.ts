@@ -71,7 +71,8 @@ export class UserService {
         firstName: result.firstName,
         lastName: result.lastName,
         isFirstAccess: result.isFirstAccess,
-        role: result.role
+        role: result.role,
+        isActive: result.isActive
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
