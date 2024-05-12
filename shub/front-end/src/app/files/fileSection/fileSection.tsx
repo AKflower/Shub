@@ -2,6 +2,9 @@
 import styles from './fileSection.module.scss'
 import Card from '../card/card'
 import { useShub } from '@/app/Provider/Provider';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 interface FileProps {
     file_id: string,
@@ -15,7 +18,7 @@ interface FileProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
-
+    file_size:string,
 }
 
 
@@ -39,7 +42,7 @@ export default function FileSection ({files} : {files:FileProps[]}) {
     return (
             <div className={styles.part}>
             <h3 className={styles.title}>Files</h3>
-            <div className="grid grid-cols-4 gap-3">
+            <div className={cx('grid')}>
                 {files.map((file) => (
                     <div key={file.file_id}
                         onClick={() => {
@@ -72,7 +75,7 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                         }}
                     >
 
-                    <Card type1={file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)} key={file.file_id} name={file.file_name} size='10'  date={file.updated_date} selected={selected == file.file_id && type == file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)}/>
+                    <Card type1={file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)} key={file.file_id} name={file.file_name} size={file.file_size}  date={file.updated_date} selected={selected == file.file_id && type == file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)}/>
                     </div>
                         
                   

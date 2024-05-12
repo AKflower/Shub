@@ -32,7 +32,7 @@ const Delete: React.FC<DeleteProps> = () => {
   
   const submit = () => {
     const load = toast.loading('Loading...')
-
+    toggleShowDelete()
     if (type == 'folder'){
       
         const data = {
@@ -49,7 +49,7 @@ const Delete: React.FC<DeleteProps> = () => {
         })
         .then(response => {
           handleChange()
-          toggle()
+          toggleCurrentPromptName()
 
           toast.success('Folder moved to Trash Files')
           toast.dismiss(load);
@@ -77,7 +77,7 @@ const Delete: React.FC<DeleteProps> = () => {
       })
       .then(response => {
         handleChange()
-        toggle()
+        toggleCurrentPromptName()
 
         toast.success('File moved to Trash Files')
         toast.dismiss(load);

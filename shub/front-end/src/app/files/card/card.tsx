@@ -53,7 +53,7 @@ export default function Card ({type1, name,size,date, selected}: {type1:string, 
 
            <div className={cx('right','content')}>
                 <p className={cx('size')}>
-                    18kB
+                    {Number(size) < 1024 ? size + ' B' : Number(size) < Math.pow(2,20) ? String((Number(size)/Math.pow(2,10)).toFixed(2)) + ' KB' : Number(size) < Math.pow(2,30) ? String((Number(size)/Math.pow(2,20)).toFixed(2)) + ' MB' : Number(size) < Math.pow(2,40) ? String((Number(size)/Math.pow(2,30)).toFixed(2)) + ' GB' : '' }
                 </p>
            </div>
             

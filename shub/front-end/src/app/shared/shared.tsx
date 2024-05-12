@@ -15,6 +15,8 @@ import Skeleton from 'react-loading-skeleton';
 import { Bounce, ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 import path from 'path';
+import fonts from '../../../public/fonts/fonts';
+
 
 const cx = classNames.bind(styles);
 
@@ -30,7 +32,7 @@ interface FileProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
-
+    file_size: string,
 }
 
 interface FoldersProps {
@@ -150,7 +152,7 @@ const Shared = () => {
     return (
 
         <div className={cx('container')}>
-            <h1>Share</h1>
+            <h1 className={cx('title',fonts.poppins.className)}>Share</h1>
             <Tool />
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}

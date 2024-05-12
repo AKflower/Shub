@@ -32,7 +32,7 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
   
   const submit = () => {
     const load = toast.loading('Loading...')
-   
+    toggleShowPermanentlyDelete()
 
           if (type == 'folder'){
             const foldersString = Cookies.get('folders');
@@ -54,7 +54,7 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
               })
               .then(response => {
                 console.log('Folder permanently deleted');
-                toggle()
+                toggleCurrentPromptName()
                 
                 toast.success('Folder permanently deleted')
                 toast.dismiss(load);
@@ -79,7 +79,7 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
               toast.success('File permanently deleted')
               toast.dismiss(load);
               handleChange()
-              toggle()
+              toggleCurrentPromptName()
 
       
             })

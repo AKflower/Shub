@@ -65,6 +65,7 @@ const Restore: React.FC<DeleteProps> = () => {
   
   const submit = async () => {
     const load = toast.loading('Loading...')
+    toggleShowRestore()
 
     if (type == 'folder'){
       
@@ -135,7 +136,7 @@ const Restore: React.FC<DeleteProps> = () => {
       })
       .then(response => {
         handleChange()
-        toggle()
+        toggleCurrentPromptName()
         toast.success('Folder Restored')
         toast.dismiss(load);
       })
@@ -160,7 +161,7 @@ const Restore: React.FC<DeleteProps> = () => {
       })
       .then(response => {
         handleChange()
-        toggle()
+        toggleCurrentPromptName()
 
         toast.success('File Restored')
         toast.dismiss(load);

@@ -214,7 +214,7 @@ const [showToast, setShowToast] = useState("");
 
         <div className={cx('right')}>
           
-          <img className={cx('noti')} src='/noti.png'></img>
+          {/* <img className={cx('noti')} src='/noti.png'></img> */}
           
           <div className={cx('id')}>
             <img className={cx('ava')} src='/dan.jpg'></img>

@@ -16,6 +16,8 @@ import { Bounce, ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 import path from 'path';
 import ToolFB from '../components/tool/ToolForBin';
+import fonts from '../../../public/fonts/fonts';
+
 
 const cx = classNames.bind(styles);
 
@@ -31,7 +33,7 @@ interface FileProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
-
+    file_size: string,
 }
 
 interface FoldersProps {
@@ -105,7 +107,7 @@ const Trash = () => {
     return (
 
         <div className={cx('container')}>
-            <h1>Bin</h1>
+            <h1 className={cx('title',fonts.poppins.className)}>Trash</h1>
             <ToolFB />
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}

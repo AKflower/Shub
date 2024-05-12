@@ -30,6 +30,8 @@
         width: 90%;
       }
 
+    
+
     .recaptcha form {
         min-width: 304px;
     }
@@ -141,3 +143,12 @@
     display: flex;
   }
 
+  .p{
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .div{
+    width: 90%;
+
+    max-width: 13em;
+  }
