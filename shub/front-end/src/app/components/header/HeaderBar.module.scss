@@ -138,10 +138,26 @@
     height: 100%;
     width: 100%;
     border-radius: 10px;
-  border: 1px solid #ccc;
+    border: 1px solid #ccc;
+    text-indent: .5em;
+
 
   }
+ 
 
+}
+
+.avar{
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  width: 2.5em;
+  height: 2.5em;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: silver;
+  color: white;
+  user-select: none;
 }
 
 

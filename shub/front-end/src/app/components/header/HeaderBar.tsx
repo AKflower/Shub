@@ -204,7 +204,7 @@ const [showToast, setShowToast] = useState("");
 
           <div className={cx('filter')}>
             <select name="lang" id="lang-select" onChange={(e) => setFilter(e.target.value)}>
-              <option value="">All</option>
+                <option value="">All</option>
               <option value="File">File</option>
               <option value="Folder">Folder</option>
             
@@ -214,10 +214,14 @@ const [showToast, setShowToast] = useState("");
 
         <div className={cx('right')}>
           
-          {/* <img className={cx('noti')} src='/noti.png'></img> */}
           
           <div className={cx('id')}>
-            <img className={cx('ava')} src='/dan.jpg'></img>
+            {/* <img className={cx('ava')} src='/dan.jpg'></img> */}
+            <div className={cx('avar')}>
+              <span>
+                {user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}
+              </span>
+            </div>
             <Link href="/setting/profile"><div className={cx('info')}>
               <p className={cx('name')}>{user.firstName}</p>
               <p className={cx('mail')}>{user.email}</p>
