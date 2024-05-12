@@ -36,7 +36,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
             <div className={styles.part}>
                 <h3 className={styles.title}>Folders</h3>
                 <div 
-                className={cx('grid')}
+                className={cx('grid-1')}
                 >
                     {folders.map((folder) => (
                         
