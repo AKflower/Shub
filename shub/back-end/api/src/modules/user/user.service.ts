@@ -70,7 +70,9 @@ export class UserService {
         password: result.password,
         firstName: result.firstName,
         lastName: result.lastName,
-        isFirstAccess: result.isFirstAccess
+        isFirstAccess: result.isFirstAccess,
+        role: result.role,
+        isActive: result.isActive
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
@@ -89,7 +91,7 @@ export class UserService {
     const saltOfRounds = 10;
     newUser.password = await bcrypt.hash(newUser.password, saltOfRounds);
     
-    const resUTF8=await contract.submitTransaction('NewUser',newUser.email,newUser.password,newUser.firstName,newUser.lastName);
+    const resUTF8=await contract.submitTransaction('NewUser',newUser.email,newUser.password,newUser.firstName,newUser.lastName,newUser.role);
     const utf8Decoder = new TextDecoder();
     const res = utf8Decoder.decode(resUTF8);
 

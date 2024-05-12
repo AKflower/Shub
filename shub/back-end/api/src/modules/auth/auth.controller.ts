@@ -30,7 +30,9 @@ export class AuthController {
       firstName: user.firstName,
       lastName: user.lastName,
       isFirstAccess: user.isFirstAccess,
-      access_token: token 
+      access_token: token ,
+      role: user.role,
+      isActive: user.isActive
     };
   }
 

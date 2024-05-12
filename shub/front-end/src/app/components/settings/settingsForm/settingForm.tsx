@@ -20,25 +20,58 @@ type User = {
 }    
 const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userAffected?:User | null,isAddNew?: boolean}) => {
   const router = useRouter();
+  const {sessionInfo}=useShub()
   const [isSaving, setIsSaving] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
+  const [errorFirstName,setErrorFirstName] = useState(false);
+  const [errorLastName,setErrorLastName] = useState(false);
   const [password,setPassword] = useState<string>("");
   const [email,setEmail] = useState<string>("");
   const [firstName,setFirstName] = useState<string>("");
   const [lastName,setLastName] = useState<string>("");
+  const [role,setRole] = useState<string>("Admin");
   useEffect(() => {
     console.log('test: ', errorEmail);
   }, [errorEmail]);
-  
+  useEffect(() => {
+    if (errorEmail) setErrorEmail(false)
+    
+    
+  },[email])
+  useEffect(() => {
+    if (errorFirstName) setErrorFirstName(false)
+  },[firstName])
+  useEffect(() => {
+    if (errorLastName) setErrorLastName(false)
+  },[lastName])
   const handleSubmit = (event : any) => {
     event.preventDefault();
     setIsSaving(true);
     console.log(email,password,firstName,lastName);
+    if (email==='' || firstName==='' || lastName === '') {
+      if (email==='') setErrorEmail(true);
+      if (firstName==='') setErrorFirstName(true);
+      if (lastName==='') setErrorLastName(true);
+      toast.error(`You must fill in all the fields above!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+      });
+      setIsSaving(false);
+      return;      
+    }
      const newUser = {
         email: email,
         password: email,
         firstName: firstName,
         lastName: lastName,
+        role: role,
      }
      axios.post(`http://localhost:3001/user/new`, newUser,{
               
@@ -61,6 +94,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
               setFirstName('');
               setLastName('');
               setErrorEmail(false);
+              setRole('Admin')
               setIsSaving(false)
 
           })
@@ -117,10 +151,10 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='Last name' type='text' value={user.lastName} />
                 <Input label='Email' type='email' value={user.email} />
                 <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
-                <Select label='Role' list={roles}/>
+                <Select label='Role' list={roles} value={role}/>
             </div>
             <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
-                <Select label='Themes' list={themes}/>
+                <Select label='Themes' list={themes} />
 
             </div>
             
@@ -140,11 +174,11 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         <form action="" className={fonts.poppins.className}>
                 
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
-            <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName} isProcessing={isSaving}/>
-            <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName} isProcessing={isSaving}/>
+            <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName} isError={errorFirstName} isProcessing={isSaving}/>
+            <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName} isError={errorLastName} isProcessing={isSaving}/>
             <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail} isError={errorEmail} isProcessing={isSaving}/>
             <Input label='Password' type='password' isDisabled={true} value={email} onChange={setPassword} isProcessing={isSaving}/>
-            <Select label='Role' list={roles}/>
+            <Select label='Role' list={roles} value={role} onChange={setRole}/>
         </div>
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
             <Select label='Themes' list={themes}/>

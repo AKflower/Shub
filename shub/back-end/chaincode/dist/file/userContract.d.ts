@@ -1,7 +1,7 @@
 import { Context, Contract } from "fabric-contract-api";
 export declare class UserContract extends Contract {
     private generateUniqueId;
-    NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string): Promise<string>;
+    NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string, role: string): Promise<string>;
     GetUserById(ctx: Context, user_id: string): Promise<string>;
     GetUserByEmail(ctx: Context, email: string): Promise<string>;
     UserExists(ctx: Context, user_id: string): Promise<boolean>;

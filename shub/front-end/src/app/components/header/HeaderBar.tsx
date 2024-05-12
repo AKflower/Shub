@@ -50,6 +50,7 @@ const [showToast, setShowToast] = useState("");
 
   const pathname = usePathname()
   const isLogin = (pathname=='/') 
+  const [user,setUser] = useState<any>({})
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('');
   const [searchData, setSearchData] = useState<Option[] >([]);
@@ -82,7 +83,12 @@ const [showToast, setShowToast] = useState("");
   } = useShub();
   const accessToken = Cookies.get('accessToken');
   const router = useRouter();
-  
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, [pathname]);
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
@@ -212,10 +218,11 @@ const [showToast, setShowToast] = useState("");
           
           <div className={cx('id')}>
             <img className={cx('ava')} src='/dan.jpg'></img>
-            <div className={cx('info')}>
-              <p className={cx('name')}>Danisolation</p>
-              <p className={cx('mail')}>tranquocdungb4@gmail.com</p>
+            <Link href="/setting/profile"><div className={cx('info')}>
+              <p className={cx('name')}>{user.firstName}</p>
+              <p className={cx('mail')}>{user.email}</p>
             </div>
+            </Link>
           </div>
         </div>
         

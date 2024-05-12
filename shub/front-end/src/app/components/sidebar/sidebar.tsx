@@ -42,7 +42,7 @@ const Sidebar = () => {
             .then(response => {
                 console.log('Logout success');
                 Cookies.set('accessToken', '', { secure: true, sameSite: 'strict' });
-
+                localStorage.clear();
                 router.push('/');
 
             })
@@ -172,7 +172,7 @@ const Sidebar = () => {
             
             
         </div>
-        <div className={styles.buttonContainer}>
+        <div className={styles.buttonContainer} style={pathname.startsWith("/setting")? {display:'none'}: {}}>
         <Link href="">
                 <button
                 className={styles.button}

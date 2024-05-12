@@ -44,7 +44,6 @@ export class StorageFileContract extends Contract {
           const folder : Folder =
           {
             folder_id: 'folder_1',
-
             folder_name: 'folder_root',
             folder_nameForSearch: 'folder_root',
             folder_path: '/files',
