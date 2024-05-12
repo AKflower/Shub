@@ -30,7 +30,7 @@ const Copy: React.FC<CopyProps> = () => {
         selected,
         handleChange,
         toggleCurrentPromptName,
-        toggleShowMove,
+        toggleShowCopy,
         toggleShowNewDir
     } = useShub();
 
@@ -83,7 +83,7 @@ const Copy: React.FC<CopyProps> = () => {
                 console.log('File moved');
                 handleChange()
                 toggleCurrentPromptName()
-                toggleShowMove()
+                toggleShowCopy()
       
               })
               .catch(error => {
@@ -237,7 +237,11 @@ const Copy: React.FC<CopyProps> = () => {
             <div>
                 <button
                     className={cx('button','button--flat',"button--grey")}
-                    onClick={toggleShowMove}
+                    onClick={() => {
+                        toggleShowCopy()
+                        toggleCurrentPromptName()
+
+                    }}
                     aria-label="Cancel"
                     title="Cancel"
                 >

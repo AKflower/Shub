@@ -30,6 +30,8 @@
         width: 90%;
       }
 
+    
+
     .recaptcha form {
         min-width: 304px;
     }
@@ -55,13 +57,13 @@
         }
       }
       p {
-        cursor: pointer;
-        text-align: right;
         color: var(--blue);
-        text-transform: lowercase;
         font-weight: 500;
         font-size: 0.9rem;
         margin: .5rem 0;
+        margin-bottom:  2.5em;
+        
+        
       }
   }
 
@@ -97,13 +99,56 @@
     margin: 0;
   }
   
-  .input:hover,
   .input:focus {
-    border-color: rgba(0, 0, 0, 0.2);
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem #c7d2fe;
+    border-radius: 6px;
   }
   
   .input--block {
     margin-bottom: .5em;
     display: block;
     width: 100%;
+  }
+
+  .pass{
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 2.5em;
+    margin-bottom: 1.5em;
+
+
+    
+
+    div{
+      width: 100%;
+      height: 100%;
+    }
+    input{
+      width: 100%;
+      height: 100%;
+      text-indent: 1em;
+
+
+    }
+  }
+
+  .check{
+    width: 1em;
+    margin-right: .5em;
+  }
+
+  .li{
+    display: flex;
+  }
+
+  .p{
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .div{
+    width: 90%;
+
+    max-width: 13em;
   }

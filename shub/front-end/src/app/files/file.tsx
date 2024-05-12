@@ -27,6 +27,7 @@ interface FileProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
+    file_size:string,
 }
 
 interface FoldersProps {
@@ -58,8 +59,8 @@ const File = () => {
 
     const userId = Cookies.get('userId');
     useEffect(() => {
-
-        if ( accessToken == '') {
+        console.log(accessToken)
+        if ( accessToken == '' || !accessToken) {
             router.push('/');
         }
         const fetchData = async () => {
