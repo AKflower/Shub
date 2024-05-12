@@ -43,7 +43,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
       className={cx('container')} 
       onSelect={handleTrue} 
       onClick={handleToggle} 
-      onMouseLeave={handleLeave}
+      onBlur={handleLeave}
     >
      
         {children}

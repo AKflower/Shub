@@ -38,7 +38,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             firstName: 'Admin',
             role: "Admin",
             lastName: '',
-            isFirstAccess: true,
+            isFirstAccess: false,
             isActive: true,
         };
         const folder = {

@@ -33,5 +33,4 @@ npm run start or npm run start:dev (for hot reload)
 cd shub/front-end
 npm install
 npm run dev
-
 </pre>
