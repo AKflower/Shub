@@ -42,7 +42,7 @@ export default function FileSection ({files} : {files:FileProps[]}) {
     return (
             <div className={styles.part}>
             <h3 className={styles.title}>Files</h3>
-            <div className={cx('grid')}>
+            <div className={cx('grid-1')}>
                 {files.map((file) => (
                     <div key={file.file_id}
                         onClick={() => {

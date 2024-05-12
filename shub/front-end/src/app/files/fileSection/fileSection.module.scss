@@ -8,14 +8,14 @@
     }
 }
 
-.grid {
+.grid-1 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 3rem;
 }
 
 @media (min-width: 1025px) and (max-width: 1370px) {
-    .grid {
+    .grid-1 {
         /* Adjust styles for tablet view */
         grid-template-columns: repeat( 3, 1fr);
     }
@@ -23,7 +23,7 @@
 
 /* Styles for tablets */
 @media (min-width: 768px) and (max-width: 1024px) {
-    .grid {
+    .grid-1 {
         /* Adjust styles for tablet view */
         grid-template-columns: repeat( 2, 1fr);
     }
@@ -31,7 +31,7 @@
 
 /* Styles for mobile phones */
 @media (max-width: 767px) {
-    .grid {
+    .grid-1 {
         /* Adjust styles for mobile view */
         grid-template-columns: repeat(1, 1fr);
     }
