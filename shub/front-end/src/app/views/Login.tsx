@@ -210,7 +210,6 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
         <Image src="/images/logo.png" alt="Shub" width={200} height={200}/>
         <h1 className={fonts.fontLogo.className}>Shub</h1>
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
-        <FloatLabel>
           
             <InputText
               autoFocus
@@ -219,14 +218,12 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
               autoCapitalize="off"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder='User Name'
             />
   
           
-          <label htmlFor="username">Username</label>
 
-        </FloatLabel>
 
-        <FloatLabel>
           <div className={cx('pass')}>
             <Password
               type="password"
@@ -234,10 +231,9 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => setPassword(e.target.value)}
               feedback={false}
               toggleMask
+              placeholder='Password'
               />
           </div>
-          <label htmlFor="password">Password</label>
-        </FloatLabel>
         
         <input
           className={cx('button','button--block')}
@@ -253,7 +249,6 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
        
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
         <p>Change your password</p>
-        <FloatLabel>
           <div className={cx('pass')}>
             <Password
               className={cx('pass')}
@@ -261,12 +256,10 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => {setNewPassword(e.target.value);setError('')}}
               toggleMask
               footer={footer}
+              placeholder='New Password'
             />
           </div>
-          <label htmlFor="newpassword">New Password</label>
-        </FloatLabel>
 
-        <FloatLabel>
           <div className={cx('pass')}>
             <Password
               className={cx('pass')}
@@ -274,11 +267,10 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => {setRetypePassword(e.target.value);setError('')}}
               toggleMask
               footer={check}
+              placeholder='Retype'
           />
        
           </div>
-          <label htmlFor="retype">Retype</label>
-        </FloatLabel>
         
         
 
