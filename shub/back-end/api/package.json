@@ -26,16 +26,15 @@
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.1",
+    "append-field": "^2.0.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
-
+    "class-validator": "^0.14.0",
     "file-type": "^12.4.2",
     "ipfs-cluster-api": "^0.0.9",
     "ipfs-http-client": "^53.0.1",
-    "class-validator": "^0.14.0",
     "passport": "^0.7.0",
-
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",
