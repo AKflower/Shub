@@ -8,10 +8,9 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import fonts from '../../../public/fonts/fonts';
 import { Password } from 'primereact/password';
-import { FloatLabel } from 'primereact/floatlabel';
 import { InputText } from 'primereact/inputtext';
-import { Divider } from 'primereact/divider';
 import toast from 'react-hot-toast';
+import Alert from '@mui/material/Alert'
 
 const cx = classNames.bind(styles);
 
@@ -19,12 +18,14 @@ interface Props {
 }
 
 const Login: React.FC<Props> = () => {
+
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
   const [token, setToken] = useState('');
   const [user, setUser] = useState<any>();
   const [password, setPassword] = useState('');
+  const [disabled, setDisabled] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [retypePassword, setRetypePassword] = useState('');
   const [reset, setReset] = useState(false);
@@ -103,8 +104,10 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         
       }
       else {
+        setError('')
         setReset(response.data.isFirstAccess);
         setActive(response.data.isActive)
+        
       }
       
   } catch (e) {
@@ -125,13 +128,17 @@ const returnL = async (event: React.FormEvent<HTMLFormElement>) => {
 
 const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
 
-  event.preventDefault();
-  event.stopPropagation();
-
+    event.preventDefault();
+    event.stopPropagation();
+    setDisabled(true)
+    setError('')
   if (newPassword.length < 8) {
-    setError(' Password must be at least 8 characters!')
+    setError('Password must be at least 8 characters!')
+    setDisabled(false)
+    
+
   }
-  else if (newPassword !== retypePassword) setError('Your password not match')
+  else if (newPassword !== retypePassword) {setError('Your password not match');setDisabled(false)}
   else{
     try {
 
@@ -150,6 +157,7 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             
         .catch(error => {
           console.error('Error:', error);
+          setDisabled(false)
         });
 
         const dataF = {
@@ -168,6 +176,7 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             
         .catch(error => {
           console.error('Error:', error);
+          setDisabled(false)
         });
 
         const dataA = {
@@ -192,12 +201,14 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             
         .catch(error => {
           console.error('Error:', error);
+          setDisabled(false)
         });
       
       
       
     } catch (e) {
       setError('An error occurred');  
+      setDisabled(false)
     }
   }
 
@@ -245,18 +256,20 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
       </form>)}
 
       {reset && (
+        
         <form onSubmit={changePass}>
-       
+          {disabled && <Alert severity="info">Loading</Alert>}
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
         <p>Change your password</p>
           <div className={cx('pass')}>
             <Password
               className={cx('pass')}
               value={newPassword}
-              onChange={(e) => {setNewPassword(e.target.value);setError('')}}
+              onChange={(e) => {setNewPassword(e.target.value);}}
               toggleMask
               footer={footer}
               placeholder='New Password'
+              disabled={disabled}
             />
           </div>
 
@@ -264,10 +277,12 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             <Password
               className={cx('pass')}
               value={retypePassword}
-              onChange={(e) => {setRetypePassword(e.target.value);setError('')}}
+              onChange={(e) => {setRetypePassword(e.target.value);}}
               toggleMask
               footer={check}
               placeholder='Retype'
+              disabled={disabled}
+
           />
        
           </div>
@@ -275,9 +290,11 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
         
 
         <input
-          className={cx('button','button--block')}
+          className={cx('button','button--block', 'disabled')}
           type="submit"
           value={'Change password'}
+          disabled={disabled}
+
         />
 
         

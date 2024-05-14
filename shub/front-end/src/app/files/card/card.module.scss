@@ -113,11 +113,13 @@
   }
 
 .left{
-    width: 75%;
+    width:75%;
 }
 
 .right{
-    width: 25%;
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
 }
 
 // /* Styles for tablets */

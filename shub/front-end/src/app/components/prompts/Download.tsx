@@ -22,7 +22,8 @@ const Download: FC<DownloadProps> = () => {
    data,
    name,
    toggleShowDownload,
-   toggleCurrentPromptName
+   toggleCurrentPromptName,
+   type
   } = useShub();
 
   const formats = {
@@ -44,15 +45,14 @@ const Download: FC<DownloadProps> = () => {
     const url = `http://localhost:3001/files/down`;
     const data1 = { cid: data };
     await axios.get(url, {
-      params: data1, // Truyền dữ liệu qua query parameters
+      params: data1, 
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`, 
       },
-      responseType: 'blob' // Yêu cầu dữ liệu dưới dạng blob
+      responseType: 'blob' 
     })
     .then((response) => {
-      // Kiểm tra nếu yêu cầu thành công
       if (response.status !== 200) {
         throw new Error('Network response was not ok');
       }
@@ -60,7 +60,15 @@ const Download: FC<DownloadProps> = () => {
       const blobUrl = URL.createObjectURL(response.data);
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = `${name}`; // Tên file
+      if (type == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        link.download = `${name.slice(0, name.lastIndexOf('.'))}.xlsx`; // Tên file
+      }
+      else if (type == 'vnd.openxmlformats-officedocument.wordprocessingml.document'){
+        link.download = `${name.slice(0, name.lastIndexOf('.'))}.docx`; // Tên file
+      }
+      else{
+        link.download = `${name.slice(0, name.lastIndexOf('.'))}.${type}`; // Tên file
+      }
       link.click();
       toggle()
     })
@@ -68,33 +76,10 @@ const Download: FC<DownloadProps> = () => {
       console.error('There has been a problem with your axios operation:', error);
     });
   }
-  // const handleClick = (format: string) => {
-  //   currentPrompt.confirm(format);
-  // };
+
 
   return (
-    // <div className={cx('card','floating')} id={cx('download')}>
-    //   <div className={cx('card-title')}>
-    //     {/* <h2>{currentPrompt.$t('prompts.download')}</h2> */}
-    //     <h2>download</h2>
-    //   </div>
-
-    //   <div className={cx("card-content")}>
-    //     {/* <p>{currentPrompt.$t('prompts.downloadMessage')}</p> */}
-    //     <p>downloadMessage</p>
-
-    //     {Object.entries(formats).map(([format, ext]) => (
-    //       <button
-    //         key={format}
-    //         className={cx('button','button--block')}
-    //         // onClick={() => handleClick(format)}
-    //         autoFocus
-    //       >
-    //         {ext}
-    //       </button>
-    //     ))}
-    //   </div>
-    // </div>
+   
     <div className={cx('card','floating')}>
       <div className={cx("card-content")}>
         <p>

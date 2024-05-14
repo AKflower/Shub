@@ -152,8 +152,9 @@ const Shared = () => {
     return (
 
         <div className={cx('container')}>
-            <h1 className={cx('title',fonts.poppins.className)}>Share</h1>
             <Tool />
+
+            <h1 className={cx('title',fonts.poppins.className)}>Share</h1>
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}
