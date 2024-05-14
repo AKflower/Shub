@@ -83,6 +83,14 @@
   .button:hover {
     background-color: var(--dark-blue);
   }
+  .button:hover:disabled {
+    background: var(--moon-grey);
+    cursor: none;
+  }
+  .button:disabled {
+    background: var(--moon-grey);
+    cursor: none;
+  }
   
   .button--block {
     margin: 0 0 0.5em;
@@ -152,3 +160,5 @@
 
     max-width: 13em;
   }
+
+  

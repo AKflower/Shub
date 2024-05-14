@@ -6,6 +6,11 @@ const nextConfig = {
     //     }
     // }
     plugins: ['@next/bundle-analyzer', '@next/font'],
+    webpack: (config) => {
+          config.resolve.alias.canvas = false;
+        
+          return config;
+        },
 }
 
 module.exports = nextConfig

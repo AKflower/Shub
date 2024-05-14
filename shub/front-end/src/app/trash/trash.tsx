@@ -107,8 +107,9 @@ const Trash = () => {
     return (
 
         <div className={cx('container')}>
-            <h1 className={cx('title',fonts.poppins.className)}>Trash</h1>
             <ToolFB />
+
+            <h1 className={cx('title',fonts.poppins.className)}>Trash</h1>
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}
