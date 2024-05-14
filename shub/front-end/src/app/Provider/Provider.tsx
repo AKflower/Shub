@@ -81,12 +81,16 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
 
   const [sessionInfo, setSessionInfo] = useState()
   const fetchDataSession = async () => {
-  const res = await axios.get(`http://localhost:3001/user/session`,{
+  if (userId) {
+    const res = await axios.get(`http://localhost:3001/user/session`,{
     params: {
       user_id: userId
     }
   });
-    setSessionInfo(res.data)
+  setSessionInfo(res.data)
+  }
+  
+    
   }
   useEffect(() => {
    
