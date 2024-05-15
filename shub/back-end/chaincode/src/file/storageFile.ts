@@ -257,14 +257,41 @@ export class StorageFileContract extends Contract {
     @Returns('string')
     public async GetFilesByPath(ctx: Context, user_id:string, path: string): Promise<string> {
       // const check = await this.checkDelete(ctx,path);
-      const checkForShare = await this.checkForShare(ctx,user_id,path)
+      if (path==='/files') {
+        const queryString = {
+          selector: {
+            // $or: [
+            //   { owner: user_id },
+            //   { share: { $elemMatch: { $eq: user_id } } }
+            // ],
+            file_path: path,
+            owner: user_id
+          },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+    
+        let result = await iterator.next();
+        while (!result.done) {
+          const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+          let record;
+          try {
+            record = JSON.parse(strValue);
+          } catch (err) {
+            console.log(err);
+            record = strValue;
+          }
+          allResults.push(record);
+          result = await iterator.next();
+        }
+    
+        return JSON.stringify(allResults);
+      }
+      else {
+        const checkForShare = await this.checkForShare(ctx,user_id,path)
       if (!checkForShare) return "You don't have permission!";
         const queryString = {
           selector: {
-            $or: [
-              { owner: user_id },
-              { share: { $elemMatch: { $eq: user_id } } }
-            ],
             file_path: path,
           },
         };
@@ -287,6 +314,8 @@ export class StorageFileContract extends Contract {
         }
     
         return JSON.stringify(allResults);
+      }
+      
       }
       @Transaction(false)
       @Returns('string')
