@@ -150,21 +150,7 @@ const Tool = () => {
         />
       </div>
 
-      <div className={cx('icon')}>
-        <Action 
-          icon={showView === 'grid' ? <img src='/grid.svg'></img> : showView === 'list' ? <img src='/list.svg'></img> : <img src='/module.svg'></img>}
-          label='Switch View'
-          counter={0}  
-          onAction={()=>{
-            if (showView === 'grid') setShowView('list')
-            else if (showView === 'list') setShowView('module')
-              else setShowView('grid')
-
-            }
-          }      
-
-        />
-      </div>
+      
 
       <div className={cx('icon')}>
         <Action 

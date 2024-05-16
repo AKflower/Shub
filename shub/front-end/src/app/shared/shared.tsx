@@ -8,14 +8,10 @@ import axios from 'axios';
 import { usePathname, useRouter } from 'next/navigation'; 
 import Cookies from 'js-cookie';
 import classNames from 'classnames/bind';
-import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
-import Tool from '../components/tool/Tool';
-import Skeleton from 'react-loading-skeleton';
-import { Bounce, ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
-import path from 'path';
 import fonts from '../../../public/fonts/fonts';
+import ToolFS from '../components/tool/ToolFS';
 
 
 const cx = classNames.bind(styles);
@@ -26,7 +22,7 @@ interface FileProps {
     file_path: string,
     cid: string,
     file_type: string,
-    user_id: number,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -39,7 +35,7 @@ interface FoldersProps {
     folder_id: string,
     folder_name: string,
     folder_path: string,
-    owner: string,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -106,42 +102,12 @@ const Shared = () => {
             }
             else setBlank('')
             
-            const foldersF = JSON.stringify(res.data.folders);
-            Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
+            // const foldersF = JSON.stringify(res.data.folders);
+            // Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
             
-            const filesF = JSON.stringify(res.data.files);
-            Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
+            // const filesF = JSON.stringify(res.data.files);
+            // Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
 
-
-            // const test = await fetch(`http://localhost:3001/files/file_3/download`)
-
-//             const fileContent = await test.blob();
-//   const url = window.URL.createObjectURL(fileContent);
-//   setUrl(url)
-
-//   const downloadLink = document.createElement('a');
-//   downloadLink.href = url;
-//   downloadLink.download = `sad.jpg`;
-//   downloadLink.click();
-
-//   window.URL.revokeObjectURL(url);
-            // const url = 'http://localhost:3001/files/file_3/download';
-
-            // axios.get(url)
-            //   .then((response) => {
-            //     const img = document.createElement('img');
-            //     img.src = response.data.url;
-            //     document.body.appendChild(img);
-            //   })
-            //   .catch((error) => {
-            //     // Xử lý lỗi
-            //   });
-        
-        
-        
-        
-        
-        
         }
         fetchData()
         
@@ -152,8 +118,9 @@ const Shared = () => {
     return (
 
         <div className={cx('container')}>
+            <ToolFS />
+
             <h1 className={cx('title',fonts.poppins.className)}>Share</h1>
-            <Tool />
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}

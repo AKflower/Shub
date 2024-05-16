@@ -12,6 +12,8 @@ import Breadcrumbs from '../components/breadcumbs/breadcrumbs';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import Tool from '../components/tool/Tool';
 import { Toaster } from 'react-hot-toast';
+import ToolFB from '../components/tool/ToolForBin';
+import ToolFS from '../components/tool/ToolFS';
 
 const cx = classNames.bind(styles);
 
@@ -21,7 +23,7 @@ interface FileProps {
     file_path: string,
     cid: string,
     file_type: string,
-    user_id: number,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -34,7 +36,7 @@ interface FoldersProps {
     folder_id: string,
     folder_name: string,
     folder_path: string,
-    owner: string,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -48,7 +50,6 @@ const File = () => {
 
 
     const {  change, resetSelect, hideOption } = useShub();
-    const [url, setUrl] = useState('');
     const [blank, setBlank] = useState('');
     const [folder, setFolder] = useState<FoldersProps[]>([]);
     const [file, setFile] = useState<FileProps[]>([]);
@@ -109,12 +110,13 @@ const File = () => {
         resetSelect()
         hideOption()
     },[change])
-    
     return (
 
         <div className={cx('container')}>
+            {(userId == folder[0]?.user_id) || (userId == file[0]?.user_id) ? <Tool /> : <ToolFS />}
+            
+
             <Breadcrumbs />
-            <Tool />
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}

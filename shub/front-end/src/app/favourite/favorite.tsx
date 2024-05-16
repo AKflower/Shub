@@ -26,7 +26,7 @@ interface FileProps {
     file_path: string,
     cid: string,
     file_type: string,
-    user_id: number,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -39,7 +39,7 @@ interface FoldersProps {
     folder_id: string,
     folder_name: string,
     folder_path: string,
-    owner: string,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -95,38 +95,11 @@ const Favorite = () => {
             }
             else setBlank('')
             
-            const foldersF = JSON.stringify(filteredFolders);
-            Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
+            // const foldersF = JSON.stringify(filteredFolders);
+            // Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
             
-            const filesF = JSON.stringify(filteredFiles);
-            Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
-
-
-            // const test = await fetch(`http://localhost:3001/files/file_3/download`)
-
-//             const fileContent = await test.blob();
-//   const url = window.URL.createObjectURL(fileContent);
-//   setUrl(url)
-
-//   const downloadLink = document.createElement('a');
-//   downloadLink.href = url;
-//   downloadLink.download = `sad.jpg`;
-//   downloadLink.click();
-
-//   window.URL.revokeObjectURL(url);
-            // const url = 'http://localhost:3001/files/file_3/download';
-
-            // axios.get(url)
-            //   .then((response) => {
-            //     const img = document.createElement('img');
-            //     img.src = response.data.url;
-            //     document.body.appendChild(img);
-            //   })
-            //   .catch((error) => {
-            //     // Xử lý lỗi
-            //   });
-        
-        
+            // const filesF = JSON.stringify(filteredFiles);
+            // Cookies.set('files', filesF, { secure: true, sameSite: 'strict' })
         
         
         
@@ -141,8 +114,9 @@ const Favorite = () => {
     return (
 
         <div className={cx('container')}>
-            <h1 className={cx('title',fonts.poppins.className)}>Favourite</h1>
             <Tool />
+
+            <h1 className={cx('title',fonts.poppins.className)}>Favourite</h1>
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}

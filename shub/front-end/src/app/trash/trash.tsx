@@ -27,7 +27,7 @@ interface FileProps {
     file_path: string,
     cid: string,
     file_type: string,
-    user_id: number,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -40,7 +40,7 @@ interface FoldersProps {
     folder_id: string,
     folder_name: string,
     folder_path: string,
-    owner: string,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -91,11 +91,11 @@ const Trash = () => {
             }
             else setBlank('')
             
-            const foldersF = JSON.stringify(res.data.folders);
-            Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
+            // const foldersF = JSON.stringify(res.data.folders);
+            // Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
             
-            const filesF = JSON.stringify(res.data.files);
-            Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
+            // const filesF = JSON.stringify(res.data.files);
+            // Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
 
         }
         fetchData()
@@ -107,8 +107,9 @@ const Trash = () => {
     return (
 
         <div className={cx('container')}>
-            <h1 className={cx('title',fonts.poppins.className)}>Trash</h1>
             <ToolFB />
+
+            <h1 className={cx('title',fonts.poppins.className)}>Trash</h1>
             
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}

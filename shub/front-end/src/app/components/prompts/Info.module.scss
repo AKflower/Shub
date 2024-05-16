@@ -1,5 +1,7 @@
 .break-word {
     word-break: break-all;
+    display: flex;
+    flex-direction: column;
 }
 
 .card {

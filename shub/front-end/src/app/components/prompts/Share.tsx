@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { usePathname, useRouter } from 'next/navigation'
-import styles from './Move.module.scss'
+import styles from './Share.module.scss'
 import Cookies from 'js-cookie';
 import { useShub } from '@/app/Provider/Provider';
 import axios from 'axios';
@@ -14,6 +14,8 @@ interface MoveProps { }
 interface Item {
     id: string;
     name: string;
+    fname: string;
+    lname: string;
   }
 
 const Share: React.FC<MoveProps> = () => {
@@ -118,6 +120,8 @@ const Share: React.FC<MoveProps> = () => {
                     await itm.push({
                         id: res.data[pie].user_id,
                         name: res.data[pie].email,
+                        fname: res.data[pie].firstName,
+                        lname: res.data[pie].lastName,
                     })
                 }
             }
@@ -130,20 +134,6 @@ const Share: React.FC<MoveProps> = () => {
         fetchData()
     },[path, create])
 
-   
-    
-
-   
-
-    // const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (event.key === 'Enter') {
-    //         submit();
-    //     }
-    // };
-
-    // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setName(event.target.value);
-    // };
 
     const [checkedNames, setCheckedNames] = useState<string[]>(share);
 
@@ -174,7 +164,11 @@ const Share: React.FC<MoveProps> = () => {
                             key={item.name}
                         >
                             <input type="checkbox" name={item.id} onChange={handleCheckboxChange} checked={checkedNames.includes(item.id)}/>
-                            <img src="/avt.svg" alt="" />
+                            <div className={cx('avar')}>
+                                <span>{item.fname.charAt(0).toUpperCase() + item.lname.charAt(0).toUpperCase()}</span>
+                            </div>
+                            
+
                             <span className={cx('name')}>
                                 {item.name}
                             </span>
@@ -212,54 +206,14 @@ const Share: React.FC<MoveProps> = () => {
                         aria-label="Share"
                         title="Share"
                     >
-                        Share
+                        Save
                     </button>
                 </div>
             </div>
         </div >
         )}
         
-        {/* {create && (
-            <div className={cx('card','floating')}>
-            <div className={cx('card-title')}>
-                <h2>New directory</h2>
-            </div>
-
-            <div className={cx("card-content")}>
-                <p>Write the name of the new directory.</p>
-                <input
-                    className={cx('input','input--block')}
-                    type='text'
-                    onKeyDown={handleKeyPress}
-                    onChange={handleInputChange}
-                    name={name}
-                />
-            </div>
-
-            <div className={cx("card-action")}>
-                <button
-                    className={cx('button','button--flat',"button--grey")}
-                    onClick={() => {
-                        setCreate('')
-                        toggleCurrentPromptName()
-                        }
-                    }
-                    aria-label='Cancel'
-                    title='Cancel'>
-                    Cancel
-                </button>
-                <button
-                    className={cx('button','button--flat')}
-                    aria-label='Create'
-                    title='Create'
-                    onClick={submit}
-                    >
-                    Create
-                </button>
-            </div>
-        </div>
-        )} */}
-        
+       
         </>
         
     );

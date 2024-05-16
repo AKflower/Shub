@@ -10,6 +10,35 @@ type User = {
   email: string,
   password: string,
 }
+
+interface FoldersProps {
+  folder_id: string,
+  folder_name: string,
+  folder_path: string,
+  user_id: string,
+  created_date: string,
+  updated_date: string,
+  isFavourite: boolean,
+  isDelete: boolean,
+  share: string[],
+
+}
+
+interface FileProps {
+  file_id: string,
+  file_name: string,
+  file_path: string,
+  cid: string,
+  file_type: string,
+  user_id: string,
+  created_date: string,
+  updated_date: string,
+  isFavourite: boolean,
+  isDelete: boolean,
+  share: string[],
+  file_size:string,
+}
+
 interface ShubContextProps {
     currentPromptName: string;
     toggleCurrentPromptName: () => void;
@@ -42,6 +71,7 @@ interface ShubContextProps {
     toggleShowMove: () => void;
     showDownload: string;
     toggleShowDownload: () => void;
+    
     showInfo: string;
     toggleShowInfo: () => void;
     handleNavigation: (name: string) => void;
@@ -56,6 +86,10 @@ interface ShubContextProps {
     handleType: (type: string) => void;
     isFavourite: boolean;
     handleIsFavourite: (isFavourite: boolean) => void;
+    infoFolder: FoldersProps|undefined;
+    handleInfoFolder: (infoFolder: FoldersProps|undefined) => void;
+    infoFile: FileProps|undefined;
+    handleInfoFile: (infoFile: FileProps|undefined) => void;
     isDelete: boolean;
     handleShare: (share: string[]) => void;
     share: string[];
@@ -150,6 +184,16 @@ const handleName = (name: string) => {
   setName(name)
 }
 
+const [infoFolder, setInfoFolder] = useState<FoldersProps|undefined>();
+const handleInfoFolder = (infoFolder: FoldersProps|undefined) => {
+  setInfoFolder(infoFolder)
+}
+
+const [infoFile, setInfoFile] = useState<FileProps|undefined>();
+const handleInfoFile = (infoFile: FileProps|undefined) => {
+  setInfoFile(infoFile)
+}
+
 const resetSelect = () => {
   setSelected('')
 }
@@ -227,7 +271,7 @@ const handleType = (type: string) => {
 };
 
 const handleNavigation = (name: string) => {
-  router.push(`${pathname}/${name}`);
+  router.push(`${name}`);
 };
 const [showChangePassword, setShowChangePassword] = useState("");
 const toggleShowChangePassword = () => {
@@ -317,7 +361,10 @@ const value: ShubContextProps = {
     fetchDataSession,
     showResetPassword,
     toggleShowResetPassword,
-    
+    infoFolder,
+    infoFile,
+    handleInfoFile,
+    handleInfoFolder
 
   };
 

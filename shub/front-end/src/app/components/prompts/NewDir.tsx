@@ -92,11 +92,11 @@ const NewDir: React.FC<NewDirProps> = () => {
     return (
         <div className={cx('card','floating')}>
             <div className={cx('card-title')}>
-                <h2>New directory</h2>
+                <h2>New Folder</h2>
             </div>
 
             <div className={cx("card-content")}>
-                <p>Write the name of the new directory.</p>
+                <p>Write the name of the new folder.</p>
                 <input
                     className={cx('input','input--block')}
                     type='text'

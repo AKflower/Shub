@@ -19,8 +19,8 @@ cd test-network
 **Run IPFS**
 <pre>
 cd ipfs-network
-docker-compose down
-docker-compose up
+./network.sh down
+./network.sh up
 </pre>
 **Run API**
 <pre>

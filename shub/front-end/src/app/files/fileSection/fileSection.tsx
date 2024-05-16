@@ -3,6 +3,7 @@ import styles from './fileSection.module.scss'
 import Card from '../card/card'
 import { useShub } from '@/app/Provider/Provider';
 import classNames from 'classnames/bind';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -12,7 +13,7 @@ interface FileProps {
     file_path: string,
     cid: string,
     file_type: string,
-    user_id: number,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -33,7 +34,8 @@ export default function FileSection ({files} : {files:FileProps[]}) {
         handleIsFavourite,
         handleIsDelete,
         handleShare,
-        handleName
+        handleName,
+        handleInfoFile
     } = useShub();
 
     
@@ -67,11 +69,13 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                             handleName(file.file_name)
 
                             handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
-
+                            handleInfoFile(file)
                             }}
                         onDoubleClick={() => {
                             handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
                             handleStream()
+
+
                         }}
                     >
 
