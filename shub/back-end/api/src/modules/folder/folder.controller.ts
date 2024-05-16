@@ -26,6 +26,7 @@ export class FolderController {
 
     }
     @Post('/upload')
+    @UseGuards(JwtAuthGuard)
     uploadFolder(@Body() data: {foldersArray : Folder[], filesArray : File[]}) {
         return this.folderService.uploadFolder(this.contract,data.foldersArray,data.filesArray)
     }
@@ -64,6 +65,7 @@ export class FolderController {
 
     @Put('/updatePath')
     // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     updateFolderPath(@Body() params : {folder_id: string,newPath: string,user_id: string}) {
         const {folder_id, newPath,user_id} = params;
         return this.folderService.updateFolderPath(this.contract,folder_id,newPath,user_id)
@@ -75,36 +77,43 @@ export class FolderController {
     }
     
     @Get('/favourite')
+    @UseGuards(JwtAuthGuard)
     getFilesAndFoldersFavourite(@Query('user_id') user_id: string) {
         return this.folderService.getFilesAndFoldersFavourite(this.contract,user_id);
     }
 
     @Put('/updateFavourite')
+    @UseGuards(JwtAuthGuard)
     updateFavourtieFolder(@Body() params : {user_id: string, folder_id: string, isFavourite: boolean}) {
         const {user_id,folder_id,isFavourite} = params;
         console.log(folder_id,user_id,isFavourite);
         return this.folderService.updateFavouriteFolder(this.contract,user_id,folder_id,isFavourite);
     }
     @Get('/trash')
+    @UseGuards(JwtAuthGuard)
     getTrashFolderAndFiles(@Query('user_id') user_id: string) {
         return this.folderService.getTrashFolderAndFiles(this.contract,user_id);
     }
     @Put('/updateTrash')
+    @UseGuards(JwtAuthGuard)
     updateTrashFolder(@Body() params : {user_id: string, folder_id: string, isDelete: boolean}) {
         const {user_id,folder_id,isDelete} = params;
         return this.folderService.updateTrashFolder(this.contract,user_id,folder_id,isDelete);
     }
     @Get('/share')
+    @UseGuards(JwtAuthGuard)
     getShareFolders(@Query('user_id') user_id: string) {
         return this.folderService.getShareFolders(this.contract,user_id);
     }
     @Put('/updateShare')
+    @UseGuards(JwtAuthGuard)
     updateShareFolder(@Body() params : {user_id: string, folder_id: string,share: string[]}) {
         const {user_id,folder_id,share} = params;
         console.log(user_id, folder_id, share);
         return this.folderService.updateShareFolder(this.contract,user_id,folder_id,share);
     }
     @Get('/byName')
+    @UseGuards(JwtAuthGuard)
     getFolderByName(@Body() params : {path: string, folderName: string}) {
         const {path,folderName} = params;
         return this.folderService.getFolderByName(this.contract,path,folderName);

@@ -28,7 +28,8 @@ const Tool = () => {
     selected,
     type,
     isFavourite,
-    handleChange
+    handleChange,
+    toggleShowLock
   } = useShub();
 
   const handleFavourite = () => {
@@ -79,7 +80,8 @@ const Tool = () => {
       });
     }
   }
-      
+  
+  const isLock = true
   
   return (
     <div className={cx('wrapper')}>
@@ -181,11 +183,24 @@ const Tool = () => {
       </div>
 
       <div className={cx('icon')}>
-      <Action 
+        <Action 
           icon={isFavourite ? (<img src='/fa.svg'></img>) : (<img src='/star.svg'></img>)}
           label='Favourite'
           counter={0}        
           onAction={handleFavourite}
+        />
+      </div>
+
+      <div className={cx('icon')}>
+        <Action 
+          icon={isLock ? (<img src='/lock.svg'></img>) : (<img src='/unlock.svg'></img>)}
+          label='Lock'
+          counter={0}        
+          onAction={()=>{
+            toggleShowLock()
+            toggleCurrentPromptName()
+            }
+          } 
         />
       </div>
 

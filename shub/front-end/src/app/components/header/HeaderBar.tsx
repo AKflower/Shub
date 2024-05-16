@@ -13,6 +13,7 @@ import NewDir from '../prompts/NewDir';
 import Image from 'next/image';
 import Link from 'next/link';
 import Share from '../prompts/Share';
+import Lock from '../prompts/Lock';
 import Rename from '../prompts/Rename';
 import Copy from '../prompts/Copy';
 import Move from '../prompts/Move';
@@ -80,6 +81,7 @@ const [showToast, setShowToast] = useState("");
     fetchDataSession,
     showResetPassword,
     toggleShowResetPassword,
+    showLock
 
   } = useShub();
   const accessToken = Cookies.get('accessToken');
@@ -290,6 +292,11 @@ const [showToast, setShowToast] = useState("");
       {showMove && (
         <Move />
       )}
+
+      {showLock && (
+        <Lock />
+      )}
+
 
       {showDelete && (
         <Delete />

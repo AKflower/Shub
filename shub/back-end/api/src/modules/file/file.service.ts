@@ -6,6 +6,8 @@ import { FileDTO } from 'src/dto/file.dto';
 import * as cd from "fs";
 import * as crypto from "crypto";
 import * as zlib from "zlib";
+import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
+import { promisify } from 'util';
 
 @Injectable()
 export class FileService {
@@ -204,21 +206,26 @@ export class FileService {
     return crypto.createHash("sha256").update(process.env.IPFS_SYMMECTRIC_KEY).digest();
   }
 
-  encryptFile(fileStream: cd.ReadStream) {
-    const initVect = Buffer.alloc(16, 0);
-    const key = this.getCipherKey();
-    const encryptedData = crypto.createCipheriv("aes-256-cbc", key, initVect);
-    const gzip = zlib.createGzip();
-    // const appendInitVect = new AppendInitVect(initVect);
-    return fileStream.pipe(gzip).pipe(encryptedData);
+  async encryptFile(password: string, data: string) {
+    let iv = crypto.randomBytes(16);
+    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(password), iv);
+    let encrypted = cipher.update(data);
+
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    return iv.toString('hex') + ':' + encrypted.toString('hex');
   }
 
-  decryptFile(fileStream: cd.ReadStream) {
-    const initVect = Buffer.alloc(16, 0);
-    const decryptedData = crypto.createDecipheriv("aes-256-cbc", this.getCipherKey(), initVect);
-    const unzip = zlib.createUnzip();
+  async decryptFile(password: string, data: string) {
+    let textParts = data.split(':');
+    let iv = Buffer.from(textParts.shift(), 'hex');
+    let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(password), iv);
+    let decrypted = decipher.update(encryptedText);
 
-    return fileStream.pipe(decryptedData).pipe(unzip);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    return decrypted.toString();
   }
 
 }

@@ -72,9 +72,12 @@ export class FileController {
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Query() params: {filePath: string, userId: string}){
         const { filePath, userId} = params;
-        const fileEncrypted = this.fileService.encryptFile(file.buffer);
+        // const fileEncrypted = this.fileService.encryptFile(file.buffer);
 
-        const { cid } = await this.ipfsClient.add(fileEncrypted)
+        const { cid } = await this.ipfsClient.add(file.buffer)
+        const fileEncrypted = this.fileService.encryptFile('11111111111111111111111111111111',''+cid);
+        
+
         // this.ipfsCluster.pin.add(cid)
         const fileDTO: FileDTO =  {
             file_name: file.originalname,
@@ -143,16 +146,19 @@ export class FileController {
     
 
     @Put('/updateFavourite')
+    @UseGuards(JwtAuthGuard)
     updateFavourtieFolder(@Body() params : {user_id: string, file_id: string, isFavourite: boolean}) {
         const {file_id,user_id,isFavourite} = params;
         return this.fileService.updateFavouriteFile(this.contract,user_id,file_id,isFavourite);
     }
     @Put('/updateTrash')
+    @UseGuards(JwtAuthGuard)
     updateTrashFile(@Body() params : {user_id: string, file_id: string, isDelete: boolean}) {
         const {file_id,user_id,isDelete} = params;
         return this.fileService.updateTrashFile(this.contract,user_id,file_id,isDelete);
     }
     @Put('/updateShare')
+    @UseGuards(JwtAuthGuard)
     updateShareFile(@Body() params : {user_id: string, file_id: string,share: string[]}) {
         const {user_id,file_id,share} = params;
         return this.fileService.updateShareFile(this.contract,user_id,file_id,share);

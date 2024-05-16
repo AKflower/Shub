@@ -71,7 +71,8 @@ interface ShubContextProps {
     toggleShowMove: () => void;
     showDownload: string;
     toggleShowDownload: () => void;
-    
+    showLock: string;
+    toggleShowLock: () => void;
     showInfo: string;
     toggleShowInfo: () => void;
     handleNavigation: (name: string) => void;
@@ -247,6 +248,12 @@ const toggleShowDownload = () => {
   // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
+const [showLock, setShowLock] = useState("");
+const toggleShowLock = () => {
+  setShowLock(showLock == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
 const [showInfo, setShowInfo] = useState("");
 const toggleShowInfo = () => {
   setShowInfo(showInfo == '' ? 'more' : '');
@@ -347,7 +354,8 @@ const value: ShubContextProps = {
     handleType,
     showChangePassword,
     toggleShowChangePassword,
-
+    showLock,
+    toggleShowLock,
     isFavourite,
     handleIsFavourite,
     isDelete,
