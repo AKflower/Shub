@@ -221,6 +221,11 @@ async validatePassword(contract:Contract,user_id:string, file_id:string,file_pas
   return true;
   else return false;
 }
+async updateCID(contract: Contract,user_id:string, file_id:string,cid:string): Promise<string> {
+  await contract.submitTransaction('UpdateCID',user_id,file_id,cid);
+  return "Update Successfully!"
+
+}
   getCipherKey() {
     if (!process.env.IPFS_SYMMECTRIC_KEY) throw Error("IPFS_SYMMECTRIC_KEY environment variable is required");
     return crypto.createHash("sha256").update(process.env.IPFS_SYMMECTRIC_KEY).digest();

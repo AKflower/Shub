@@ -167,6 +167,11 @@ export class FileController {
         const {user_id,file_id,file_password} = params;
         return this.fileService.validatePassword(this.contract,user_id,file_id,file_password);
     }
+    @Put('/updateCID')
+    updateCID(@Body() params : {user_id:string, file_id: string,cid: string}) {
+        const {user_id,file_id,cid} = params;
+        return this.fileService.updateCID(this.contract,user_id,file_id,cid);
+    }
 }
 
  
