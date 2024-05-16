@@ -4,7 +4,7 @@ export const Ipfs = {
   provide: "IPFS_CONFIG",
   useFactory: () => {
 
-    const ipfsClient: IPFSHTTPClient = create({ url: 'http://192.168.68.154:5001/api/v0' });
+    const ipfsClient: IPFSHTTPClient = create({ url: 'http://10.0.182.134:5001/api/v0' });
 
     return ipfsClient;
   },
