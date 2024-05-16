@@ -6,11 +6,12 @@ import * as stream from 'stream';
 import { promisify } from 'util';
 import * as FileType from 'file-type';
 import { CID, IPFSHTTPClient } from "ipfs-http-client";
+import { FileService } from "../file/file.service";
 
 @Injectable()
 export class IPFSService {
 
-  constructor(@Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster, @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient) {
+  constructor(private readonly fileService: FileService,@Inject('IpfsCluster') private readonly ipfsCluster: ipfsCluster, @Inject("IPFS_CONFIG") private readonly ipfsClient: IPFSHTTPClient) {
   }
 
 
@@ -108,6 +109,7 @@ const file = new File([blob], filename, { type: mimeType });
 
     // Chuyển đổi mảng thành Buffer
     const buffer = Buffer.concat(dataArray);
+    
     return buffer;
 }
 

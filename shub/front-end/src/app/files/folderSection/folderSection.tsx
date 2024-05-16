@@ -11,7 +11,7 @@ interface FoldersProps {
     folder_id: string,
     folder_name: string,
     folder_path: string,
-    owner: string,
+    user_id: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
@@ -29,7 +29,8 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
         handleType,
         handleIsFavourite,
         handleIsDelete,
-        handleShare
+        handleShare,
+        handleInfoFolder
     } = useShub();
 
     return (
@@ -59,11 +60,11 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                             }
 
                             handleShare(folder.share)
-                            
+                            handleInfoFolder(folder)
                             
                         }}
                         onDoubleClick={() => {
-                             handleNavigation(folder.folder_name)
+                             handleNavigation(folder.folder_path + '/' + folder.folder_name)
                         }}
                         >
                             <Card type1="folder" key={folder.folder_id.slice(0, folder.folder_id.indexOf('_'))} name={folder.folder_name} date={folder.updated_date} selected={selected==folder.folder_id && type=='folder'}/>

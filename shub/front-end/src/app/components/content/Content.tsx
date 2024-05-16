@@ -7,6 +7,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import ReactPlayer from 'react-player';
 import Cookies from 'js-cookie';
+import { useShub } from '@/app/Provider/Provider';
 
 
 const cx = classNames.bind(styles);
@@ -19,7 +20,10 @@ interface ContentProps {
 const Content: React.FC<ContentProps> = ({data, type}) => {
   const [src, setSrc] = useState('');
   const accessToken = Cookies.get('accessToken');
-
+  const { 
+    handleStream,
+    name
+  } = useShub();
 
   useEffect(() => {
     const url = `http://localhost:3001/files/down`;
@@ -39,9 +43,19 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
       if (response.status !== 200) {
         throw new Error('Network response was not ok');
       }
+
+      if(type == 'pdf'){
+        const a = response.data
+        const b = new Blob([a], { type: "application/pdf" });
+        const blobUrl = URL.createObjectURL(b);
+        setSrc(blobUrl)
+      }
+      
+      else{
+        const blobUrl = URL.createObjectURL(response.data);
+        setSrc(blobUrl)
+      }
     
-      const blobUrl = URL.createObjectURL(response.data);
-      setSrc(blobUrl)
       
     })
     .catch((error) => {
@@ -49,6 +63,32 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
     });
     
   }, []);
+
+
+  const open = () => {
+    handleStream()
+    window.open(src)
+  }
+
+  const down = () => {
+    handleStream()
+    const link = document.createElement('a');
+    link.href = src;
+    if (type == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+      link.download = `${name.slice(0, name.lastIndexOf('.'))}.xlsx`; // Tên file
+    }
+    else if (type == 'vnd.openxmlformats-officedocument.wordprocessingml.document'){
+      link.download = `${name.slice(0, name.lastIndexOf('.'))}.docx`; // Tên file
+    }
+    else if (type == 'x-zip-compressed'){
+      link.download = `${name.slice(0, name.lastIndexOf('.'))}.zip`; // Tên file
+    }
+    else{
+      link.download = `${name.slice(0, name.lastIndexOf('.'))}.${type}`; // Tên file
+    }
+    link.click();
+  }
+
 
   return (
     <div className={cx('card','floating')}>
@@ -82,6 +122,71 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
           />
         )
       }
+
+      
+      {(type == 'pdf') && 
+        (
+         <>
+            <div className={cx("card-content")}>
+              <p>
+                Do you want to open the file in another tab?
+              </p>
+            </div>
+            <div className={cx("card-action")}>
+              <button
+                onClick={() => handleStream()}
+                className={cx('button','button--flat',"button--grey")}
+                aria-label="Cancel"
+                title="Cancel"
+              >
+                Cancel
+              </button>
+              <button
+              onClick={() => open()}
+              className={cx('button','button--flat',"button--red")}
+              aria-label="Open"
+              title="Open"
+              >
+                Open
+              </button>
+            </div>
+          </>
+        )
+      }
+
+      {(type == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+        || type == 'vnd.openxmlformats-officedocument.wordprocessingml.document'
+        || type == 'x-zip-compressed'
+      ) && 
+        (
+         <>
+            <div className={cx("card-content")}>
+              <p>
+              Viewing this file type is not supported yet. Do you want to download this file?
+              </p>
+            </div>
+            <div className={cx("card-action")}>
+              <button
+                onClick={() => handleStream()}
+                className={cx('button','button--flat',"button--grey")}
+                aria-label="Cancel"
+                title="Cancel"
+              >
+                Cancel
+              </button>
+              <button
+              onClick={() => down()}
+              className={cx('button','button--flat',"button--red")}
+              aria-label="Download"
+              title="Download"
+              >
+                Download
+              </button>
+            </div>
+          </>
+        )
+      }
+
     </div>
   );
 };

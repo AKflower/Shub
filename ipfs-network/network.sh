@@ -17,29 +17,7 @@ function upNetwork() {
   
   ipfs config --json Gateway.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
   " > reset.sh
-
-  docker-compose up nodeboot
-
-  sleep 5
-
-  docker exec ipfs-node-boot ipfs id > nodeboot.json
-
-  NODEBOOT_ID=$(jq -r ".ID" nodeboot.json)
-
-  echo "#!/bin/sh
-  set -ex
-  ipfs bootstrap rm all
-  ipfs bootstrap add /ip4/172.26.24.100/tcp/4001/p2p/${NODEBOOT_ID}
-
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://192.168.68.154:5001\", \"http://192.168.68.154:8080\", \"http://localhost:3000\"]'
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
-  ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"http://192.168.68.154:5001\", \"http://192.168.68.154:8080\", \"http://localhost:3000\"]'
-
-  ipfs config --json Gateway.HTTPHeaders.Access-Control-Allow-Methods '[\"PUT\", \"POST\", \"GET\"]'
-  " > reset.sh
-
-  docker-compose up node1
-  docker-compose up node2
+  docker-compose up
 }
 
 function downNetwork() {

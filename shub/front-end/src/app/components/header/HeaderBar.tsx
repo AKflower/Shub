@@ -52,6 +52,7 @@ const [showToast, setShowToast] = useState("");
   const isLogin = (pathname=='/') 
   const [user,setUser] = useState<any>({})
   const [searchQuery, setSearchQuery] = useState('');
+  const [name, setName] = useState('');
   const [filter, setFilter] = useState('');
   const [searchData, setSearchData] = useState<Option[] >([]);
   
@@ -87,6 +88,7 @@ const [showToast, setShowToast] = useState("");
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
+      setName(JSON.parse(savedUser).firstName.charAt(0).toUpperCase()+ JSON.parse(savedUser).lastName.charAt(0).toUpperCase())
     }
   }, [pathname]);
   useEffect(()=>{
@@ -219,7 +221,7 @@ const [showToast, setShowToast] = useState("");
             {/* <img className={cx('ava')} src='/dan.jpg'></img> */}
             <div className={cx('avar')}>
               <span>
-                {user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}
+                {name}
               </span>
             </div>
             <Link href="/setting/profile"><div className={cx('info')}>

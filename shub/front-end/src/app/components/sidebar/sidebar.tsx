@@ -172,7 +172,7 @@ const Sidebar = () => {
             
             
         </div>
-        <div className={styles.buttonContainer} style={!pathname.startsWith("/files")? {display:'none'}: {}}>
+        <div className={styles.buttonContainer} style={pathname.startsWith("/setting")? {display:'none'}: {}}>
         <Link href="">
                 <button
                 className={styles.button}

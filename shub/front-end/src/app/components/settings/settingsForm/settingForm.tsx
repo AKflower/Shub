@@ -146,14 +146,14 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         
         <form action="" className={fonts.poppins.className}>
             
-            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:"grid"}}>
+            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
                 <Input label='First name' type='text' value={user.firstName} />
                 <Input label='Last name' type='text' value={user.lastName} />
                 <Input label='Email' type='email' value={user.email} />
                 <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
                 <Select label='Role' list={roles} value={role}/>
             </div>
-            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:"grid"}}>
+            <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1">
                 <Select label='Themes' list={themes} />
 
             </div>

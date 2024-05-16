@@ -8,10 +8,9 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import fonts from '../../../public/fonts/fonts';
 import { Password } from 'primereact/password';
-import { FloatLabel } from 'primereact/floatlabel';
 import { InputText } from 'primereact/inputtext';
-import { Divider } from 'primereact/divider';
 import toast from 'react-hot-toast';
+import Alert from '@mui/material/Alert'
 
 const cx = classNames.bind(styles);
 
@@ -19,12 +18,15 @@ interface Props {
 }
 
 const Login: React.FC<Props> = () => {
+
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
   const [token, setToken] = useState('');
   const [user, setUser] = useState<any>();
   const [password, setPassword] = useState('');
+  const [disabled, setDisabled] = useState(false);
+  const [disabledL, setDisabledL] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [retypePassword, setRetypePassword] = useState('');
   const [reset, setReset] = useState(false);
@@ -96,6 +98,7 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
       setToken(response.data.access_token)
       setUser(response.data)
       if(!response.data.isFirstAccess && response.data.isActive) {
+        setDisabledL(true)
         localStorage.setItem('user', JSON.stringify(response.data));
         Cookies.set('accessToken', response.data.access_token, { secure: true, sameSite: 'strict' });
         Cookies.set('userId', response.data.user_id, { secure: true, sameSite: 'strict' });
@@ -103,8 +106,10 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         
       }
       else {
+        setError('')
         setReset(response.data.isFirstAccess);
         setActive(response.data.isActive)
+        
       }
       
   } catch (e) {
@@ -125,13 +130,17 @@ const returnL = async (event: React.FormEvent<HTMLFormElement>) => {
 
 const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
 
-  event.preventDefault();
-  event.stopPropagation();
-
+    event.preventDefault();
+    event.stopPropagation();
+    setDisabled(true)
+    setError('')
   if (newPassword.length < 8) {
-    setError(' Password must be at least 8 characters!')
+    setError('Password must be at least 8 characters!')
+    setDisabled(false)
+    
+
   }
-  else if (newPassword !== retypePassword) setError('Your password not match')
+  else if (newPassword !== retypePassword) {setError('Your password not match');setDisabled(false)}
   else{
     try {
 
@@ -150,6 +159,7 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             
         .catch(error => {
           console.error('Error:', error);
+          setDisabled(false)
         });
 
         const dataF = {
@@ -168,6 +178,7 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             
         .catch(error => {
           console.error('Error:', error);
+          setDisabled(false)
         });
 
         const dataA = {
@@ -192,12 +203,14 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
             
         .catch(error => {
           console.error('Error:', error);
+          setDisabled(false)
         });
       
       
       
     } catch (e) {
       setError('An error occurred');  
+      setDisabled(false)
     }
   }
 
@@ -207,10 +220,11 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
   return (
     <div id={cx('login')}>
       {!reset && active && (<form onSubmit={submit}>
+        {disabledL && <Alert severity="info">Loading</Alert>}
+
         <Image src="/images/logo.png" alt="Shub" width={200} height={200}/>
         <h1 className={fonts.fontLogo.className}>Shub</h1>
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
-        <FloatLabel>
           
             <InputText
               autoFocus
@@ -219,14 +233,13 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
               autoCapitalize="off"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder='Email'
+              disabled={disabledL}
             />
   
           
-          <label htmlFor="username">Username</label>
 
-        </FloatLabel>
 
-        <FloatLabel>
           <div className={cx('pass')}>
             <Password
               type="password"
@@ -234,58 +247,61 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => setPassword(e.target.value)}
               feedback={false}
               toggleMask
+              placeholder='Password'
+              disabled={disabledL}
               />
           </div>
-          <label htmlFor="password">Password</label>
-        </FloatLabel>
         
         <input
           className={cx('button','button--block')}
           type="submit"
           value={'Log In'}
+          disabled={disabledL}
         />
 
         
       </form>)}
 
       {reset && (
+        
         <form onSubmit={changePass}>
-       
+          {disabled && <Alert severity="info">Loading</Alert>}
         {error !== '' && <div className={cx('wrong')}>{error}</div>}
         <p>Change your password</p>
-        <FloatLabel>
           <div className={cx('pass')}>
             <Password
               className={cx('pass')}
               value={newPassword}
-              onChange={(e) => {setNewPassword(e.target.value);setError('')}}
+              onChange={(e) => {setNewPassword(e.target.value);}}
               toggleMask
               footer={footer}
+              placeholder='New Password'
+              disabled={disabled}
             />
           </div>
-          <label htmlFor="newpassword">New Password</label>
-        </FloatLabel>
 
-        <FloatLabel>
           <div className={cx('pass')}>
             <Password
               className={cx('pass')}
               value={retypePassword}
-              onChange={(e) => {setRetypePassword(e.target.value);setError('')}}
+              onChange={(e) => {setRetypePassword(e.target.value);}}
               toggleMask
               footer={check}
+              placeholder='Retype'
+              disabled={disabled}
+
           />
        
           </div>
-          <label htmlFor="retype">Retype</label>
-        </FloatLabel>
         
         
 
         <input
-          className={cx('button','button--block')}
+          className={cx('button','button--block', 'disabled')}
           type="submit"
           value={'Change password'}
+          disabled={disabled}
+
         />
 
         

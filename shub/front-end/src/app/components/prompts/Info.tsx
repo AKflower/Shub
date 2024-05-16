@@ -1,13 +1,12 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FC } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Info.module.scss'
-// import { useSelector } from 'react-redux';
-// import { filesize } from '@/utils';
-// import moment from 'moment';
-// import { files as api } from '@/api';
+import { useShub } from '@/app/Provider/Provider';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const cx = classNames.bind(styles);
 
@@ -16,77 +15,72 @@ interface InfoProps {
 }
 
 const Info: FC<InfoProps> = () => {
-  // const req = useSelector((state: RootState) => state.req);
-  // const selected = useSelector((state: RootState) => state.selected);
-  // const selectedCount = useSelector((state: RootState) => state.selectedCount);
-  // const isListing = useSelector((state: RootState) => state.isListing);
-
-  // const humanSize = () => {
-  //   if (selectedCount === 0 || !isListing) {
-  //     return filesize(req.size);
-  //   }
-
-  //   let sum = 0;
-
-  //   for (const index of selected) {
-  //     sum += req.items[index].size;
-  //   }
-
-  //   return filesize(sum);
-  // };
-
-  // const humanTime = () => {
-  //   if (selectedCount === 0) {
-  //     return moment(req.modified).fromNow();
-  //   }
-
-  //   return moment(req.items[selected[0]].modified).fromNow();
-  // };
-
-  // const modTime = () => {
-  //   return new Date(Date.parse(req.modified)).toLocaleString();
-  // };
-
-  // const name = () => {
-  //   return selectedCount === 0 ? req.name : req.items[selected[0]].name;
-  // };
-
-  // const dir = () => {
-  //   return selectedCount > 1 || (selectedCount === 0 ? req.isDir : req.items[selected[0]].isDir);
-  // };
-
-  // const checksum = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, algo: string) => {
-  //   event.preventDefault();
-
-  //   let link;
-
-  //   if (selectedCount) {
-  //     link = req.items[selected[0]].url;
-  //   } else {
-  //     link = '/'; // Replace with the actual route path
-  //   }
-
-  //   try {
-  //     const hash = await api.checksum(link, algo);
-  //     // eslint-disable-next-line
-  //     (event.target as HTMLAnchorElement).innerHTML = hash;
-  //   } catch (e) {
-  //     // Replace with your error handling logic
-  //   }
-  // };
+  const { 
+    infoFile,
+    infoFolder,
+    type,
+    toggleShowInfo,
+    toggleCurrentPromptName
+  } = useShub();
   let selectedCount = 1
+  const accessToken = Cookies.get('accessToken');
+  const [owner, setOwner] = useState('');
+  const [share, setShare] = useState([]);
+
+  useEffect(()=>{
+    const fetchData = async () => {
+
+        const res = await axios.get(`http://localhost:3001/user`,{
+
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`, 
+            },
+          },
+         );
+
+        if (type == 'folder'){
+          let name = res.data.find((el: { user_id: string; })  => el.user_id == infoFolder?.user_id)
+          setOwner(name.firstName + ' ' + name.lastName)
+        }
+        else {
+          let name = res.data.find((el: { user_id: string; })  => el.user_id == infoFile?.user_id)
+          setOwner(name.firstName + ' ' + name.lastName)
+
+        }
+
+        
+    }
+    fetchData()
+},[])
 
   return (
     <div className={cx('card','floating')}>
       <div className={cx('card-title')}>
-        <h2>{"Translate Function to Replace $t('prompts.fileInfo')"}</h2>
+        <h2>Info</h2>
       </div>
 
       <div className={cx("card-content")}>
-        <p>{selectedCount > 1 ? `Translate Function for $t('prompts.filesSelected', { count: ${selectedCount} })` : null}</p>
+        {/* <p>{selectedCount > 1 ? `Translate Function for $t('prompts.filesSelected', { count: ${selectedCount} })` : null}</p> */}
 
-        <p className={cx("break-word")} style={{ display: selectedCount < 2 ? 'block' : 'none' }}>
-          <strong>{"displayName"}</strong> {/*name()*/}asd
+        <p className={cx("break-word")} 
+          // style={{ display: selectedCount < 2 ? 'block' : 'none' }}
+        >
+          {type == 'folder' ? (
+            <>
+              <span><strong>Name: </strong>{infoFolder?.folder_name}</span>
+              <span><strong>Created Date: </strong>{infoFolder?.created_date}</span>
+              <span><strong>Onwer: </strong>{owner}</span>
+            </>
+          ) : (
+            <>
+              <span><strong>Name: </strong>{infoFile?.file_name}</span>
+              <span><strong>Created Date: </strong>{infoFile?.created_date}</span>
+              <span><strong>Onwer: </strong>{owner}</span>
+            </>
+          )
+          }
+          
         </p>
         
         {/* Add similar lines for other items */}
@@ -96,8 +90,8 @@ const Info: FC<InfoProps> = () => {
         <button
           type="submit"
           onClick={() => {
-            // Replace with the actual dispatch function from your store
-            // Example: dispatch({ type: 'closeHovers' });
+            toggleShowInfo()
+            toggleCurrentPromptName()
           }}
           className={cx('button','button--flat')}
           aria-label="Translate Function for $t('buttons.ok')"

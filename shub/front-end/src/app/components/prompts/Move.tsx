@@ -113,23 +113,24 @@ const Move: React.FC<MoveProps> = () => {
                 },
               },
              );
-
+             let filteredFolders1 = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+             let filteredFolders = filteredFolders1.sort((a: { folder_name: string; }, b: { folder_name: any; }) => a.folder_name.localeCompare(b.folder_name))
             if(type != 'folder'){
-                for (const pie in resF.data){
+                for (const pie in filteredFolders){
                     await itm.push({
-                        id: resF.data[pie].folder_id,
-                        name: resF.data[pie].folder_name,
-                        url: resF.data[pie].folder_path,
+                        id: filteredFolders[pie].folder_id,
+                        name: filteredFolders[pie].folder_name,
+                        url: filteredFolders[pie].folder_path,
                     })
                 }
             }
             else{
-                for (const pie in resF.data){
-                    if(resF.data[pie].folder_id != selected){
+                for (const pie in filteredFolders){
+                    if(filteredFolders[pie].folder_id != selected){
                         await itm.push({
-                            id: resF.data[pie].folder_id,
-                            name: resF.data[pie].folder_name,
-                            url: resF.data[pie].folder_path,
+                            id: filteredFolders[pie].folder_id,
+                            name: filteredFolders[pie].folder_name,
+                            url: filteredFolders[pie].folder_path,
                         })
                     }
                 }

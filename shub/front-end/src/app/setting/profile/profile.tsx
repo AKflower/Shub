@@ -6,48 +6,21 @@ import Button from '@/app/components/button/button'
 import SettingsForm from '@/app/components/settings/settingsForm/settingForm'
 import fonts from '../../../../public/fonts/fonts'
 import Link from 'next/link'
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Cookies from "js-cookie";
-import { usePathname, useRouter } from "next/navigation";
-
+import { useEffect } from 'react';
 
 const Profile =  () => {
-    const router = useRouter();
-    const pathname = usePathname()
-    const userId = Cookies.get('userId');
-    const [sessionInfo, setSessionInfo] = useState<any>()
-    const fetchDataSession = async () => {
-    const res = await axios.get(`http://localhost:3001/user/session`,{
-      params: {
-        user_id: userId
-      }
-    });
-      setSessionInfo(res.data)
-    }
-    useEffect(() => {
-     
-      fetchDataSession();
-      
-    }, [pathname]
-    
-    )
+   const { sessionInfo } = useShub()
     // style={sessionInfo.role === "Admin" ? {display: "none"}: {}}
-    
-    
-   
     return (
-        <>
-        {sessionInfo ? <div className={fonts.poppins.className}>
+        <div className={fonts.poppins.className}>
             <div className={styles.headerContainer}>
                 <h1 className={styles.header}>Setting</h1>
-                <Link href='/setting/userManage' style={sessionInfo && sessionInfo.role === "User" ? {display: "none"}: {}}><button className={styles.button}>User Manager</button></Link>
+                <Link href='/setting/userManage' style={sessionInfo.role === "User" ? {display: "none"}: {}}><button className={styles.button}>User Manager</button></Link>
             </div>
             <p className={styles.title}>Your Account</p>
             <SettingsForm actionBy='user'/>
-        </div> : null
-    }
-        </>
+        </div>
+        
        
         
         )
