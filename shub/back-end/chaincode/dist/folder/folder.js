@@ -16,6 +16,8 @@ let Folder = class Folder {
         this.isFavourite = false;
         this.isDelete = false;
         this.share = [];
+        this.folder_password = "";
+        this.folder_lock = false;
     }
 };
 __decorate([
@@ -58,6 +60,14 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", Array)
 ], Folder.prototype, "share", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], Folder.prototype, "folder_password", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], Folder.prototype, "folder_lock", void 0);
 Folder = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], Folder);

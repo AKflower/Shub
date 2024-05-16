@@ -26,7 +26,9 @@ export class StorageFileContract extends Contract {
                 created_date: '123',
                 updated_date: '456',
                 file_size:'1KB',
-                file_type: 'image/png'
+                file_type: 'image/png',
+                file_password: "",
+                file_lock: false
             }
           const admin : User = 
           {
@@ -51,6 +53,8 @@ export class StorageFileContract extends Contract {
             created_date: '456',
             updated_date: '123',
             share: ['user_2'],
+            folder_password: "",
+            folder_lock: false
           }
             
     
@@ -129,6 +133,8 @@ export class StorageFileContract extends Contract {
             isDelete: false,
             isFavourite: false,
             share: [],
+            file_password: "",
+            file_lock: false
         };
         await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(newfile))));
         
@@ -527,6 +533,8 @@ export class StorageFileContract extends Contract {
             isDelete: false,
             isFavourite: false,
             share: [],
+            folder_password: "",
+            folder_lock: false
         }
         await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(newFolder))));
       }
@@ -1075,6 +1083,39 @@ export class StorageFileContract extends Contract {
       const shareUser = JSON.parse(share);
       fileJSON.share = shareUser;
       await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+    }
+
+    @Transaction(true)
+    public async ChangeFolderPassword(ctx: Context,user_id:string, folder_id:string, folder_password:string): Promise<void>{
+      const folderString = await this.GetFolder(ctx,folder_id);
+      const folderJSON = JSON.parse(folderString);
+      folderJSON.folder_password = folder_password;
+      if (folder_password ==="") folderJSON.folder_lock = false;
+      else folderJSON.folder_lock = true;
+      await ctx.stub.putState(folder_id,Buffer.from(stringify(sortKeysRecursive(folderJSON))))
+    }
+    @Transaction(true)
+    public async ChangeFilePassword(ctx: Context,user_id:string, file_id:string, file_password:string): Promise<void>{
+      
+      const fileString = await this.GetFile(ctx,file_id);
+      const fileJSON = JSON.parse(fileString);
+      fileJSON.file_password = file_password;
+      if (file_password ==="") fileJSON.file_lock = false;
+      else fileJSON.file_lock = true;
+      await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+    }
+
+    @Transaction()
+    public async GetFilePassword(ctx: Context,user_id:string, file_id:string): Promise<string>{
+      const fileString = await this.GetFile(ctx,file_id);
+      const fileJSON = JSON.parse(fileString);
+      return fileJSON.file_password;
+    }
+    @Transaction()
+    public async GetFolderPassword(ctx: Context,user_id:string, folder_id:string): Promise<string>{
+      const folderString = await this.GetFolder(ctx,folder_id);
+      const folderJSON = JSON.parse(folderString);
+      return folderJSON.folder_password;
     }
 }
    

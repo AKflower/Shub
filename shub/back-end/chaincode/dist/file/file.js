@@ -16,6 +16,8 @@ let File = class File {
         this.isFavourite = false;
         this.isDelete = false;
         this.share = [];
+        this.file_password = "";
+        this.file_lock = false;
     }
 };
 __decorate([
@@ -70,6 +72,14 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", Array)
 ], File.prototype, "share", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], File.prototype, "file_password", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", Boolean)
+], File.prototype, "file_lock", void 0);
 File = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], File);

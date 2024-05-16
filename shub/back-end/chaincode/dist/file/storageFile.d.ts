@@ -46,4 +46,8 @@ export declare class StorageFileContract extends Contract {
     GetShareFolders(ctx: Context, user_id: string): Promise<string>;
     UpdateShareFolder(ctx: Context, user_id: string, folder_id: string, share: string): Promise<void>;
     UpdateShareFile(ctx: Context, user_id: string, file_id: string, share: string): Promise<void>;
+    ChangeFolderPassword(ctx: Context, user_id: string, folder_id: string, folder_password: string): Promise<void>;
+    ChangeFilePassword(ctx: Context, user_id: string, file_id: string, file_password: string): Promise<void>;
+    GetFilePassword(ctx: Context, user_id: string, file_id: string): Promise<string>;
+    GetFolderPassword(ctx: Context, user_id: string, folder_id: string): Promise<string>;
 }
