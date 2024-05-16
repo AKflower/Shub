@@ -1117,6 +1117,14 @@ export class StorageFileContract extends Contract {
       const folderJSON = JSON.parse(folderString);
       return folderJSON.folder_password;
     }
+    @Transaction()
+    public async UpdateCID(ctx:Context, user_id:string,file_id:string,cid:string): Promise<void>{
+      const fileString = await this.GetFile(ctx,file_id);
+      const fileJSON = JSON.parse(fileString);
+      fileJSON.cid = cid;
+      await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+
+    }
 }
    
     
