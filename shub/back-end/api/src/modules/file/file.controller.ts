@@ -163,6 +163,16 @@ export class FileController {
         const {user_id,file_id,share} = params;
         return this.fileService.updateShareFile(this.contract,user_id,file_id,share);
     }
+    @Put('/changePassword')
+    changeFilePassword(@Body() params : {user_id:string, file_id: string, file_password:string}) {
+        const {user_id,file_id,file_password} = params;
+        return this.fileService.changeFilePassword(this.contract,user_id,file_id,file_password);
+    }
+    @Get('/validate')
+    validate(@Body() params : {user_id:string, file_id: string,file_password:string}) {
+        const {user_id,file_id,file_password} = params;
+        return this.fileService.validatePassword(this.contract,user_id,file_id,file_password);
+    }
 }
 
  

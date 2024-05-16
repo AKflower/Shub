@@ -6,9 +6,7 @@ import { FileDTO } from 'src/dto/file.dto';
 import * as cd from "fs";
 import * as crypto from "crypto";
 import * as zlib from "zlib";
-import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
-import { promisify } from 'util';
-
+import * as bcrypt from "bcrypt";
 @Injectable()
 export class FileService {
   async initLedger(contract: Contract) : Promise<String> {
@@ -96,6 +94,7 @@ export class FileService {
       isFavourite: item.isFavourite,
       isDelete: item.isDelete,
       share: item.share,
+      file_lock: item.file_lock
   }));
   return files;
     
@@ -200,6 +199,25 @@ export class FileService {
   async updateShareFile(contract: Contract, user_id: string, file_id: string,share: string[]): Promise<string> {
     await contract.submitTransaction('UpdateShareFolder',user_id,file_id,JSON.stringify(share));
     return 'Update Successful!';
+}
+async changeFilePassword(contract:Contract, user_id:string,file_id:string,file_password:string): Promise<string>{
+  if (file_password!=="") {
+    const saltOfRounds = 10;
+    file_password = await bcrypt.hash(file_password, saltOfRounds);
+}
+  await contract.submitTransaction('ChangeFilePassword',user_id,file_id,file_password);
+  return "Change Successfully!";
+}
+async validatePassword(contract:Contract,user_id:string, file_id:string,file_password:string): Promise<boolean> {
+  const resultBytes= await contract.evaluateTransaction('GetFilePassword',user_id,file_id);
+  
+  const utf8Decoder = new TextDecoder();
+  
+  const resultJson = utf8Decoder.decode(resultBytes);
+
+  if (await bcrypt.compare(file_password, resultJson))
+  return true;
+  else return false;
 }
   getCipherKey() {
     if (!process.env.IPFS_SYMMECTRIC_KEY) throw Error("IPFS_SYMMECTRIC_KEY environment variable is required");

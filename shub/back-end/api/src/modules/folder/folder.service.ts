@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import { File } from 'src/model/file.model';
 import { FileDTO } from 'src/dto/file.dto';
 import { Folder } from 'src/model/folder.model';
+import * as bcrypt from "bcrypt";
 
 
 @Injectable()
@@ -47,6 +48,7 @@ export class FolderService {
             isFavourite: item.isFavourite,
             isDelete: item.isDelete,
             share: item.share,
+            folder_lock: item.folder_lock
     }));
     return folders;
     
@@ -150,6 +152,25 @@ export class FolderService {
         const resultJson = utf8Decoder.decode(resultBytes);
         const result = JSON.parse(resultJson);
         return result;
+    }
+    async changeFolderPassword(contract:Contract, user_id:string,folder_id:string,folder_password:string): Promise<string>{
+        if (folder_password!=="") {
+            const saltOfRounds = 10;
+            folder_password = await bcrypt.hash(folder_password, saltOfRounds);
+        }
+        await contract.submitTransaction('ChangeFolderPassword',user_id,folder_id,folder_password);
+        return "Change Successfully!";
+    }
+    async validatePassword(contract:Contract,user_id:string, folder_id:string,folder_password:string): Promise<boolean> {
+        const resultBytes= await contract.evaluateTransaction('GetFolderPassword',user_id,folder_id);
+        console.log(resultBytes);
+        const utf8Decoder = new TextDecoder();
+        const resultJson = utf8Decoder.decode(resultBytes);
+
+        if (await bcrypt.compare(folder_password, resultJson))
+            return true;
+            else return false;
+  
     }
     
 

@@ -33,5 +33,10 @@ export class Folder {
 
     @Property()
     public share?: string[] = [];
- 
+    
+    @Property()
+    public folder_password?: string = "";
+
+    @Property()
+    public folder_lock?: boolean = false;
 }

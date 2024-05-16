@@ -43,5 +43,10 @@ export class File {
     @Property()
     public share?: string[] = [];
     
+    @Property()
+    public file_password?: string = "";
+
+    @Property()
+    public file_lock?: boolean = false;
 
 }

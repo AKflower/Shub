@@ -118,4 +118,14 @@ export class FolderController {
         const {path,folderName} = params;
         return this.folderService.getFolderByName(this.contract,path,folderName);
     }
+    @Put('/changePassword')
+    changeFolderPassword(@Body() params : {user_id:string, folder_id: string, folder_password:string}) {
+        const {user_id,folder_id,folder_password} = params;
+        return this.folderService.changeFolderPassword(this.contract,user_id,folder_id,folder_password);
+    }
+    @Get('/validate')
+    validate(@Body() params : {user_id:string, folder_id: string,folder_password:string}) {
+        const {user_id,folder_id,folder_password} = params;
+        return this.folderService.validatePassword(this.contract,user_id,folder_id,folder_password);
+    }
 }

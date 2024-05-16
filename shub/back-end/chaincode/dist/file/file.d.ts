@@ -12,4 +12,6 @@ export declare class File {
     isFavourite?: boolean;
     isDelete?: boolean;
     share?: string[];
+    file_password?: string;
+    file_lock?: boolean;
 }

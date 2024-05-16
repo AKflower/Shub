@@ -29,7 +29,9 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             created_date: '123',
             updated_date: '456',
             file_size: '1KB',
-            file_type: 'image/png'
+            file_type: 'image/png',
+            file_password: "",
+            file_lock: false
         };
         const admin = {
             user_id: 'user_1',
@@ -50,6 +52,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             created_date: '456',
             updated_date: '123',
             share: ['user_2'],
+            folder_password: "",
+            folder_lock: false
         };
         await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
         await ctx.stub.putState(admin.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(admin))));
@@ -112,6 +116,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             isDelete: false,
             isFavourite: false,
             share: [],
+            file_password: "",
+            file_lock: false
         };
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newfile))));
     }
@@ -449,6 +455,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             isDelete: false,
             isFavourite: false,
             share: [],
+            folder_password: "",
+            folder_lock: false
         };
         await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newFolder))));
     }
@@ -922,6 +930,36 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         fileJSON.share = shareUser;
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }
+    async ChangeFolderPassword(ctx, user_id, folder_id, folder_password) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        folderJSON.folder_password = folder_password;
+        if (folder_password === "")
+            folderJSON.folder_lock = false;
+        else
+            folderJSON.folder_lock = true;
+        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folderJSON))));
+    }
+    async ChangeFilePassword(ctx, user_id, file_id, file_password) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.file_password = file_password;
+        if (file_password === "")
+            fileJSON.file_lock = false;
+        else
+            fileJSON.file_lock = true;
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+    }
+    async GetFilePassword(ctx, user_id, file_id) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        return fileJSON.file_password;
+    }
+    async GetFolderPassword(ctx, user_id, folder_id) {
+        const folderString = await this.GetFolder(ctx, folder_id);
+        const folderJSON = JSON.parse(folderString);
+        return folderJSON.folder_password;
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
@@ -1155,6 +1193,30 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "UpdateShareFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "ChangeFolderPassword", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "ChangeFilePassword", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFilePassword", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "GetFolderPassword", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);

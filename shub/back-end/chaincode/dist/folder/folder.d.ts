@@ -9,4 +9,6 @@ export declare class Folder {
     isFavourite?: boolean;
     isDelete?: boolean;
     share?: string[];
+    folder_password?: string;
+    folder_lock?: boolean;
 }
