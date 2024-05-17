@@ -75,6 +75,8 @@ interface ShubContextProps {
     toggleShowLock: () => void;
     showInfo: string;
     toggleShowInfo: () => void;
+    showOpen: string;
+    toggleShowOpen: () => void;
     handleNavigation: (name: string) => void;
     change: number;
     handleChange: () => void;
@@ -83,8 +85,10 @@ interface ShubContextProps {
     handleStream: () => void;
     data: string;
     type: string;
-    handleData: (data: string, type: string) => void;
+    lock: boolean;
+    handleData: (data: string, type: string, lock: boolean) => void;
     handleType: (type: string) => void;
+    handleOpen: (data: string) => void;
     isFavourite: boolean;
     handleIsFavourite: (isFavourite: boolean) => void;
     infoFolder: FoldersProps|undefined;
@@ -230,6 +234,12 @@ const toggleShowCopy = () => {
   // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
+const [showOpen, setShowOpen] = useState("");
+const toggleShowOpen = () => {
+  setShowOpen(showOpen == '' ? 'more' : '');
+  // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+};
+
 const [showMove, setShowMove] = useState("");
 const toggleShowMove = () => {
   setShowMove(showMove == '' ? 'more' : '');
@@ -263,18 +273,24 @@ const toggleShowInfo = () => {
 const [stream, setStream] = useState("");
 const handleStream = () => {
   setStream(stream == '' ? 'more' : '');
-  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+//   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 };
 
 const [data, setData] = useState("");
 const [type, setType] = useState("");
-const handleData = (data: string, type: string) => {
+const [lock, setLock] = useState(false);
+const handleData = (data: string, type: string, lock: boolean) => {
   setData(data);
   setType(type);
+  setLock(lock)
 };
 
 const handleType = (type: string) => {
   setType(type);
+};
+
+const handleOpen = (data: string) => {
+  setData(data);
 };
 
 const handleNavigation = (name: string) => {
@@ -364,7 +380,8 @@ const value: ShubContextProps = {
     share,
     name,
     handleName,
-
+    lock,
+    handleOpen,
     sessionInfo,
     fetchDataSession,
     showResetPassword,
@@ -372,7 +389,9 @@ const value: ShubContextProps = {
     infoFolder,
     infoFile,
     handleInfoFile,
-    handleInfoFolder
+    handleInfoFolder,
+    showOpen,
+    toggleShowOpen
 
   };
 

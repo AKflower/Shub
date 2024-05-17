@@ -50,4 +50,5 @@ export declare class StorageFileContract extends Contract {
     ChangeFilePassword(ctx: Context, user_id: string, file_id: string, file_password: string): Promise<void>;
     GetFilePassword(ctx: Context, user_id: string, file_id: string): Promise<string>;
     GetFolderPassword(ctx: Context, user_id: string, folder_id: string): Promise<string>;
+    UpdateCID(ctx: Context, user_id: string, file_id: string, cid: string): Promise<void>;
 }

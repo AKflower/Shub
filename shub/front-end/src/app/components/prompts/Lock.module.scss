@@ -22,6 +22,15 @@
   .card-content{
     p{ 
       margin-bottom: 1em;
+      margin-top: 1em;
+    }
+    div {
+      display: flex;
+      justify-content: space-between;
+      input{
+      border: 1px solid #d1d5db!important;
+
+      }
     }
   }
 
@@ -128,3 +137,24 @@
     color: #6f6f6f;
   }
   
+  .pass{
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 2.5em;
+    margin-bottom: 1.5em;
+
+
+    
+
+    div{
+      width: 100%;
+      height: 100%;
+    }
+    input{
+      width: 100%;
+      height: 100%;
+      text-indent: 1em;
+
+
+    }
+  }

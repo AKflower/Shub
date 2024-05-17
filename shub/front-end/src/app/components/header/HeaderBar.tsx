@@ -28,6 +28,7 @@ import ResetPassword from '../prompts/ResetPassword';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import PermanentlyDelete from '../prompts/PermanentlyDelete';
 import Restore from '../prompts/Restore';
+import Open from '../prompts/Open';
 
 const cx = classNames.bind(styles);
 
@@ -81,7 +82,9 @@ const [showToast, setShowToast] = useState("");
     fetchDataSession,
     showResetPassword,
     toggleShowResetPassword,
-    showLock
+    showLock,
+    showOpen,
+    toggleCurrentPromptName
 
   } = useShub();
   const accessToken = Cookies.get('accessToken');
@@ -265,6 +268,10 @@ const [showToast, setShowToast] = useState("");
         <Info />
       )}
 
+      {showOpen && (
+        <Open />
+      )}
+
       {showUpload && (
         <Upload />
       )}
@@ -345,7 +352,11 @@ const [showToast, setShowToast] = useState("");
             // if(showCopy){setShowCopy('')}
             // if(showMove){setShowMove('')}
             // if(showDelete){toggleShowDelete()}
-            if(stream){handleStream()}
+            if(stream){
+              toggleCurrentPromptName();
+
+              handleStream();
+            }
             // if(showChangePassword){toggleShowChangePassword()}
           }
         }

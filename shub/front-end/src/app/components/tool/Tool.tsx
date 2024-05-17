@@ -11,7 +11,6 @@ import axios from 'axios';
 const cx = classNames.bind(styles);
 
 const Tool = () => {
-  const [showView, setShowView] = useState('grid');
   const userId = Cookies.get('userId');
   const accessToken = Cookies.get('accessToken');
 
@@ -29,7 +28,8 @@ const Tool = () => {
     type,
     isFavourite,
     handleChange,
-    toggleShowLock
+    toggleShowLock,
+    lock
   } = useShub();
 
   const handleFavourite = () => {
@@ -87,7 +87,9 @@ const Tool = () => {
     <div className={cx('wrapper')}>
     {option && (<div className={cx('container')}>
        
-      <div className={cx('icon')}>
+      {!lock && (
+      <>
+        <div className={cx('icon')}>
         <Action 
           icon={<img src='/edit.svg'></img>}
           label='Rename'
@@ -190,10 +192,12 @@ const Tool = () => {
           onAction={handleFavourite}
         />
       </div>
-
+      </>
+      )}
       <div className={cx('icon')}>
         <Action 
-          icon={isLock ? (<img src='/lock.svg'></img>) : (<img src='/unlock.svg'></img>)}
+          icon={lock ? 
+            (<img src='/lock.svg'></img>) : (<img src='/unlock.svg'></img>)}
           label='Lock'
           counter={0}        
           onAction={()=>{

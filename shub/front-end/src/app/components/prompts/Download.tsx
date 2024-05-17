@@ -98,8 +98,8 @@ const Download: FC<DownloadProps> = () => {
         <button
           onClick={() => download()}
           className={cx('button','button--flat',"button--red")}
-          aria-label="Delete"
-          title="Delete"
+          aria-label="Download"
+          title="Download"
         >
           Download
         </button>

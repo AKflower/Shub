@@ -20,6 +20,8 @@ interface FileProps {
     isDelete: boolean,
     share: string[],
     file_size:string,
+    file_lock:boolean
+
 }
 
 
@@ -35,7 +37,10 @@ export default function FileSection ({files} : {files:FileProps[]}) {
         handleIsDelete,
         handleShare,
         handleName,
-        handleInfoFile
+        handleInfoFile,
+        lock,
+        toggleShowOpen,
+        toggleCurrentPromptName
     } = useShub();
 
     
@@ -63,17 +68,28 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                             else {
                                 handleIsDelete(file.isDelete)
                             }
-
+ 
                             handleShare(file.share)
 
                             handleName(file.file_name)
 
-                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length),file.file_lock)
                             handleInfoFile(file)
                             }}
                         onDoubleClick={() => {
-                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
-                            handleStream()
+                            handleSelect(file.file_id, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+
+                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length),file.file_lock)
+                            if (lock) {
+                                toggleShowOpen()
+                                toggleCurrentPromptName()
+                            }
+                            else 
+                            {
+                                handleStream()
+                                toggleCurrentPromptName()
+
+                            }
 
 
                         }}

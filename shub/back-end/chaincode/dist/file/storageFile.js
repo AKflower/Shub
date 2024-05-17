@@ -960,6 +960,12 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const folderJSON = JSON.parse(folderString);
         return folderJSON.folder_password;
     }
+    async UpdateCID(ctx, user_id, file_id, cid) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.cid = cid;
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+    }
 };
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
@@ -1217,6 +1223,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFolderPassword", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "UpdateCID", null);
 StorageFileContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageFileUserFolder', description: 'Smart contract' })
 ], StorageFileContract);

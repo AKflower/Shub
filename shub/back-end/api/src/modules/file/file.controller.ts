@@ -75,7 +75,6 @@ export class FileController {
         // const fileEncrypted = this.fileService.encryptFile(file.buffer);
 
         const { cid } = await this.ipfsClient.add(file.buffer)
-        const fileEncrypted = this.fileService.encryptFile('11111111111111111111111111111111',''+cid);
         
 
         // this.ipfsCluster.pin.add(cid)
@@ -121,14 +120,7 @@ export class FileController {
         return this.fileService.copyFile(this.contract,file);
     }
 
-    @Post('/ipfslong')
-    @UseInterceptors(FileInterceptor('file'))
-    async uploadFile(@UploadedFile() file) {
-            const fileBuffer = file.buffer;
-            const result = await this.ipfsClient.add(fileBuffer);
-            this.ipfsCluster.pin.add(result.cid.toString())
-            return { cid: result.cid.toString() };
-          }
+ 
 
     @Get('/down')
     @UseGuards(JwtAuthGuard)
@@ -169,7 +161,7 @@ export class FileController {
         return this.fileService.changeFilePassword(this.contract,user_id,file_id,file_password);
     }
     @Get('/validate')
-    validate(@Body() params : {user_id:string, file_id: string,file_password:string}) {
+    validate(@Query() params : {user_id:string, file_id: string,file_password:string}) {
         const {user_id,file_id,file_password} = params;
         return this.fileService.validatePassword(this.contract,user_id,file_id,file_password);
     }
@@ -177,6 +169,27 @@ export class FileController {
     updateCID(@Body() params : {user_id:string, file_id: string,cid: string}) {
         const {user_id,file_id,cid} = params;
         return this.fileService.updateCID(this.contract,user_id,file_id,cid);
+    }
+    @Put('/encrypt')
+    encrypt(@Body() params : {user_id: string, file_id: string, data: string, password: string}) {
+        const { password, user_id, file_id, data } = params;
+        const truePass = password + password + password + password + password + password + password + password
+        console.log(truePass, truePass.length)
+        return this.fileService.encryptFile(this.contract, truePass, data, user_id, file_id);
+    }
+
+    @Put('/decrypt')
+    decrypt(@Body() params : {user_id: string, file_id: string, data: string, password: string}) {
+        const { password, user_id, file_id, data } = params;
+        const truePass = password + password + password + password + password + password + password + password
+        return this.fileService.decryptFile(this.contract, truePass, data, user_id, file_id);
+    }
+
+    @Put('/open')
+    open(@Body() params : {data: string, password: string}) {
+        const { password, data } = params;
+        const truePass = password + password + password + password + password + password + password + password
+        return this.fileService.decrypt( truePass, data);
     }
 }
 

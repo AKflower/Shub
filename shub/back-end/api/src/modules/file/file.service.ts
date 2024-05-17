@@ -229,17 +229,17 @@ async updateCID(contract: Contract,user_id:string, file_id:string,cid:string): P
     return crypto.createHash("sha256").update(process.env.IPFS_SYMMECTRIC_KEY).digest();
   }
 
-  async encryptFile(password: string, data: string) {
+  async encryptFile(contract: Contract, password: string, data: string, user_id: string, file_id: string) {
     let iv = crypto.randomBytes(16);
     let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(password), iv);
     let encrypted = cipher.update(data);
 
     encrypted = Buffer.concat([encrypted, cipher.final()]);
-
-    return iv.toString('hex') + ':' + encrypted.toString('hex');
+    await this.updateCID(contract, user_id, file_id, iv.toString('hex') + ':' + encrypted.toString('hex'))
+    return 'success'
   }
 
-  async decryptFile(password: string, data: string) {
+  async decryptFile(contract: Contract, password: string, data: string, user_id: string, file_id: string) {
     let textParts = data.split(':');
     let iv = Buffer.from(textParts.shift(), 'hex');
     let encryptedText = Buffer.from(textParts.join(':'), 'hex');
@@ -248,7 +248,22 @@ async updateCID(contract: Contract,user_id:string, file_id:string,cid:string): P
 
     decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-    return decrypted.toString();
+    await this.updateCID(contract, user_id, file_id, decrypted.toString())
+    return 'success'
+
+  }
+
+  async decrypt(password: string, data: string) {
+    let textParts = data.split(':');
+    let iv = Buffer.from(textParts.shift(), 'hex');
+    let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(password), iv);
+    let decrypted = decipher.update(encryptedText);
+
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    return decrypted.toString()
+
   }
 
 }
