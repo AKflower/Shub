@@ -30,7 +30,8 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
         handleIsFavourite,
         handleIsDelete,
         handleShare,
-        handleInfoFolder
+        handleInfoFolder,
+        handleData
     } = useShub();
 
     return (
@@ -61,6 +62,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
 
                             handleShare(folder.share)
                             handleInfoFolder(folder)
+                            handleData('', 'folder', false)
                             
                         }}
                         onDoubleClick={() => {

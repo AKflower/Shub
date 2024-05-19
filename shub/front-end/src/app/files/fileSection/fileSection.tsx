@@ -40,7 +40,8 @@ export default function FileSection ({files} : {files:FileProps[]}) {
         handleInfoFile,
         lock,
         toggleShowOpen,
-        toggleCurrentPromptName
+        toggleCurrentPromptName,
+        handleS
     } = useShub();
 
     
@@ -76,18 +77,18 @@ export default function FileSection ({files} : {files:FileProps[]}) {
                             handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length),file.file_lock)
                             handleInfoFile(file)
                             }}
-                        onDoubleClick={() => {
-                            handleSelect(file.file_id, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                        onDoubleClick={async() => {
+                            await handleS(file.file_id)
 
                             handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length),file.file_lock)
                             if (lock) {
-                                toggleShowOpen()
-                                toggleCurrentPromptName()
+                                await toggleShowOpen()
+                                await toggleCurrentPromptName()
                             }
                             else 
                             {
-                                handleStream()
-                                toggleCurrentPromptName()
+                                await handleStream()
+                                await toggleCurrentPromptName()
 
                             }
 

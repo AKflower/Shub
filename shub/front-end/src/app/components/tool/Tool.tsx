@@ -197,7 +197,7 @@ const Tool = () => {
       <div className={cx('icon')}>
         <Action 
           icon={lock ? 
-            (<img src='/lock.svg'></img>) : (<img src='/unlock.svg'></img>)}
+            (<img src='/unlock.svg'></img>) : (<img src='/lock.svg'></img>)}
           label='Lock'
           counter={0}        
           onAction={()=>{

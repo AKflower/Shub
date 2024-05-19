@@ -82,6 +82,8 @@ const Lock: React.FC<LockProps> = () => {
             })
             .catch(error => {
                 console.error('Error locking file:', error);
+                toast.dismiss(load);
+
             }); 
         
 
@@ -159,6 +161,7 @@ const Lock: React.FC<LockProps> = () => {
                 }
             } catch (e) {
                 console.error('There has been a problem with your axios operation:', e);
+                toast.dismiss(load);
 
               }
                   
@@ -447,8 +450,8 @@ const Lock: React.FC<LockProps> = () => {
                 </button>
                 <button
                     className={cx('button','button--flat')}
-                    aria-label='Lock'
-                    title='Lock'
+                    aria-label='Unlock'
+                    title='Unlock'
                     onClick={unLockFile}
                     >
                     Unlock

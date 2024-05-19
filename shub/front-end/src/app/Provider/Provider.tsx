@@ -55,6 +55,7 @@ interface ShubContextProps {
     hideOption: () => void;
     selected: string;
     handleSelect: (id: string, type1: string) => void;
+    handleS: (id: string) => void;
     name: string;
     handleName: (name: string) => void;
     showDelete: string;
@@ -182,6 +183,12 @@ const handleSelect = (id: string, type1: string) => {
       setSelected(id);
       showOption()
   }
+}
+
+const handleS = (id: string) => {
+  
+      setSelected(id);
+   
 }
 
 const [name, setName] = useState('');
@@ -391,7 +398,8 @@ const value: ShubContextProps = {
     handleInfoFile,
     handleInfoFolder,
     showOpen,
-    toggleShowOpen
+    toggleShowOpen,
+    handleS
 
   };
 
