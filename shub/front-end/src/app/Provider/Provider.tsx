@@ -81,6 +81,8 @@ interface ShubContextProps {
     handleNavigation: (name: string) => void;
     change: number;
     handleChange: () => void;
+    view: string;
+    handleView: (view: string) => void;
     resetSelect: () => void;
     stream: string;
     handleStream: () => void;
@@ -194,6 +196,11 @@ const handleS = (id: string) => {
 const [name, setName] = useState('');
 const handleName = (name: string) => {
   setName(name)
+}
+
+const [view, setView] = useState('');
+const handleView = (view: string) => {
+  setView(view)
 }
 
 const [infoFolder, setInfoFolder] = useState<FoldersProps|undefined>();
@@ -399,7 +406,9 @@ const value: ShubContextProps = {
     handleInfoFolder,
     showOpen,
     toggleShowOpen,
-    handleS
+    handleS,
+    view,
+    handleView,
 
   };
 

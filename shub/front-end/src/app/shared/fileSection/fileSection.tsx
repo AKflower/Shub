@@ -1,0 +1,109 @@
+"use client"
+import styles from './fileSection.module.scss'
+import Card from '../card/card'
+import { useShub } from '@/app/Provider/Provider';
+import classNames from 'classnames/bind';
+import Cookies from 'js-cookie';
+
+const cx = classNames.bind(styles);
+
+interface FileProps {
+    file_id: string,
+    file_name: string,
+    file_path: string,
+    cid: string,
+    file_type: string,
+    user_id: string,
+    created_date: string,
+    updated_date: string,
+    isFavourite: boolean,
+    isDelete: boolean,
+    share: string[],
+    file_size:string,
+    file_lock:boolean
+
+}
+
+
+export default function FileSection ({files} : {files:FileProps[]}) {
+    const { 
+        handleStream,
+        handleData,
+        selected,
+        handleSelect,
+        handleType,
+        type,
+        handleIsFavourite,
+        handleIsDelete,
+        handleShare,
+        handleName,
+        handleInfoFile,
+        lock,
+        toggleShowOpen,
+        toggleCurrentPromptName,
+        handleS
+    } = useShub();
+
+    
+    
+
+    return (
+            <div className={styles.part}>
+            <h3 className={styles.title}>Files</h3>
+            <div className={cx('grid-1')}>
+                {files.map((file) => (
+                    <div key={file.file_id}
+                        onClick={() => {
+                            handleSelect(file.file_id, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                            handleType(file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length))
+                            if(file.isFavourite == undefined) {
+                                handleIsFavourite(false)
+                            }
+                            else {
+                                handleIsFavourite(file.isFavourite)
+                            }
+
+                            if(file.isDelete == undefined) {
+                                handleIsDelete(false)
+                            }
+                            else {
+                                handleIsDelete(file.isDelete)
+                            }
+ 
+                            handleShare(file.share)
+
+                            handleName(file.file_name)
+
+                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length),file.file_lock)
+                            handleInfoFile(file)
+                            }}
+                        onDoubleClick={async() => {
+                            await handleS(file.file_id)
+
+                            handleData(file.cid, file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length),file.file_lock)
+                            if (lock) {
+                                await toggleShowOpen()
+                                await toggleCurrentPromptName()
+                            }
+                            else 
+                            {
+                                await handleStream()
+                                await toggleCurrentPromptName()
+
+                            }
+
+
+                        }}
+                    >
+
+                    <Card type1={file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)} key={file.file_id} name={file.file_name} size={file.file_size}  date={file.updated_date} selected={selected == file.file_id && type == file.file_type.slice(file.file_type.indexOf('/') + 1, file.file_type.length)}/>
+                    </div>
+                        
+                  
+                    
+                ))}
+            
+            </div>
+        </div>
+    )
+}

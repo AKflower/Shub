@@ -141,22 +141,11 @@ const Tool = () => {
         />
       </div>
 
-      <div className={cx('icon')}>
-        <Action 
-          icon={<img src='/delete.svg'></img>}
-          label='Delete'
-          counter={0}
-          onAction={()=>{
-            toggleShowDelete()
-            toggleCurrentPromptName()
-            }
-          } 
-        />
-      </div>
+      
 
       
 
-      <div className={cx('icon')}>
+      {type != 'folder' && (<div className={cx('icon')}>
         <Action 
           icon={<img src='/down.svg'></img>}
           label='Download'
@@ -168,7 +157,7 @@ const Tool = () => {
           } 
 
         />
-      </div >
+      </div >)}
            
       <div className={cx('icon')}>
         <Action 
@@ -194,11 +183,24 @@ const Tool = () => {
       </div>
       </>
       )}
-      <div className={cx('icon')}>
+
+<div className={cx('icon')}>
+        <Action 
+          icon={<img src='/delete.svg'></img>}
+          label='Delete'
+          counter={0}
+          onAction={()=>{
+            toggleShowDelete()
+            toggleCurrentPromptName()
+            }
+          } 
+        />
+      </div>
+      {type !== 'folder' && (<div className={cx('icon')}>
         <Action 
           icon={lock ? 
             (<img src='/unlock.svg'></img>) : (<img src='/lock.svg'></img>)}
-          label='Lock'
+          label={lock ? 'Unlock' : 'Lock'}
           counter={0}        
           onAction={()=>{
             toggleShowLock()
@@ -206,7 +208,7 @@ const Tool = () => {
             }
           } 
         />
-      </div>
+      </div>)}
 
       
          

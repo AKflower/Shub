@@ -1,7 +1,7 @@
 "use client"
 import styles from './shared.module.scss'
-import FileSection from '../files/fileSection/fileSection';
-import FolderSection from '../files/folderSection/folderSection';
+import FileSection from './fileSection/fileSection';
+import FolderSection from './folderSection/folderSection';
 import { useEffect, useState } from 'react';
 import { useShub } from '../Provider/Provider';
 import axios from 'axios';
@@ -12,7 +12,7 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import { Toaster } from 'react-hot-toast';
 import fonts from '../../../public/fonts/fonts';
 import ToolFS from '../components/tool/ToolFS';
-
+import BCFS from '../components/breadcumbs/BCFS';
 
 const cx = classNames.bind(styles);
 
@@ -29,6 +29,7 @@ interface FileProps {
     isDelete: boolean,
     share: string[],
     file_size: string,
+    file_lock:boolean
 }
 
 interface FoldersProps {
@@ -41,108 +42,124 @@ interface FoldersProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
-
 }
 
-
 const Shared = () => {
-    const {  change, resetSelect, hideOption } = useShub();
-    const [url, setUrl] = useState('');
+    const { 
+        change, 
+        resetSelect, 
+        hideOption 
+    } = useShub();
     const [blank, setBlank] = useState('');
     const [folder, setFolder] = useState<FoldersProps[]>([]);
     const [file, setFile] = useState<FileProps[]>([]);
     const pathname = usePathname()
     const accessToken = Cookies.get('accessToken');
     const router = useRouter();
-
     const userId = Cookies.get('userId');
-    useEffect(() => {
-        if (pathname != '/shared'){
-            router.push(pathname.replace("shared","files"));
-        }
-    },[pathname])
+    
+    // useEffect(() => {
+    //     if (pathname != '/shared'){
+    //         router.push(pathname.replace("shared","files"));
+    //     }
+    // },[pathname])
    
     useEffect(() => {
-        
-        if ( accessToken == '') {
-            router.push('/');
-        }
         const fetchData = async () => {
-            const newPath = pathname.replace("shared","files")
-            const data = { user_id: userId };
+            try {
+                if (pathname == '/shared'){
+                    const data = { user_id: userId };
 
-            const res = await axios.get(`http://localhost:3001/folders/share`,{
-                params: data, // Truyền dữ liệu qua query parameters
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, 
-                },
-            });
-            const folderD:FoldersProps[] = []
-            const fileD:FileProps[] = []
+                    const res = await axios.get(`http://localhost:3001/folders/share`,{
+                        params: data, // Truyền dữ liệu qua query parameters
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`, 
+                        },
+                    });
 
-            for (const pie in res.data){
-                if (res.data[pie].file_id){
-                    await fileD.push(res.data[pie])
+                    const folderD:FoldersProps[] = []
+                    const fileD:FileProps[] = []
+
+                    for (const pie in res.data){
+                        if (res.data[pie].file_id){
+                            await fileD.push(res.data[pie])
+                        }
+                        else {
+                            await folderD.push(res.data[pie])
+                        }
+                    }
+
+                    setFolder(folderD)
+                    setFile(fileD) 
+
+                    if (!fileD[0] && !folderD[0]) {
+                        setBlank('show')
+                    }
+                    else setBlank('')
                 }
-                else {
-                    await folderD.push(res.data[pie])
+                else{
+                    const data = { user_id: userId, path: pathname.replace(`shared`,'files')};
+
+                    const resF = await axios.get(`http://localhost:3001/folders/bypath`, {
+                        params: data, // Truyền dữ liệu qua query parameters
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`, 
+                        },
+                    },);
+
+                    const res = await axios.get(`http://localhost:3001/files/bypath`, {
+                        params: data, // Truyền dữ liệu qua query parameters
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`, 
+                        },
+                    });
+
+                    let filteredFolders = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+                    let filteredFiles = res.data.filter((file: { isDelete: any; }) => !file.isDelete);
+
+                    setFile(filteredFiles)
+                    setFolder(filteredFolders)
+
+                    if (!filteredFiles[0] && !filteredFolders[0]) {
+                        setBlank('show')
+                    }
+                    else setBlank('')
                 }
-                
             }
-            // setFile(res.data.files)
-            
-
-            setFolder(folderD)
-            setFile(fileD) 
-
-
-            if (!fileD[0] && !folderD[0]) {
-                setBlank('show')
+            catch (e){
+                router.push('/shared');
             }
-            else setBlank('')
-            
-            // const foldersF = JSON.stringify(res.data.folders);
-            // Cookies.set('folders', foldersF, { secure: true, sameSite: 'strict' });
-            
-            // const filesF = JSON.stringify(res.data.files);
-            // Cookies.set('files', filesF, { secure: true, sameSite: 'strict' });
-
         }
         fetchData()
-        
         resetSelect()
         hideOption()
     },[change])
     
     return (
-
         <div className={cx('container')}>
             <ToolFS />
 
-            <h1 className={cx('title',fonts.poppins.className)}>Share</h1>
-            
+            <h1 className={cx('title', fonts.poppins.className)}>Share</h1>
+
+            <BCFS />
+
             {folder[0] && <FolderSection folders={folder.sort((a, b) => a.folder_name.localeCompare(b.folder_name))}/>}
             {file[0] && <FileSection files={file.sort((a, b) => a.file_name.localeCompare(b.file_name))}/>}
+            
             {blank && (<div className={cx('content')}>
                 <div className="">
                     <SentimentDissatisfiedIcon  style={{fontSize: '100px'}}/>
                 </div>
                 <div className={cx('message')}>It feels lonely here...</div>
-
             </div>)}
-            <div>
-                {/* <img src={url} alt="" />
-                 */}
-                 {url}
-            </div>
+            
             <Toaster 
                 position="top-center"
                 reverseOrder={false}
             />
-            
-            
-             
         </div>
     )
 }

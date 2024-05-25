@@ -28,6 +28,7 @@ const Breadcrumbs =() => {
   })
   // const name = pathname.split("/");
   // name.splice(0,2);
+  console.log(routes)
   
   return (
     <div className={styles.breadcrumbs}>

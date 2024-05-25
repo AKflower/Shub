@@ -11,18 +11,12 @@ import axios from 'axios';
 const cx = classNames.bind(styles);
 
 const Tool = () => {
-  const [showView, setShowView] = useState('grid');
   const userId = Cookies.get('userId');
   const accessToken = Cookies.get('accessToken');
 
   const { 
     toggleCurrentPromptName,
-    toggleShowShare,
     option, 
-    toggleShowCopy,
-    toggleShowRename,
-    toggleShowMove,
-    toggleShowDelete,
     toggleShowDownload,
     toggleShowInfo,
     selected,
@@ -87,7 +81,7 @@ const Tool = () => {
        
       
 
-      <div className={cx('icon')}>
+      {type != 'folder' && (<div className={cx('icon')}>
         <Action 
           icon={<img src='/down.svg'></img>}
           label='Download'
@@ -99,7 +93,7 @@ const Tool = () => {
           } 
 
         />
-      </div >
+      </div >)}
            
       <div className={cx('icon')}>
         <Action 

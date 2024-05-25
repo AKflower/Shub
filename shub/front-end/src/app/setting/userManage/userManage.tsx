@@ -42,7 +42,7 @@ import AccessDenied from '@/app/components/accessDenied/accessDenied';
 
 const UserManage = ({role}:{role:string}) => {
   interface User {
-    user_id: number,
+    user_id: string,
     email: string,
     fullName: string,
     firstName: string,
@@ -52,10 +52,13 @@ const UserManage = ({role}:{role:string}) => {
     isActive: boolean,
     isFirstAccess: boolean,
   }
+
+  const { handleView } = useShub();
+
   const [reload,setReload] = useState(false)
   const [isSaving,setIsSaving] = useState(false)
   const [users,setUsers]  = useState<User[]>([])
-  
+  const userId = Cookies.get('userId');
   const router = useRouter()
   
   useEffect(() => {
@@ -126,6 +129,7 @@ const UserManage = ({role}:{role:string}) => {
         
         item.check= !item.check;
     }
+    const dis = false
     return (
       <>
       { role ==="Admin" ?
@@ -152,11 +156,14 @@ const UserManage = ({role}:{role:string}) => {
                         <tr>
                             <td>{item.fullName}</td>
                             <td className={styles.blue}>{item.email}</td>
-                            <td>{item.organization}</td>
+                            <td>Computer Science and Engineer</td>
                             <td>{item.role}</td>
                             <td className={styles.action}>
                               <Link href={`/setting/userManage/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>
+                              {item.user_id != userId &&(<Link onClick={() => handleView(item.user_id)} href={`/setting/userManage/${item.user_id}/view`}>{dis ? (<div  className={styles.viewD}><img  src='/viewD.svg'></img></div>) : (<div className={styles.view}><img  src='/view.svg'></img></div>)}</Link>)}
+
                               <input type="checkbox" className={styles.checkActive} checked={item.isActive} onClick={() =>changeActive(item)} disabled={isSaving}/>
+
                             </td>
                             
                         </tr>

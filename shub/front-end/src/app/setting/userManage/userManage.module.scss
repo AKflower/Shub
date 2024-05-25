@@ -58,8 +58,31 @@
                     
                     .action {
                         display: flex;
-                        justify-content: center;
+                        justify-content: flex-end;
                         align-items: center;
+                        .view{
+                            padding: 0.2em; 
+                            cursor: pointer;
+                            border-radius: 50%;
+                            margin-right: .5em;
+                            &:hover{
+                                background-color: silver;
+                            }
+                            img{
+                                width: 1.55em;
+                            }
+
+                        }
+                        .viewD{
+                            padding: 0.2em; 
+                            border-radius: 50%;
+                            margin-right: .5em;
+                            
+                            img{
+                                width: 1.55em;
+                            }
+
+                        }
 
                         .edit {
                             cursor: pointer;
@@ -69,6 +92,7 @@
                             &:hover{
                                 background-color: silver;
                             }
+                            
                         }
                         .checkActive{
                             cursor: pointer;

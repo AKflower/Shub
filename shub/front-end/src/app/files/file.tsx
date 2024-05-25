@@ -43,7 +43,6 @@ interface FoldersProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
-
 }
 
 
