@@ -5,18 +5,22 @@ import { User } from 'src/model/user.model';
 import { AuthService } from '../auth/auth.service';
 import * as bcrypt from "bcrypt";
 import { FabricService } from '../fabric/fabric.service';
-
+import { RoleService } from '../role/role.service';
 
 
 @Injectable()
 export class UserService {
   private contract: Contract;
+  private contractForRole: Contract;
+  
 
   constructor(
     private readonly fabricService: FabricService,
+    private readonly roleService: RoleService
   ) {
     this.contract = this.fabricService.getContract('UserContract');
-
+    this.contractForRole = this.fabricService.getContract('RoleContract');
+    
   }
   async getAllUser(contract: Contract): Promise<User[]> {
     const resultBytes= await contract.evaluateTransaction('GetAllUser');
@@ -72,19 +76,35 @@ export class UserService {
         lastName: result.lastName,
         isFirstAccess: result.isFirstAccess,
         role: result.role,
-        isActive: result.isActive
+        isActive: result.isActive,
     }
+    const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
+    user.role_name = roleDetail.role_name;
+    user.permissionIds=roleDetail.role_permissionIds;
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
 
     return user;
   }
-  async getSession(contract: Contract, user_id: string) : Promise<string> {
+  async getSession(contract: Contract, user_id: string) : Promise<User> {
     const resultBytes= await contract.evaluateTransaction('GetSession',user_id);
     const utf8Decoder = new TextDecoder();
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
-    return result;
+    const user : User = {
+      user_id: result.user_id,
+      email: result.email,
+      password: result.password,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      isFirstAccess: result.isFirstAccess,
+      role: result.role,
+      isActive: result.isActive,
+  }
+  const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
+  user.role_name = roleDetail.role_name;
+  user.permissionIds=roleDetail.role_permissionIds;
+    return user;
   }
   async createNewUser(contract: Contract, newUser : User): Promise<string> {
     console.log('check new user');

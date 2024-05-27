@@ -55,6 +55,7 @@ export class UserContract extends Contract {
 
         return newId;
     }
+    
     @Transaction()
     public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string, role: string): Promise<string>{
         const user_id = await this.generateUniqueId(ctx, 'user_');
@@ -79,6 +80,7 @@ export class UserContract extends Contract {
         return JSON.stringify(newUser)
 
     }
+
     @Transaction(false)
     public async GetUserById(ctx:Context, user_id:string): Promise<string>{
         console.log('Check');
@@ -248,7 +250,8 @@ export class UserContract extends Contract {
             email: userJSON.email,
             role: userJSON.role,
             fullName: userJSON.firstName + userJSON.lastName,
-            isActive: userJSON.isActive
+            isActive: userJSON.isActive,
+        
         }
         return JSON.stringify(userInfo);
       }

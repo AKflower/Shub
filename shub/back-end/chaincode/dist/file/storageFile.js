@@ -55,9 +55,49 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             folder_password: "",
             folder_lock: false
         };
+        const role1 = {
+            role_id: 'role_1',
+            idInt: 1,
+            role_name: 'admin',
+            level: -Infinity,
+            role_type: 1,
+            role_organization: '',
+            role_permissionIds: ['permission_1', 'permission_2', 'permission_3', 'permission_4']
+        };
+        const role2 = {
+            role_id: 'role_2',
+            idInt: 2,
+            role_name: 'user',
+            level: Infinity,
+            role_type: 1,
+            role_organization: '',
+            role_permissionIds: []
+        };
+        const permission1 = {
+            permission_id: 'permission_1',
+            permission_name: 'User manage',
+        };
+        const permission2 = {
+            permission_id: 'permission_2',
+            permission_name: 'User manage in Organization',
+        };
+        const permission3 = {
+            permission_id: 'permission_3',
+            permission_name: 'Role manage',
+        };
+        const permission4 = {
+            permission_id: 'permission_4',
+            permission_name: 'Lower-level document access',
+        };
         await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
         await ctx.stub.putState(admin.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(admin))));
         await ctx.stub.putState(folder.folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
+        await ctx.stub.putState(role1.role_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(role1))));
+        await ctx.stub.putState(role2.role_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(role2))));
+        await ctx.stub.putState(permission1.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission1))));
+        await ctx.stub.putState(permission2.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission2))));
+        await ctx.stub.putState(permission3.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission3))));
+        await ctx.stub.putState(permission4.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission4))));
         console.info(`Asset ${firstfile.file_id} initialized`);
         console.info(`Asset ${admin.user_id} initialized`);
     }

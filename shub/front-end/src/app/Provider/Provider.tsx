@@ -108,6 +108,8 @@ interface ShubContextProps {
     fetchDataSession: () => void;
     showResetPassword: string;
     toggleShowResetPassword: () => void;
+    showNewRole: string;
+    toggleShowNewRole: () => void;
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -322,7 +324,11 @@ const toggleShowResetPassword = () => {
   setCurrentPromptName(currentPromptName == '' ? 'more' : '');
 }
 
-
+const [showNewRole, setShowNewRole] = useState("");
+const toggleShowNewRole = () => {
+  setShowNewRole(showNewRole == '' ? 'more' : '');
+  setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+}
 const [isFavourite, setIsFavourite] = useState(false);
 const handleIsFavourite = (isFavourite: boolean) =>{
   setIsFavourite(isFavourite)
@@ -411,6 +417,8 @@ const value: ShubContextProps = {
     view,
     handleView,
 
+    showNewRole,
+    toggleShowNewRole,
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

@@ -44,7 +44,7 @@ import { FolderModule } from './modules/folder/folder.module';
 // import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
-
+import { RoleModule } from './modules/role/role.module';
 @Module({
   imports: [
     FileModule, 
@@ -52,6 +52,7 @@ import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
     UserModule, 
     FolderModule, 
     AuthModule,
+    RoleModule
    
     
   //   TypeOrmModule.forRoot({
