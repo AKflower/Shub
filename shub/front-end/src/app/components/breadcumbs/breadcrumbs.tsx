@@ -19,17 +19,11 @@ const Breadcrumbs =() => {
   const pathname = usePathname();
   let parts = pathname.split("/").filter(Boolean);
   let routes = parts.map((part,index) => {
-    
       let name = decodeURIComponent(part);
       let path = `/${parts.slice(0,index+1).join("/")}`
       return {name,path};
-  
-    
   })
-  // const name = pathname.split("/");
-  // name.splice(0,2);
-  console.log(routes)
-  
+
   return (
     <div className={styles.breadcrumbs}>
         

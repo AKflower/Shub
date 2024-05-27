@@ -9,7 +9,6 @@ import Cookies from 'js-cookie';
 import fonts from '../../../public/fonts/fonts';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
-import toast from 'react-hot-toast';
 import Alert from '@mui/material/Alert'
 
 const cx = classNames.bind(styles);
@@ -35,8 +34,6 @@ const Login: React.FC<Props> = () => {
   
   const footer = (
     <>
-        
-
         {newPassword.length < 8 && newPassword.length != 0 && (
           <div className={cx('div')}>
             <p className={cx('p','mt-2')}></p>
@@ -48,8 +45,6 @@ const Login: React.FC<Props> = () => {
             </ul>
           </div>
         )}
-        
-        
     </>
 );
 
@@ -88,11 +83,6 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
   try {
     
       const response = await axios.post('http://localhost:3001/auth/login', { email, password });
-      
-      
-      console.log(response.data);
-      // setUser(response.data);
-      // localStorage.setItem('user_id',response.data.user_id); //Delete?
       
       setId(response.data.user_id)
       setToken(response.data.access_token)
@@ -213,8 +203,6 @@ const changePass = async (event: React.FormEvent<HTMLFormElement>) => {
       setDisabled(false)
     }
   }
-
-  
 };
   
   return (

@@ -190,6 +190,7 @@ const handleSelect = (id: string, type1: string) => {
 const handleS = (id: string) => {
   
       setSelected(id);
+      showOption()
    
 }
 

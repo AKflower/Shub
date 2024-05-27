@@ -16,6 +16,7 @@ const Profile =  () => {
             <div className={styles.headerContainer}>
                 <h1 className={styles.header}>Setting</h1>
                 <Link href='/setting/userManage' style={sessionInfo.role === "User" ? {display: "none"}: {}}><button className={styles.button}>User Manager</button></Link>
+                <Link href='/setting/org' style={sessionInfo.role === "Admin" ? {display: "none"}: {}}><button className={styles.button}>Organization</button></Link>
             </div>
             <p className={styles.title}>Your Account</p>
             <SettingsForm actionBy='user'/>
