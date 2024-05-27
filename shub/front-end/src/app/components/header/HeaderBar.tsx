@@ -29,6 +29,7 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import PermanentlyDelete from '../prompts/PermanentlyDelete';
 import Restore from '../prompts/Restore';
 import Open from '../prompts/Open';
+import NewRole from '../prompts/NewRole';
 
 const cx = classNames.bind(styles);
 
@@ -82,6 +83,8 @@ const [showToast, setShowToast] = useState("");
     fetchDataSession,
     showResetPassword,
     toggleShowResetPassword,
+    showNewRole,
+    toggleShowNewRole,
     showLock,
     showOpen,
     toggleCurrentPromptName
@@ -326,6 +329,9 @@ const [showToast, setShowToast] = useState("");
       )}
       {showResetPassword && (
         <ResetPassword />
+      )}
+      {showNewRole && (
+        <NewRole />
       )}
       {children && (
         <Action

@@ -15,7 +15,7 @@ const Profile =  () => {
         <div className={fonts.poppins.className}>
             <div className={styles.headerContainer}>
                 <h1 className={styles.header}>Setting</h1>
-                <Link href='/setting/userManage' style={sessionInfo.role === "User" ? {display: "none"}: {}}><button className={styles.button}>User Manager</button></Link>
+               {sessionInfo && <Link href='/setting/userManage' style={sessionInfo.permissionIds.includes('permission_1') ? {} : {display: "none"}}><button className={styles.button}>User Manager</button></Link>}
             </div>
             <p className={styles.title}>Your Account</p>
             <SettingsForm actionBy='user'/>

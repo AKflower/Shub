@@ -4,14 +4,14 @@ import UserManage from './userManage'
 import { useEffect,useState} from 'react';
 
 export default function UserManagePage () {
-    const [role, setRole] = useState(null);
+    const [permissionIds, setPermissionIds] = useState<string[]>([]);
     const {sessionInfo} = useShub();
 
     useEffect(() => {
-        if (sessionInfo && sessionInfo.role) {
-            setRole(sessionInfo.role);
+        if (sessionInfo && sessionInfo.permissionIds) {
+            setPermissionIds(sessionInfo.permissionIds);
         }
     }, [sessionInfo]);
 
-    return role ? <UserManage role={role}/> : null;
+    return permissionIds ? <UserManage permissionIds={permissionIds}/> : null;
 }

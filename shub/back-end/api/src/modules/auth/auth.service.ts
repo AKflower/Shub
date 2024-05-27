@@ -6,7 +6,9 @@ import { BlacklistService } from './blacklist.service';
 import { FabricService } from '../fabric/fabric.service';
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import { ShubService } from 'src/config/shub.service';
+import { RoleService } from '../role/role.service';
 import * as bcrypt from "bcrypt";
+
 
 @Injectable()
 export class AuthService {
@@ -18,7 +20,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly blacklistService: BlacklistService,
     private readonly fabricService: FabricService,
-    private readonly shubService: ShubService
+    private readonly shubService: ShubService,
+
   ) {
     this.contract = this.fabricService.getContract('UserContract');
   }
@@ -31,7 +34,8 @@ export class AuthService {
 
     if (user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
-
+      console.log(user);
+      console.log(result);
       return result;
     }
 

@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useShub } from '@/app/Provider/Provider';
 import { useRouter } from 'next/navigation';
 import AccessDenied from '@/app/components/accessDenied/accessDenied';
+import Navigation from '../navigation/navigation';
 
 // const users= [
 //     {
@@ -40,7 +41,7 @@ import AccessDenied from '@/app/components/accessDenied/accessDenied';
 //     }
 //   ]
 
-const UserManage = ({role}:{role:string}) => {
+const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
   interface User {
     user_id: number,
     email: string,
@@ -128,7 +129,10 @@ const UserManage = ({role}:{role:string}) => {
     }
     return (
       <>
-      { role ==="Admin" ?
+      
+      { permissionIds.includes('permission_1') ?
+      <>
+       <Navigation />
        <div className={fonts.poppins.className+' '+styles.container}>
            <div className={styles.headerContainer}>
               <h1 className={styles.header}>User Manangement</h1>
@@ -178,6 +182,7 @@ const UserManage = ({role}:{role:string}) => {
             transition= {Bounce}
             />
         </div>
+        </>
           :
           <AccessDenied />       }
         </>

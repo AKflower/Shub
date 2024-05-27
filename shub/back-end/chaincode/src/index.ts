@@ -1,5 +1,5 @@
-import { StorageFileContract, UserContract } from './file/index'
+import { StorageFileContract, UserContract, RoleContract } from './file/index'
 
 
 
-export const contracts: any[] = [StorageFileContract, UserContract];
+export const contracts: any[] = [StorageFileContract, UserContract, RoleContract];

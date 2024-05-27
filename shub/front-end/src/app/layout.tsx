@@ -9,6 +9,7 @@ import { ShubProvider } from './Provider/Provider'
 import Breadcrumbs from './components/breadcumbs/breadcrumbs'
 
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

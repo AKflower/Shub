@@ -18,6 +18,10 @@ export class User {
 
     isFirstAccess?: boolean;
 
+    permissionIds?: string[];
+    
+    role_name?:string;
+
     constructor({email,password,firstName,lastName}) {
         
         if (email!=null) this.email=email;
