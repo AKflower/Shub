@@ -121,27 +121,28 @@ export class UserContract extends Contract {
     public async GetUserByOrganization(ctx: Context, organization: string): Promise<string> {
         const queryString = {
             selector: {
-                organization: organization,
+              organization: organization,
             },
-        };
-
-        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        const result = await iterator.next();
-
-        if (result.done) {
-            throw new Error(`User with organization ${organization} not found`);
-        }
-
-        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-        let record;
-        try {
-            record = JSON.parse(strValue);
-        } catch (err) {
-            console.log(err);
-            record = strValue;
-        }
-
-        return JSON.stringify(record);
+          };
+      
+          const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+          const allResults = [];
+      
+          let result = await iterator.next();
+          while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+              record = JSON.parse(strValue);
+            } catch (err) {
+              console.log(err);
+              record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+          }
+      
+          return JSON.stringify(allResults);
     }
     @Transaction(false)
     @Returns('boolean')

@@ -104,20 +104,22 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
             },
         };
         const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
-        const result = await iterator.next();
-        if (result.done) {
-            throw new Error(`User with organization ${organization} not found`);
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
         }
-        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
-        let record;
-        try {
-            record = JSON.parse(strValue);
-        }
-        catch (err) {
-            console.log(err);
-            record = strValue;
-        }
-        return JSON.stringify(record);
+        return JSON.stringify(allResults);
     }
     async UserExists(ctx, user_id) {
         const userJSON = await ctx.stub.getState(user_id);
