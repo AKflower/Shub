@@ -15,12 +15,13 @@ interface FoldersProps {
   folder_id: string,
   folder_name: string,
   folder_path: string,
-  user_id: string,
+  owner: string,
   created_date: string,
   updated_date: string,
   isFavourite: boolean,
   isDelete: boolean,
   share: string[],
+  user_id:string,
 
 }
 
@@ -30,7 +31,8 @@ interface FileProps {
   file_path: string,
   cid: string,
   file_type: string,
-  user_id: string,
+  owner: string,
+  user_id:string,
   created_date: string,
   updated_date: string,
   isFavourite: boolean,

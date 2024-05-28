@@ -40,12 +40,13 @@ const Info: FC<InfoProps> = () => {
          );
 
         if (type == 'folder'){
-          let name = res.data.find((el: { user_id: string; })  => el.user_id == infoFolder?.user_id)
-          setOwner(name.firstName + ' ' + name.lastName)
+          let name = res.data.find((el: { user_id: string; })  => el.user_id == (infoFolder?.owner ? infoFolder?.owner : infoFolder?.user_id))
+          console.log('daw',infoFolder?.user_id)
+          setOwner(name?.firstName + ' ' + name?.lastName)
         }
         else {
-          let name = res.data.find((el: { user_id: string; })  => el.user_id == infoFile?.user_id)
-          setOwner(name.firstName + ' ' + name.lastName)
+          let name = res.data.find((el: { user_id: string; })  => el.user_id == (infoFile?.owner ? infoFile?.owner : infoFile?.user_id))
+          setOwner(name?.firstName + ' ' + name?.lastName)
 
         }
 

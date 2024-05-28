@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 
 const Sidebar = () => {
     
-    const { toggleCurrentPromptName, toggleShowNewFile, toggleShowNewDir, toggleShowUpload } = useShub();
+    const { toggleCurrentPromptName, toggleShowNewFile, toggleShowNewDir, toggleShowUpload, sessionInfo } = useShub();
     const pathname = usePathname()
     const isLogin = (pathname=='/') //check login page ? not render : render
     const accessToken = Cookies.get('accessToken');
@@ -172,7 +172,7 @@ const Sidebar = () => {
             
             
         </div>
-        <div className={styles.buttonContainer} style={pathname.startsWith("/setting")? {display:'none'}: {}}>
+        <div className={styles.buttonContainer} style={((sessionInfo && !sessionInfo.permissionIds.includes('permission_5') && sessionInfo.role !== "role_1") ||pathname.startsWith("/setting") || pathname.startsWith("/shared") || pathname.startsWith("/trash") || pathname.startsWith("/favourite")) ? {display:'none'}: {}}>
         <Link href="">
                 <button
                 className={styles.button}

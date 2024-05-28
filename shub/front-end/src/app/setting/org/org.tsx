@@ -194,7 +194,6 @@ const Org = ({role}:{role:string}) => {
                             <td className={styles.action}>
                               {sessionInfo.permissionIds.includes('permission_2') && <Link href={`/setting/org/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>}
                               {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}><div className={styles.view}><img  src='/view.svg'></img></div></Link>)}
-                              {sessionInfo.permissionIds.includes('permission_2') && <input type="checkbox" className={styles.checkActive} checked={item.isActive} onClick={() =>changeActive(item)} disabled={isSaving}/>}
                             </td>
                             
                         </tr>

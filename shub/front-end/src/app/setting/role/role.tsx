@@ -42,7 +42,7 @@ export default function Role () {
     const [listRoles,setListRoles] = useState<RoleType[] | []>([])
     const fetchData = async () => {
         const params = {
-            role_organization: selectedOrgId,
+            role_organization: sessionInfo ? sessionInfo.organization : selectedOrgId,
         }
         const res = await axios.get(`http://localhost:3001/role/org`,{ params});
         var data : RoleType [] = [
@@ -77,7 +77,7 @@ export default function Role () {
     useEffect(() => {
         
         fetchData();
-      }, [selectedOrgId]
+      }, [selectedOrgId, sessionInfo]
       )
     const data = [
         {

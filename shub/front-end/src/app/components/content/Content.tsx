@@ -22,7 +22,8 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
   const accessToken = Cookies.get('accessToken');
   const { 
     handleStream,
-    name
+    name, 
+    toggleCurrentPromptName
   } = useShub();
 
   useEffect(() => {
@@ -66,11 +67,14 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
 
 
   const open = () => {
+    toggleCurrentPromptName()
     handleStream()
     window.open(src)
   }
 
   const down = () => {
+    toggleCurrentPromptName()
+  
     handleStream()
     const link = document.createElement('a');
     link.href = src;
@@ -134,7 +138,7 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
             </div>
             <div className={cx("card-action")}>
               <button
-                onClick={() => handleStream()}
+                onClick={() => {handleStream(); toggleCurrentPromptName()}}
                 className={cx('button','button--flat',"button--grey")}
                 aria-label="Cancel"
                 title="Cancel"
@@ -167,7 +171,7 @@ const Content: React.FC<ContentProps> = ({data, type}) => {
             </div>
             <div className={cx("card-action")}>
               <button
-                onClick={() => handleStream()}
+                onClick={() => {handleStream(); toggleCurrentPromptName()}}
                 className={cx('button','button--flat',"button--grey")}
                 aria-label="Cancel"
                 title="Cancel"

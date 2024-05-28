@@ -32,7 +32,8 @@ const Share: React.FC<MoveProps> = () => {
         handleChange,
         toggleCurrentPromptName,
         toggleShowShare,
-        share
+        share,
+        sessionInfo
     } = useShub();
 
     // const handleClick = (name: string) => {
@@ -102,9 +103,33 @@ const Share: React.FC<MoveProps> = () => {
 
     useEffect(()=>{
         const fetchData = async () => {
-
-            const res = await axios.get(`http://localhost:3001/user`,{
-
+            if(sessionInfo.role == 'role_1'){
+                const res = await axios.get(`http://localhost:3001/user`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              },);
+            
+                const itm:Item[] = []
+            
+                for (const pie in res.data){
+                    if(res.data[pie].user_id != userId){
+                        await itm.push({
+                            id: res.data[pie].user_id,
+                            name: res.data[pie].email,
+                            fname: res.data[pie].firstName,
+                            lname: res.data[pie].lastName,
+                        })
+                    }
+                }
+                setItems(itm)
+            }
+            else {
+                const res = await axios.get(`http://localhost:3001/user/org`,{
+                params:{
+                    organization: sessionInfo.organization
+                },
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`, 
@@ -125,10 +150,8 @@ const Share: React.FC<MoveProps> = () => {
                     })
                 }
             }
-            
-            
-            
             setItems(itm)
+            }
 
         }
         fetchData()

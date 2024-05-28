@@ -196,7 +196,7 @@ const Tool = () => {
           } 
         />
       </div>
-      {type !== 'folder' && (<div className={cx('icon')}>
+      {/* {type !== 'folder' && (<div className={cx('icon')}>
         <Action 
           icon={lock ? 
             (<img src='/unlock.svg'></img>) : (<img src='/lock.svg'></img>)}
@@ -208,7 +208,7 @@ const Tool = () => {
             }
           } 
         />
-      </div>)}
+      </div>)} */}
 
       
          

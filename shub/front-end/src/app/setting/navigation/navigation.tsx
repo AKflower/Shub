@@ -14,8 +14,7 @@ const Navigation = () => {
                     <nav className={styles.nav}>
                     <div className={styles.container}>
                         <ul className={styles.list}>
-                            {(sessionInfo.permissionIds.includes('permission_1') ) && <Link href="/setting/userManage"><li className={pathname === "/setting/userManage" ? styles.itemActive : styles.item}>User Management</li></Link>}
-                            {(!sessionInfo.permissionIds.includes('permission_1') && sessionInfo.permissionIds.includes('permission_2')) && <Link href="/setting/org"><li className={pathname === "/setting/org" ? styles.itemActive : styles.item}>Organization</li></Link>}
+                            {(sessionInfo.permissionIds.includes('permission_1') ) ? <Link href="/setting/userManage"><li className={pathname === "/setting/userManage" ? styles.itemActive : styles.item}>User Management</li></Link> : <Link href="/setting/org"><li className={pathname === "/setting/org" ? styles.itemActive : styles.item}>Organization</li></Link>}
                             {sessionInfo.permissionIds.includes('permission_3') && <Link href="/setting/role"><li className={pathname.startsWith("/setting/role" ) ? styles.itemActive : styles.item}>Role Setting</li></Link>}
                             {sessionInfo.permissionIds.includes('permission_3') && <Link href="/setting/permission"><li className={pathname.startsWith("/setting/permission" ) ? styles.itemActive : styles.item}>Permission</li></Link>}
                             
