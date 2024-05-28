@@ -38,10 +38,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             email: 'admin@hcmut.edu.vn',
             password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
             firstName: 'Admin',
-            role: "Admin",
+            role: "role_1",
             lastName: '',
             isFirstAccess: false,
             isActive: true,
+            organization: ""
         };
         const folder = {
             folder_id: 'folder_1',
@@ -89,6 +90,10 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             permission_id: 'permission_4',
             permission_name: 'Lower-level document access',
         };
+        const permission5 = {
+            permission_id: 'permission_5',
+            permission_name: 'Modify document'
+        };
         await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
         await ctx.stub.putState(admin.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(admin))));
         await ctx.stub.putState(folder.folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
@@ -98,6 +103,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         await ctx.stub.putState(permission2.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission2))));
         await ctx.stub.putState(permission3.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission3))));
         await ctx.stub.putState(permission4.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission4))));
+        await ctx.stub.putState(permission5.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission5))));
         console.info(`Asset ${firstfile.file_id} initialized`);
         console.info(`Asset ${admin.user_id} initialized`);
     }

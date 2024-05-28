@@ -41,6 +41,7 @@ import { FileModule } from './modules/file/file.module';
 import { FabricModule } from './modules/fabric/fabric.module';
 import { UserModule } from './modules/user/user.module';
 import { FolderModule } from './modules/folder/folder.module';
+import { PermissionModule } from './modules/permission/permission.module';
 // import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { BlacklistMiddleware } from './modules/auth/blacklist.middleware';
@@ -52,7 +53,8 @@ import { RoleModule } from './modules/role/role.module';
     UserModule, 
     FolderModule, 
     AuthModule,
-    RoleModule
+    RoleModule,
+    PermissionModule
    
     
   //   TypeOrmModule.forRoot({

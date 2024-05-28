@@ -47,7 +47,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         await ctx.stub.putState('counter', Buffer.from(idCounter.toString()));
         return newId;
     }
-    async NewUser(ctx, email, password, firstName, lastName, role) {
+    async NewUser(ctx, email, password, firstName, lastName, role, organization) {
         const user_id = await this.generateUniqueId(ctx, 'user_');
         const exists = await this.UserEmailExists(ctx, email);
         if (exists) {
@@ -61,7 +61,8 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
             lastName: lastName,
             role: role,
             isFirstAccess: true,
-            isActive: false
+            isActive: false,
+            organization: organization
         };
         await ctx.stub.putState(user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(newUser))));
         return JSON.stringify(newUser);
@@ -84,6 +85,28 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
         const result = await iterator.next();
         if (result.done) {
             throw new Error(`User with email ${email} not found`);
+        }
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
+        }
+        catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+        return JSON.stringify(record);
+    }
+    async GetUserByOrganization(ctx, organization) {
+        const queryString = {
+            selector: {
+                organization: organization,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        if (result.done) {
+            throw new Error(`User with organization ${organization} not found`);
         }
         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
         let record;
@@ -207,7 +230,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
             email: userJSON.email,
             role: userJSON.role,
             fullName: userJSON.firstName + userJSON.lastName,
-            isActive: userJSON.isActive
+            isActive: userJSON.isActive,
         };
         return JSON.stringify(userInfo);
     }
@@ -215,7 +238,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
 __decorate([
     (0, fabric_contract_api_1.Transaction)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "NewUser", null);
 __decorate([
@@ -230,6 +253,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "GetUserByEmail", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(false),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "GetUserByOrganization", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('boolean'),

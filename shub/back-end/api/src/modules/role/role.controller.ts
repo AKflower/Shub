@@ -57,5 +57,9 @@ export class RoleController {
         const {roles} = params;
         return this.roleService.updateLevel(this.contract,roles);
     }
-    
+    @Put('/updatePermissionIds')
+    async updatePermissionIds(@Body() params: {role_id: string, role_permissionIds: string[]}) {
+        const {role_id,role_permissionIds} = params;
+        return this.roleService.updateRolePermissionIds(this.contract,role_id,role_permissionIds)
+    }
 }

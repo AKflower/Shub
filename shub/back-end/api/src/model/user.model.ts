@@ -22,6 +22,10 @@ export class User {
     
     role_name?:string;
 
+    organization?:string;
+
+    level?: number;
+
     constructor({email,password,firstName,lastName}) {
         
         if (email!=null) this.email=email;

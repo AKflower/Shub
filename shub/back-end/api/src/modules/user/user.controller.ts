@@ -29,7 +29,10 @@ export class UserController {
         console.log('khoa: ',user_id);
         return this.userService.getUserByID(this.contract,user_id);
     }
-
+    @Get('/org')
+    async getRoleByOrg(@Query('organization') organization: string): Promise<User[]> {
+        return this.userService.getUserByOrganization(this.contract, organization);
+    }
     
     @Post('/new')
     async createNewUser(@Body() newUser: User) {

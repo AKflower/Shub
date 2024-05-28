@@ -37,10 +37,11 @@ export class StorageFileContract extends Contract {
             email: 'admin@hcmut.edu.vn',
             password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
             firstName: 'Admin',
-            role: "Admin",
+            role: "role_1",
             lastName:'',
             isFirstAccess: false,
             isActive: true,
+            organization: ""
             
           }
            
@@ -95,6 +96,10 @@ export class StorageFileContract extends Contract {
             permission_id: 'permission_4',
             permission_name: 'Lower-level document access',
           }
+          const permission5: Permission = {
+            permission_id: 'permission_5',
+            permission_name: 'Modify document'
+          }
             await ctx.stub.putState(firstfile.file_id, Buffer.from(stringify(sortKeysRecursive(firstfile))));
             await ctx.stub.putState(admin.user_id, Buffer.from(stringify(sortKeysRecursive(admin))));
             await ctx.stub.putState(folder.folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
@@ -104,6 +109,7 @@ export class StorageFileContract extends Contract {
             await ctx.stub.putState(permission2.permission_id, Buffer.from(stringify(sortKeysRecursive(permission2))));
             await ctx.stub.putState(permission3.permission_id, Buffer.from(stringify(sortKeysRecursive(permission3))));
             await ctx.stub.putState(permission4.permission_id, Buffer.from(stringify(sortKeysRecursive(permission4))));
+            await ctx.stub.putState(permission5.permission_id, Buffer.from(stringify(sortKeysRecursive(permission5))));
 
             console.info(`Asset ${firstfile.file_id} initialized`);
             console.info(`Asset ${admin.user_id} initialized`);

@@ -18,9 +18,12 @@ type User = {
   firstName: string,
   lastName: string,
 }    
+
 const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userAffected?:User | null,isAddNew?: boolean}) => {
   const router = useRouter();
   const {sessionInfo}=useShub()
+
+  const [selectedOrgId, setSelectedOrgId] = useState('Org1');
   const [isSaving, setIsSaving] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorFirstName,setErrorFirstName] = useState(false);
@@ -29,7 +32,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const [email,setEmail] = useState<string>("");
   const [firstName,setFirstName] = useState<string>("");
   const [lastName,setLastName] = useState<string>("");
-  const [role,setRole] = useState<string>("Admin");
+  const [role,setRole] = useState<string>("");
   useEffect(() => {
     console.log('test: ', errorEmail);
   }, [errorEmail]);
@@ -66,12 +69,14 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
       setIsSaving(false);
       return;      
     }
+    console.log(role);
      const newUser = {
         email: email,
         password: email,
         firstName: firstName,
         lastName: lastName,
         role: role,
+        organization: selectedOrgId
      }
      axios.post(`http://localhost:3001/user/new`, newUser,{
               
@@ -94,7 +99,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
               setFirstName('');
               setLastName('');
               setErrorEmail(false);
-              setRole('Admin')
+              setRole('')
               setIsSaving(false)
 
           })
@@ -124,12 +129,65 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
 
 
     const [user, setUser] = useState<User | null >(null);
-    const roles = [
-        "Admin","User"
-    ]
+    const orgs= [
+      {
+          id: "Org1",
+          name: "Khoa Máy Tính"
+      },
+      {
+          id: "Org2",
+          name: "Phòng đào tạo"
+      },
+      {
+          id: "Org3",
+          name: "Phòng CTCTSV"
+      }
+  ]
+  interface Role {
+    role_id: string;
+    idInt: number;
+    level: number;
+    role_name: string;
+    role_type: number;
+    role_organization: string;
+  }
+  const [roles,setRoles] = useState<Role[]>([])
+  const [rolesName,setRolesName] = useState<string[]>([])
+
+  const fetchData = async () => {
+      const params = {
+          role_organization: selectedOrgId,
+      }
+      const res = await axios.get(`http://localhost:3001/role/org`,{ params});
+      
+      var roleName: string [] = []
+      
+      res.data.forEach((item: Role) => {
+        roleName.push(item.role_name);
+      })
+      setRolesName(roleName)
+      
+      setRoles(res.data);
+      setRole(res.data[0])
+    }
+  useEffect(() => {
+      
+      fetchData();
+    }, [selectedOrgId]
+    )
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOrgId(event.target.value);
+  };
+
+  const handleChangeRole =  (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(event.target.value)
+    setRole(event.target.value);
+    
+  }
     const themes = [
         "Light", "Dark"
     ]
+  
   // Lấy thông tin người dùng từ localStorage khi component được render
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -151,7 +209,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='Last name' type='text' value={user.lastName} />
                 <Input label='Email' type='email' value={user.email} />
                 <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
-                <Select label='Role' list={roles} value={role}/>
+                <Select label='Role' list={rolesName} value={role}/>
             </div>
             <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
                 <Select label='Themes' list={themes} />
@@ -171,42 +229,65 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     if (isAddNew) {
       //Add new user
       return (
-        <form action="" className={fonts.poppins.className}>
+        <>
+          {sessionInfo && <form action="" className={fonts.poppins.className}>
                 
-        <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
-            <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName} isError={errorFirstName} isProcessing={isSaving}/>
-            <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName} isError={errorLastName} isProcessing={isSaving}/>
-            <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail} isError={errorEmail} isProcessing={isSaving}/>
-            <Input label='Password' type='password' isDisabled={true} value={email} onChange={setPassword} isProcessing={isSaving}/>
-            <Select label='Role' list={roles} value={role} onChange={setRole}/>
-        </div>
-        <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
-            <Select label='Themes' list={themes}/>
-    
-        </div>
+                <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
+                    <Input label='First name' type='text' isDisabled={false} value={firstName} onChange={setFirstName} isError={errorFirstName} isProcessing={isSaving}/>
+                    <Input label='Last name' type='text' isDisabled={false} value={lastName} onChange={setLastName} isError={errorLastName} isProcessing={isSaving}/>
+                    <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail} isError={errorEmail} isProcessing={isSaving}/>
+                    <Input label='Password' type='password' isDisabled={true} value={email} onChange={setPassword} isProcessing={isSaving}/>
+                    {<div style={{display:'flex',flexDirection:'column'}}>
+                      <label htmlFor="" className="" style={{    fontSize: '0.8rem',color: '#546E7A'}}>Organization</label>  
+                      <select value={selectedOrgId} onChange={handleChange} style={{padding:'.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver',width: '80%',background: !sessionInfo.permissionIds.includes('permission_1') ? '#f7f7f7' : 'white'}} disabled={!sessionInfo.permissionIds.includes('permission_1')}>
+                            {orgs.map((org) => (
+                            <option key={org.id} value={org.id}>
+                                {org.name}
+                            </option>
+                        ))}
+                      </select>
+                    </div>}
+                    <div style={{display:'flex',flexDirection:'column'}}>
+                      <label htmlFor="" className="" style={{    fontSize: '0.8rem',color: '#546E7A'}}>Role</label>  
+                      <select value={role} onChange={handleChangeRole} style={{padding:'.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver',width: '80%'}} >
+                            {roles.map((role) => (
+                            <option key={role.role_id} value={role.role_id}>
+                                {role.role_name}
+                            </option>
+                        ))}
+                      </select>
+                    </div>
         
-        <div className={styles.buttonContainer}>
-            <Button1 name='Cancel' type='' onClick={handleCancel} isDisabled={isSaving}/>
-            <Button1 name='Save' type='success' onClick={handleSubmit} isDisabled={isSaving}/>
-           <ToastContainer
-            position="bottom-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-            transition= {Bounce}
-            />
+                </div>
+                <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
+                    <Select label='Themes' list={themes}/>
             
-        </div>
-           
-     
+                </div>
+                
+                <div className={styles.buttonContainer}>
+                    <Button1 name='Cancel' type='' onClick={handleCancel} isDisabled={isSaving}/>
+                    <Button1 name='Save' type='success' onClick={handleSubmit} isDisabled={isSaving}/>
+                   <ToastContainer
+                    position="bottom-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                    transition= {Bounce}
+                    />
+                    
+                </div>
+                   
+             
+                
+            </form>}
+        </>
         
-    </form>
       )
     } else {
       return (
@@ -219,7 +300,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
             <Input label='Last name' type='text' value={userAffected?.lastName}/>
             <Input label='Email' type='email' value={userAffected?.email} />
             <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={userAffected?.user_id}/>
-            <Select label='Role' list={roles}/>
+            <Select label='Role' list={rolesName}/>
         </div>
         <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
             <Select label='Themes' list={themes}/>

@@ -75,7 +75,7 @@ export class RoleService {
         role_organization: item.role_organization,
         level: item.level,
         role_type: item.role_type,
-
+        role_permissionIds: item.role_permissionIds
       }
       roles.push(role);
     }
@@ -132,5 +132,9 @@ export class RoleService {
     await contract.submitTransaction('UpdateLevel',rolesParam);
     return "Update successfully!"
   }
-  
+  async updateRolePermissionIds(contract: Contract,role_id: string, role_permissionIds: string[]): Promise<string>{
+    const rolesParam = JSON.stringify(role_permissionIds);
+    await contract.submitTransaction('UpdatePermissionIds',role_id,rolesParam);
+    return "Update successfully!"
+  }
 }

@@ -27,7 +27,7 @@ export class PermissionContract extends Contract {
                 console.log(err);
                 record = strValue;
             }
-            if (record.role_id && record.role_id.startsWith('permission_')) {
+            if (record.permission_id && record.permission_id.startsWith('permission_')) {
                 allResults.push(record);
             }
             result = await iterator.next();
