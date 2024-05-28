@@ -99,7 +99,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
               setFirstName('');
               setLastName('');
               setErrorEmail(false);
-              setRole('')
+              setRole(roles[0].role_id)
               setIsSaving(false)
 
           })
