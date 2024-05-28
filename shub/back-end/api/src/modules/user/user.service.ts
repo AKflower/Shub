@@ -37,7 +37,8 @@ export class UserService {
         lastName: item.lastName,
         role: item.role,
         isActive: item.isActive,
-        isFirstAccess: item.isFirstAccess
+        isFirstAccess: item.isFirstAccess,
+        organization: item.organization
       }
       const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
       user.role_name = roleDetail.role_name;
@@ -60,6 +61,8 @@ export class UserService {
       password: result.password,
       firstName: result.firstName,
       lastName: result.lastName,
+      organization: result.organization
+
     }
     console.log('*** Result:', result);
     console.log('*** Transaction committed successfully');
@@ -81,6 +84,8 @@ export class UserService {
         isFirstAccess: result.isFirstAccess,
         role: result.role,
         isActive: result.isActive,
+        organization: result.organization
+
     }
     const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
     user.role_name = roleDetail.role_name;
@@ -104,6 +109,8 @@ export class UserService {
       isFirstAccess: result.isFirstAccess,
       role: result.role,
       isActive: result.isActive,
+      organization: result.organization
+
   }
   const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
   user.role_name = roleDetail.role_name;

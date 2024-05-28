@@ -168,7 +168,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
       setRolesName(roleName)
       
       setRoles(res.data);
-      setRole(res.data[0])
+      setRole(res.data[0].role_id)
     }
   useEffect(() => {
       
