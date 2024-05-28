@@ -119,11 +119,14 @@ export class UserService {
     return user;
   }
   async getUserByOrganization(contract: Contract,organization: string) : Promise<User[]> {
+    console.log(organization);
     const resultBytes= await contract.evaluateTransaction('GetUserByOrganization',organization);
     const utf8Decoder = new TextDecoder();
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
+    console.log(result);
     const users : User[] = [];
+    if (Array.isArray(result))
     for (const item of result) {
       const user : User = {
         user_id: item.user_id,
@@ -136,13 +139,17 @@ export class UserService {
         isFirstAccess: item.isFirstAccess,
         organization: item.organization
       }
+      
       const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
+      console.log(roleDetail);
       user.role_name = roleDetail.role_name;
       user.permissionIds=roleDetail.role_permissionIds;
       user.level = roleDetail.level;
       users.push(user);
     }
-    return users;}
+    else users.push(result);
+    return users;
+  }
   async createNewUser(contract: Contract, newUser : User): Promise<string> {
     console.log('check new user');
     const saltOfRounds = 10;

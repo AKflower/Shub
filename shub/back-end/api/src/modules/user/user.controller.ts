@@ -24,15 +24,17 @@ export class UserController {
     getSession(@Query('user_id') user_id : string) {
         return this.userService.getSession(this.contract,user_id);
     }
+    @Get('/org')
+    async getRoleByOrg(@Query('organization') organization: string): Promise<User[]> {
+        console.log('test: ',organization);
+        return this.userService.getUserByOrganization(this.contract, organization);
+    }
     @Get('/:user_id')
     getUserByID(@Param('user_id') user_id: string): Promise<User>{
         console.log('khoa: ',user_id);
         return this.userService.getUserByID(this.contract,user_id);
     }
-    @Get('/org')
-    async getRoleByOrg(@Query('organization') organization: string): Promise<User[]> {
-        return this.userService.getUserByOrganization(this.contract, organization);
-    }
+    
     
     @Post('/new')
     async createNewUser(@Body() newUser: User) {

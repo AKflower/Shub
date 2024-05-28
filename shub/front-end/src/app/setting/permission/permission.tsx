@@ -74,13 +74,37 @@ export default function Permission() {
         })
 
     }
+    const orgs= [
+        {
+            id: "Org1",
+            name: "Khoa Máy Tính"
+        },
+        {
+            id: "Org2",
+            name: "Phòng đào tạo"
+        },
+        {
+            id: "Org3",
+            name: "Phòng CTCTSV"
+        }
+    ]
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedOrgId(event.target.value);
+      };
     return (
         <>
            <Navigation />
            <div className={styles.container}>
-                {/* <div className={styles.header}>
-                    <button className="">Save</button>
-                </div> */}
+                <div className={styles.header}>
+                <label htmlFor="" className="">Organization</label>
+                <select value={selectedOrgId} onChange={handleChange} style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
+                    {orgs.map((org) => (
+                    <option key={org.id} value={org.id}>
+                        {org.name}
+                    </option>
+                ))}
+            </select>
+                </div>
                 <table className={styles.table}>
                 <thead className={styles.thead}>
                     <tr className={styles.tr}>
