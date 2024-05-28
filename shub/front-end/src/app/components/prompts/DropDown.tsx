@@ -21,7 +21,8 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
-    if (!isOpen) setIsOpen(true);
+    if (!isOpen) setIsOpen(true)
+    else  setIsOpen(false)
   };
   const handleTrue = () => {
     setIsOpen(true);
@@ -43,7 +44,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
       className={cx('container')} 
       onSelect={handleTrue} 
       onClick={handleToggle} 
-      onBlur={handleLeave}
+      onMouseLeave={handleLeave}
     >
      
         {children}
@@ -56,7 +57,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
                 <div className={cx('left')}>
                   {option.type == 'folder' ? 
                       <img src="/folder.svg" alt="" />
-                    : option.type == 'jpeg' || option.type == 'png' || option.type=='svg+xml' ?
+                    : option.type == 'jpeg' || option.type == 'png'  ?
                       <img src="/img.svg" alt="" />
                     : option.type == 'mp4' ?
                       <img src="/video.svg" alt="" />

@@ -48,14 +48,19 @@ const Org = ({role}:{role:string}) => {
     firstName: string,
     lastName: string,
     role: string,
+    role_name: string,
     organization: string,
     isActive: boolean,
     isFirstAccess: boolean,
+    level: number
   }
 
-  const { handleView } = useShub();
+  const { 
+    handleView,
+    sessionInfo
+   } = useShub();
 
-  const [reload,setReload] = useState(false)
+  const [reload, setReload] = useState(false)
   const [isSaving,setIsSaving] = useState(false)
   const [users,setUsers]  = useState<User[]>([])
   const userId = Cookies.get('userId');
@@ -63,15 +68,19 @@ const Org = ({role}:{role:string}) => {
   
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get(`http://localhost:3001/user`);
+      const res = await axios.get(`http://localhost:3001/user/org`,{
+        params: {
+          organization: 'Org1'
+        }
+      });
       res.data.forEach((item: User) => {
         item.fullName=item.firstName+' '+item.lastName;
       })
       setUsers(res.data);
   
-      console.log(users);
     }
     fetchData();
+
   }, [reload]
   )
   const accessToken = Cookies.get('accessToken');
@@ -130,6 +139,10 @@ const Org = ({role}:{role:string}) => {
         item.check= !item.check;
     }
     const dis = false
+    console.log(users);
+    {console.log(typeof(sessionInfo.level))}
+
+
     return (
       <>
       { role !=="role_1" ?
@@ -155,9 +168,10 @@ const Org = ({role}:{role:string}) => {
                             <td>{item.fullName}</td>
                             <td className={styles.blue}>{item.email}</td>
                             <td>Computer Science and Engineer</td>
-                            <td>{item.role}</td>
+                            <td>{item.role_name}</td>
                             <td className={styles.action}>
-                              {item.user_id != userId &&(<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}>{dis ? (<div  className={styles.viewD}><img  src='/viewD.svg'></img></div>) : (<div className={styles.view}><img  src='/view.svg'></img></div>)}</Link>)}
+                              {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}>{dis ? (<div  className={styles.viewD}><img  src='/viewD.svg'></img></div>) : (<div className={styles.view}><img  src='/view.svg'></img></div>)}</Link>)}
+                              {/* { sessionInfo.level < item.level ? `${sessionInfo.level}` : `${item.level}`} */}
                             </td>
                             
                         </tr>

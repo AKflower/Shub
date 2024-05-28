@@ -29,6 +29,9 @@ export class User {
     @Property()
     public isActive: boolean;
 
+    @Property()
+    public organization: string;
+
    
     
    

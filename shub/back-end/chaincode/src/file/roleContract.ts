@@ -139,6 +139,20 @@ export class RoleContract extends Contract {
         
 
     }
+    @Transaction()
+      public async UpdatePermissionIds(ctx: Context, role_id: string,role_permissionIds: string): Promise<void> {
+          
+         const roleString = await this.GetRoleById(ctx,role_id);
+
+          const roleJSON = JSON.parse(roleString);
+
+          const role_permissionIdsArray = JSON.parse(role_permissionIds)
+
+          roleJSON.role_permissionIds = role_permissionIdsArray;
+
+          await ctx.stub.putState(role_id,Buffer.from(stringify(sortKeysRecursive(roleJSON))))
+          
+    }
     @Transaction(false)
     public async GetRoleActive(ctx: Context): Promise<string> {
         const queryString = {

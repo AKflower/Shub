@@ -39,6 +39,10 @@ export class UserService {
         isActive: item.isActive,
         isFirstAccess: item.isFirstAccess
       }
+      const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
+      user.role_name = roleDetail.role_name;
+      user.permissionIds=roleDetail.role_permissionIds;
+      user.level = roleDetail.level;
       users.push(user);
     }
     return users;
@@ -104,14 +108,40 @@ export class UserService {
   const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
   user.role_name = roleDetail.role_name;
   user.permissionIds=roleDetail.role_permissionIds;
+  user.level = roleDetail.level;
     return user;
   }
+  async getUserByOrganization(contract: Contract,organization: string) : Promise<User[]> {
+    const resultBytes= await contract.evaluateTransaction('GetUserByOrganization',organization);
+    const utf8Decoder = new TextDecoder();
+    const resultJson = utf8Decoder.decode(resultBytes);
+    const result = JSON.parse(resultJson);
+    const users : User[] = [];
+    for (const item of result) {
+      const user : User = {
+        user_id: item.user_id,
+        email: item.email,
+        // password: item.password,
+        firstName: item.firstName,
+        lastName: item.lastName,
+        role: item.role,
+        isActive: item.isActive,
+        isFirstAccess: item.isFirstAccess,
+        organization: item.organization
+      }
+      const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
+      user.role_name = roleDetail.role_name;
+      user.permissionIds=roleDetail.role_permissionIds;
+      user.level = roleDetail.level;
+      users.push(user);
+    }
+    return users;}
   async createNewUser(contract: Contract, newUser : User): Promise<string> {
     console.log('check new user');
     const saltOfRounds = 10;
     newUser.password = await bcrypt.hash(newUser.password, saltOfRounds);
     
-    const resUTF8=await contract.submitTransaction('NewUser',newUser.email,newUser.password,newUser.firstName,newUser.lastName,newUser.role);
+    const resUTF8=await contract.submitTransaction('NewUser',newUser.email,newUser.password,newUser.firstName,newUser.lastName,newUser.role,newUser.organization);
     const utf8Decoder = new TextDecoder();
     const res = utf8Decoder.decode(resUTF8);
 

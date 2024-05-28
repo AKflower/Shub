@@ -7,4 +7,5 @@ export declare class User {
     role: string;
     isFirstAccess: boolean;
     isActive: boolean;
+    organization: string;
 }

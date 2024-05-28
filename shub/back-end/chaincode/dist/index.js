@@ -2,5 +2,5 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.contracts = void 0;
 const index_1 = require("./file/index");
-exports.contracts = [index_1.StorageFileContract, index_1.UserContract, index_1.RoleContract];
+exports.contracts = [index_1.StorageFileContract, index_1.UserContract, index_1.RoleContract, index_1.PermissionContract];
 //# sourceMappingURL=index.js.map

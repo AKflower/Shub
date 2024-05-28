@@ -48,6 +48,10 @@ __decorate([
     (0, fabric_contract_api_1.Property)(),
     __metadata("design:type", Boolean)
 ], User.prototype, "isActive", void 0);
+__decorate([
+    (0, fabric_contract_api_1.Property)(),
+    __metadata("design:type", String)
+], User.prototype, "organization", void 0);
 User = __decorate([
     (0, fabric_contract_api_1.Object)()
 ], User);

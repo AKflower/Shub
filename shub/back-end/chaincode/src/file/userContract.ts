@@ -57,7 +57,7 @@ export class UserContract extends Contract {
     }
     
     @Transaction()
-    public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string, role: string): Promise<string>{
+    public async NewUser(ctx: Context, email: string, password: string, firstName: string, lastName: string, role: string,organization:string): Promise<string>{
         const user_id = await this.generateUniqueId(ctx, 'user_');
         const exists =await this.UserEmailExists(ctx, email);
         if (exists) {
@@ -74,7 +74,8 @@ export class UserContract extends Contract {
             lastName: lastName,
             role: role,
             isFirstAccess: true,
-            isActive: false
+            isActive: false,
+            organization: organization
         };
         await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(newUser))));
         return JSON.stringify(newUser)
@@ -103,6 +104,32 @@ export class UserContract extends Contract {
 
         if (result.done) {
             throw new Error(`User with email ${email} not found`);
+        }
+
+        const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+        let record;
+        try {
+            record = JSON.parse(strValue);
+        } catch (err) {
+            console.log(err);
+            record = strValue;
+        }
+
+        return JSON.stringify(record);
+    }
+    @Transaction(false)
+    public async GetUserByOrganization(ctx: Context, organization: string): Promise<string> {
+        const queryString = {
+            selector: {
+                organization: organization,
+            },
+        };
+
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+
+        if (result.done) {
+            throw new Error(`User with organization ${organization} not found`);
         }
 
         const strValue = Buffer.from(result.value.value.toString()).toString('utf8');

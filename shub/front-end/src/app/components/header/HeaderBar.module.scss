@@ -111,10 +111,11 @@
     text-indent: 1em;
     height: 100%;
     outline: 0;
+    border-radius: 10px;
+
     &:focus{
       background: #fff;
-  border-radius: 10px;
-  border: 2px solid #6b9bd2;
+    border: 2px solid #6b9bd2;
     }
   }
 
