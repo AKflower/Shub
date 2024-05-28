@@ -47,8 +47,6 @@ interface FoldersProps {
 
 
 const File = () => {
-
-
     const {  change, resetSelect, hideOption } = useShub();
     const [blank, setBlank] = useState('');
     const [folder, setFolder] = useState<FoldersProps[]>([]);
@@ -56,7 +54,6 @@ const File = () => {
     const pathname = usePathname()
     const accessToken = Cookies.get('accessToken');
     const router = useRouter();
-
 
     const userId = Cookies.get('userId');
     useEffect(() => {

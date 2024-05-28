@@ -124,7 +124,7 @@ export class UserService {
     const utf8Decoder = new TextDecoder();
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);
-    console.log(result);
+    console.log('daw',result);
     const users : User[] = [];
     if (Array.isArray(result))
     for (const item of result) {

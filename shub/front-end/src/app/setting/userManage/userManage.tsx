@@ -41,6 +41,21 @@ import Navigation from '../navigation/navigation';
 //     }
 //   ]
 
+const orgs= [
+  {
+      id: "Org1",
+      name: "Khoa Máy Tính"
+  },
+  {
+      id: "Org2",
+      name: "Phòng đào tạo"
+  },
+  {
+      id: "Org3",
+      name: "Phòng CTCTSV"
+  }
+]
+
 const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
   interface User {
     user_id: string,
@@ -49,13 +64,13 @@ const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
     firstName: string,
     lastName: string,
     role: string,
+    role_name: string,
     organization: string,
     isActive: boolean,
     isFirstAccess: boolean,
   }
 
   const { handleView } = useShub();
-
   const [reload,setReload] = useState(false)
   const [isSaving,setIsSaving] = useState(false)
   const [users,setUsers]  = useState<User[]>([])
@@ -130,7 +145,8 @@ const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
         
         item.check= !item.check;
     }
-    const dis = false
+    console.log(users)
+
     return (
       <>
       
@@ -160,11 +176,11 @@ const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
                         <tr>
                             <td>{item.fullName}</td>
                             <td className={styles.blue}>{item.email}</td>
-                            <td>Computer Science and Engineer</td>
-                            <td>{item.role}</td>
+                            <td>{orgs.find((el: { id: string; })  => el.id == item.organization)?.name}</td>
+                            <td>{item.role_name}</td>
                             <td className={styles.action}>
                               <Link href={`/setting/userManage/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>
-                              {item.user_id != userId &&(<Link onClick={() => handleView(item.user_id)} href={`/setting/userManage/${item.user_id}/view`}>{dis ? (<div  className={styles.viewD}><img  src='/viewD.svg'></img></div>) : (<div className={styles.view}><img  src='/view.svg'></img></div>)}</Link>)}
+                              {item.user_id != userId && item.isActive && (<Link onClick={() => handleView(item.user_id)} href={`/setting/userManage/${item.user_id}/view`}><div className={styles.view}><img  src='/view.svg'></img></div></Link>)}
 
                               <input type="checkbox" className={styles.checkActive} checked={item.isActive} onClick={() =>changeActive(item)} disabled={isSaving}/>
 

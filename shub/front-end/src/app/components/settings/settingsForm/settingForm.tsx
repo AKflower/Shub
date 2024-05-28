@@ -8,7 +8,7 @@ import fonts from '../../../../../public/fonts/fonts';
 import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { error } from 'console';
 import { useShub } from '@/app/Provider/Provider';
 
@@ -21,8 +21,8 @@ type User = {
 
 const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userAffected?:User | null,isAddNew?: boolean}) => {
   const router = useRouter();
-  const {sessionInfo}=useShub()
-
+  const { sessionInfo } = useShub()
+  const pathname = usePathname()
   const [selectedOrgId, setSelectedOrgId] = useState('Org1');
   const [isSaving, setIsSaving] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
@@ -33,20 +33,23 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const [firstName,setFirstName] = useState<string>("");
   const [lastName,setLastName] = useState<string>("");
   const [role,setRole] = useState<string>("");
+
   useEffect(() => {
     console.log('test: ', errorEmail);
   }, [errorEmail]);
+
   useEffect(() => {
     if (errorEmail) setErrorEmail(false)
-    
-    
   },[email])
+
   useEffect(() => {
     if (errorFirstName) setErrorFirstName(false)
   },[firstName])
+
   useEffect(() => {
     if (errorLastName) setErrorLastName(false)
   },[lastName])
+
   const handleSubmit = (event : any) => {
     event.preventDefault();
     setIsSaving(true);
@@ -124,7 +127,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     } 
   const handleCancel = (event:any) => {
     event.preventDefault();
-    router.push('/setting/userManage');
+    if(pathname.includes('org')) router.push('/setting/org');
+    else router.push('/setting/userManage');
   }
 
 
@@ -156,10 +160,10 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const [rolesName,setRolesName] = useState<string[]>([])
 
   const fetchData = async () => {
-      const params = {
-          role_organization: selectedOrgId,
-      }
-      const res = await axios.get(`http://localhost:3001/role/org`,{ params});
+      
+      const res = await axios.get(`http://localhost:3001/role/org`,{ params: {
+        role_organization: selectedOrgId
+      }});
       
       var roleName: string [] = []
       
@@ -167,9 +171,10 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         roleName.push(item.role_name);
       })
       setRolesName(roleName)
+      console.log('tead',res.data)
       
       setRoles(res.data);
-      setRole(res.data[0].role_id)
+      setRole(res.data[0]?.role_id)
     }
   useEffect(() => {
       
@@ -209,7 +214,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='Last name' type='text' value={user.lastName} />
                 <Input label='Email' type='email' value={user.email} />
                 <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
-                <Input label='Role' type='text' value={sessionInfo.role_name}/> 
+                <Input label='Role' type='text' value={sessionInfo?.role_name}/> 
             </div>
         </form>
     )
@@ -250,10 +255,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                     </div>
         
                 </div>
-                <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
-                    <Select label='Themes' list={themes}/>
-            
-                </div>
+               
                 
                 <div className={styles.buttonContainer}>
                     <Button1 name='Cancel' type='' onClick={handleCancel} isDisabled={isSaving}/>
@@ -295,10 +297,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
             <Select label='Role' list={rolesName}/>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
-            <Select label='Themes' list={themes}/>
-    
-        </div>
+        
         
         <div className={styles.buttonContainer}>
             <Button1 name='Cancel' type='' isDisabled={isSaving}/>

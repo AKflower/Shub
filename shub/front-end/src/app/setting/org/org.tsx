@@ -40,6 +40,21 @@ import AccessDenied from '@/app/components/accessDenied/accessDenied';
 //     }
 //   ]
 
+const orgs= [
+  {
+      id: "Org1",
+      name: "Khoa Máy Tính"
+  },
+  {
+      id: "Org2",
+      name: "Phòng đào tạo"
+  },
+  {
+      id: "Org3",
+      name: "Phòng CTCTSV"
+  }
+]
+
 const Org = ({role}:{role:string}) => {
   interface User {
     user_id: string,
@@ -68,11 +83,14 @@ const Org = ({role}:{role:string}) => {
   
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get(`http://localhost:3001/user/org`,{
-        params: {
-          organization: 'Org1'
-        }
-      });
+      // const res = await axios.get(`http://localhost:3001/user/org`,{
+      //   params: {
+      //     organization: 'Org1'
+      //   }
+      // });
+
+      const res = await axios.get(`http://localhost:3001/user`);
+
       res.data.forEach((item: User) => {
         item.fullName=item.firstName+' '+item.lastName;
       })
@@ -138,9 +156,7 @@ const Org = ({role}:{role:string}) => {
         
         item.check= !item.check;
     }
-    const dis = false
     console.log(users);
-    {console.log(typeof(sessionInfo.level))}
 
 
     return (
@@ -149,6 +165,8 @@ const Org = ({role}:{role:string}) => {
        <div className={fonts.poppins.className+' '+styles.container}>
            <div className={styles.headerContainer}>
               <h1 className={styles.header}>Organization</h1>
+              {sessionInfo.permissionIds.includes('permission_2') && (<Link href='/setting/org/newUser'><button className={styles.button}>Add User</button></Link>)}
+
            </div>
            
            <div className={styles.tableContainer}>
@@ -167,10 +185,10 @@ const Org = ({role}:{role:string}) => {
                         <tr>
                             <td>{item.fullName}</td>
                             <td className={styles.blue}>{item.email}</td>
-                            <td>Computer Science and Engineer</td>
+                            <td>{orgs.find((el: { id: string; })  => el.id == item.organization)?.name}</td>
                             <td>{item.role_name}</td>
                             <td className={styles.action}>
-                              {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}>{dis ? (<div  className={styles.viewD}><img  src='/viewD.svg'></img></div>) : (<div className={styles.view}><img  src='/view.svg'></img></div>)}</Link>)}
+                              {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}><div  className={styles.view}><img  src='/view.svg'></img></div></Link>)}
                               {/* { sessionInfo.level < item.level ? `${sessionInfo.level}` : `${item.level}`} */}
                             </td>
                             
