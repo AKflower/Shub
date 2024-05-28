@@ -4,9 +4,15 @@ import { useState, useEffect } from 'react';
 import styles from './permission.module.scss'
 import axios from 'axios';
 import Navigation from '../navigation/navigation';
+import { useShub } from '@/app/Provider/Provider';
+import { usePathname, useRouter } from 'next/navigation';
 
 
 export default function Permission() {
+    const { 
+        sessionInfo
+    } = useShub();
+    const router = useRouter();
     interface Role {
         role_id: string;
         idInt: number;
@@ -36,11 +42,11 @@ export default function Permission() {
         }
         const res = await axios.get(`http://localhost:3001/role/org`,{ params});
       
-        setListRoles(res.data);
+        await setListRoles(res.data);
         const per = await axios.get(`http://localhost:3001/permission`);
-        setListPermissions(per.data)
+        await setListPermissions(per.data)
 
-        setIsSaving(false)
+        await setIsSaving(false)
 
       }
     useEffect(() => {
@@ -48,6 +54,14 @@ export default function Permission() {
         fetchData();
       }, [selectedOrgId]
       )
+
+      useEffect(() => {
+        if(sessionInfo){
+            if(!sessionInfo.permissionIds.includes('permission_3')) router.push(`/setting/profile`);
+        }
+      }, [sessionInfo])
+
+
     const handleChangePermission = (role: Role,permission_id: string) => {
         if (isSaving) return;
         setIsSaving(true)
@@ -93,17 +107,24 @@ export default function Permission() {
       };
     return (
         <>
+        {sessionInfo && sessionInfo.permissionIds.includes('permission_3') && (<>
            <Navigation />
            <div className={styles.container}>
                 <div className={styles.header}>
-                <label htmlFor="" className="">Organization</label>
-                <select value={selectedOrgId} onChange={handleChange} style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
-                    {orgs.map((org) => (
-                    <option key={org.id} value={org.id}>
-                        {org.name}
-                    </option>
-                ))}
-            </select>
+                    <label htmlFor="" className="">Organization</label>
+                    {sessionInfo && !sessionInfo.permissionIds.includes('permission_1') ? (
+                        <select value={sessionInfo.organization}  style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
+                            <option value={sessionInfo.organization}>
+                                {orgs.find((el: { id: string; })  => el.id == sessionInfo.organization)?.name}
+                            </option>
+                        </select>) : (
+                        <select value={selectedOrgId} onChange={handleChange} style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
+                            {orgs.map((org) => (
+                            <option key={org.id} value={org.id}>
+                                {org.name}
+                            </option>
+                            ))}
+                        </select>)}
                 </div>
                 <table className={styles.table}>
                 <thead className={styles.thead}>
@@ -119,9 +140,8 @@ export default function Permission() {
                               <td className={styles.td} style={{minWidth:'max-content'}}>{role.role_name}</td>
                               {listPermissions.map((permission) => (
                                  <td className={styles.td}>
-                                    {(role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)) ?
-                                        <input type="checkbox" checked={true} className={styles.checkbox+' '+(isSaving ? styles.disabled: '')} onClick={() => handleChangePermission(role,permission.permission_id)} disabled={isSaving}/> : <input type="checkbox" className={styles.checkbox+' '+(isSaving ? styles.disabled: '')} onClick={() => handleChangePermission(role,permission.permission_id)} disabled={isSaving}/>
-                                    }
+                                    {!sessionInfo.permissionIds.includes('permission_1') && permission.permission_id == 'permission_1' ? (<input type="checkbox" className={styles.checkbox+' '+ styles.disabled}  disabled={true}/>) : (<input type="checkbox" checked={role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)} className={styles.checkbox+' '+(isSaving ? styles.disabled: '')} onClick={() => handleChangePermission(role,permission.permission_id)} disabled={isSaving}/>)}
+                                     
                                     
                                 </td>
                               ))}
@@ -134,6 +154,7 @@ export default function Permission() {
            </div>
            
           
+        </>)}
         </>
     )
 }

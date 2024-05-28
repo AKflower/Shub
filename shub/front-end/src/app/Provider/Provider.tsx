@@ -345,8 +345,6 @@ const handleShare = (share: string[]) =>{
 }
 
 
-
-
 const value: ShubContextProps = {
     currentPromptName,
     toggleCurrentPromptName,

@@ -233,6 +233,7 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
             role: userJSON.role,
             fullName: userJSON.firstName + userJSON.lastName,
             isActive: userJSON.isActive,
+            organization: userJSON.organization,
         };
         return JSON.stringify(userInfo);
     }

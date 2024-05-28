@@ -95,8 +95,20 @@ const [showToast, setShowToast] = useState("");
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setName(JSON.parse(savedUser).firstName.charAt(0).toUpperCase()+ JSON.parse(savedUser).lastName.charAt(0).toUpperCase())
+      try{
+        const user = JSON.parse(savedUser);
+        if (user && user.firstName) {
+          setUser(user);
+          setName(user.firstName.charAt(0).toUpperCase()+ user.lastName.charAt(0).toUpperCase())
+        } else {
+          console.log('User object does not have a firstName property');
+        }
+      } catch (e) {
+        console.log('Error parsing user:', e);
+      }
+    } else {
+      console.log('No saved user found');
+    
     }
   }, [pathname]);
   useEffect(()=>{

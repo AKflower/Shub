@@ -9,9 +9,15 @@ import { DropReason, DropResult } from 'react-beautiful-dnd'
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { useShub } from '@/app/Provider/Provider'
+import { useRouter } from 'next/navigation'
 
 
 export default function Role () {
+    const { 
+        sessionInfo
+    } = useShub();
+    const router = useRouter();
+
     interface Role {
         role_id: string;
         idInt: number;
@@ -105,6 +111,11 @@ export default function Role () {
         }
     ]   
     
+    useEffect(() => {
+        if(sessionInfo){
+            if(!sessionInfo.permissionIds.includes('permission_3')) router.push(`/setting/profile`);
+        }
+      }, [sessionInfo])
     
     const onDragEnd = (e:DropResult) => {
         if (isSaving===true) return;
@@ -237,18 +248,25 @@ export default function Role () {
       };
     return (
         <>
+        {sessionInfo && sessionInfo.permissionIds.includes('permission_3') && (<>
             <Navigation />
            
             <div className={styles.container+' '+fonts.poppins.className}>
                 <h1 className={styles.header}>Role Setting</h1>
                 <div className="" style={{margin: '0 0 2em 0', width: '30%'}}>
-                <select value={selectedOrgId} onChange={handleChange} style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
-                    {orgs.map((org) => (
-                    <option key={org.id} value={org.id}>
-                        {org.name}
-                    </option>
-                ))}
-            </select>
+                {sessionInfo && !sessionInfo.permissionIds.includes('permission_1') ? (
+                        <select value={sessionInfo.organization}  style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
+                            <option value={sessionInfo.organization}>
+                                {orgs.find((el: { id: string; })  => el.id == sessionInfo.organization)?.name}
+                            </option>
+                        </select>) : (
+                        <select value={selectedOrgId} onChange={handleChange} style={{padding: '.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver'}}>
+                            {orgs.map((org) => (
+                            <option key={org.id} value={org.id}>
+                                {org.name}
+                            </option>
+                            ))}
+                        </select>)}
                 </div>
                
                 <div className={styles.content+" grid grid-cols-2 gap-4"}>
@@ -310,6 +328,8 @@ export default function Role () {
                 </div>
 
             </div>
+        </>)}
+
         </>
     )
 }

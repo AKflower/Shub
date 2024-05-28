@@ -41,7 +41,7 @@ export class RoleContract extends Contract {
             level: parseInt(level,10),
             role_type: parseInt(role_type,10),
             role_organization: role_organization,
-            role_permissionIds: ['permission_4']
+            role_permissionIds: ['permission_5']
         };
         await ctx.stub.putState(role_id,Buffer.from(stringify(sortKeysRecursive(newRole))));
         return JSON.stringify(newRole)

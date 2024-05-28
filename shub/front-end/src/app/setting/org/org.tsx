@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useShub } from '@/app/Provider/Provider';
 import { useRouter } from 'next/navigation';
 import AccessDenied from '@/app/components/accessDenied/accessDenied';
+import Navigation from '../navigation/navigation';
 
 // const users= [
 //     {
@@ -83,17 +84,18 @@ const Org = ({role}:{role:string}) => {
   
   useEffect(() => {
     const fetchData = async () => {
-      // const res = await axios.get(`http://localhost:3001/user/org`,{
-      //   params: {
-      //     organization: 'Org1'
-      //   }
-      // });
+      const res = await axios.get(`http://localhost:3001/user/org`,{
+        params: {
+          organization: sessionInfo.organization
+        }
+      });
 
-      const res = await axios.get(`http://localhost:3001/user`);
+      // const res = await axios.get(`http://localhost:3001/user`);
 
       res.data.forEach((item: User) => {
         item.fullName=item.firstName+' '+item.lastName;
       })
+      res.data.sort((a: { level: number; }, b: { level: number; }) => a.level - b.level);
       setUsers(res.data);
   
     }
@@ -161,6 +163,8 @@ const Org = ({role}:{role:string}) => {
 
     return (
       <>
+       <Navigation />
+
       { role !=="role_1" ?
        <div className={fonts.poppins.className+' '+styles.container}>
            <div className={styles.headerContainer}>
@@ -188,8 +192,9 @@ const Org = ({role}:{role:string}) => {
                             <td>{orgs.find((el: { id: string; })  => el.id == item.organization)?.name}</td>
                             <td>{item.role_name}</td>
                             <td className={styles.action}>
-                              {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}><div  className={styles.view}><img  src='/view.svg'></img></div></Link>)}
-                              {/* { sessionInfo.level < item.level ? `${sessionInfo.level}` : `${item.level}`} */}
+                              {sessionInfo.permissionIds.includes('permission_2') && <Link href={`/setting/org/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>}
+                              {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}><div className={styles.view}><img  src='/view.svg'></img></div></Link>)}
+                              {sessionInfo.permissionIds.includes('permission_2') && <input type="checkbox" className={styles.checkActive} checked={item.isActive} onClick={() =>changeActive(item)} disabled={isSaving}/>}
                             </td>
                             
                         </tr>

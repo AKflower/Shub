@@ -194,6 +194,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         "Light", "Dark"
     ]
   
+    
+  
   // Lấy thông tin người dùng từ localStorage khi component được render
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -214,6 +216,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='Last name' type='text' value={user.lastName} />
                 <Input label='Email' type='email' value={user.email} />
                 <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
+                <Input label='Organization' type='text' value={orgs.find((el: { id: string; })  => el.id == sessionInfo.organization)?.name}/> 
                 <Input label='Role' type='text' value={sessionInfo?.role_name}/> 
             </div>
         </form>
@@ -234,7 +237,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                     <Input label='Email' type='email' isDisabled={false} value={email} onChange={setEmail} isError={errorEmail} isProcessing={isSaving}/>
                     <Input label='Password' type='password' isDisabled={true} value={email} onChange={setPassword} isProcessing={isSaving}/>
                     {<div style={{display:'flex',flexDirection:'column'}}>
-                      <label htmlFor="" className="" style={{    fontSize: '0.8rem',color: '#546E7A'}}>Organization</label>  
+                      <label htmlFor="" className="" style={{ fontSize: '0.8rem',color: '#546E7A'}}>Organization</label>  
                       <select value={selectedOrgId} onChange={handleChange} style={{padding:'.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver',width: '80%',background: !sessionInfo.permissionIds.includes('permission_1') ? '#f7f7f7' : 'white'}} disabled={!sessionInfo.permissionIds.includes('permission_1')}>
                             {orgs.map((org) => (
                             <option key={org.id} value={org.id}>
@@ -294,6 +297,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
             <Input label='Last name' type='text' value={userAffected?.lastName}/>
             <Input label='Email' type='email' value={userAffected?.email} />
             <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={userAffected?.user_id}/>
+            <Input label='Organization' type='text' value={orgs.find((el: { id: string; })  => el.id == sessionInfo.organization)?.name}/>
             <Select label='Role' list={rolesName}/>
         </div>
 

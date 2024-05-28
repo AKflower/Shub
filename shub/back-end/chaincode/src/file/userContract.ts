@@ -279,6 +279,8 @@ export class UserContract extends Contract {
             role: userJSON.role,
             fullName: userJSON.firstName + userJSON.lastName,
             isActive: userJSON.isActive,
+            organization: userJSON.organization,
+
         
         }
         return JSON.stringify(userInfo);

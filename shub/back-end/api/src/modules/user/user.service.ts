@@ -116,6 +116,7 @@ export class UserService {
   user.role_name = roleDetail.role_name;
   user.permissionIds=roleDetail.role_permissionIds;
   user.level = roleDetail.level;
+  console.log('test s: ', user)
     return user;
   }
   async getUserByOrganization(contract: Contract,organization: string) : Promise<User[]> {

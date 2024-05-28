@@ -36,7 +36,7 @@ const ModifyUser = () => {
     return (
       
         <div className="px-4">
-            <h1 className={styles.header+' '+fonts.poppins.className}>User Management</h1>
+            <h1 className={styles.header+' '+fonts.poppins.className}>Organization</h1>
             <p className={styles.title}>{userCurrent?.user_id === user?.user_id ? 'Your' : user?.firstName+'\'s' } Account</p>
             <SettingsForm actionBy='admin' userAffected={user}/>
         </div>
