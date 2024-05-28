@@ -125,7 +125,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
 
     const [user, setUser] = useState<User | null >(null);
     const roles = [
-        "Admin","User"
+        "role_1","role_2","role_3"
     ]
     const themes = [
         "Light", "Dark"

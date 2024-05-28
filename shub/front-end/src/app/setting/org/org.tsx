@@ -132,10 +132,10 @@ const Org = ({role}:{role:string}) => {
     const dis = false
     return (
       <>
-      { role !=="Admin" ?
+      { role !=="role_1" ?
        <div className={fonts.poppins.className+' '+styles.container}>
            <div className={styles.headerContainer}>
-              <h1 className={styles.header}>User Manangement</h1>
+              <h1 className={styles.header}>Organization</h1>
            </div>
            
            <div className={styles.tableContainer}>

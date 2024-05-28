@@ -38,7 +38,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             email: 'admin@hcmut.edu.vn',
             password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
             firstName: 'Admin',
-            role: "Admin",
+            role: "role_1",
             lastName: '',
             isFirstAccess: false,
             isActive: true,
@@ -73,6 +73,15 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             role_organization: '',
             role_permissionIds: []
         };
+        const role3 = {
+            role_id: 'role_3',
+            idInt: 3,
+            role_name: 'user',
+            level: Infinity,
+            role_type: 1,
+            role_organization: '',
+            role_permissionIds: ['permission_4']
+        };
         const permission1 = {
             permission_id: 'permission_1',
             permission_name: 'User manage',
@@ -94,6 +103,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         await ctx.stub.putState(folder.folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
         await ctx.stub.putState(role1.role_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(role1))));
         await ctx.stub.putState(role2.role_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(role2))));
+        await ctx.stub.putState(role3.role_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(role3))));
         await ctx.stub.putState(permission1.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission1))));
         await ctx.stub.putState(permission2.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission2))));
         await ctx.stub.putState(permission3.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission3))));

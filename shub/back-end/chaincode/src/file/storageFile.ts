@@ -37,7 +37,7 @@ export class StorageFileContract extends Contract {
             email: 'admin@hcmut.edu.vn',
             password: '$2b$10$eS3mg4D3HBFx.CAz4EH9YuTacq3YTytUm1AvOezNkkJdwhqWA0M8m',
             firstName: 'Admin',
-            role: "Admin",
+            role: "role_1",
             lastName:'',
             isFirstAccess: false,
             isActive: true,
@@ -79,6 +79,16 @@ export class StorageFileContract extends Contract {
             role_organization: '',
             role_permissionIds: []
           }
+          const role3 : Role = 
+          {
+            role_id: 'role_3',
+            idInt: 3,
+            role_name: 'user',
+            level: Infinity,
+            role_type: 1,
+            role_organization: '',
+            role_permissionIds: ['permission_4']
+          }
           const permission1 : Permission = {
             permission_id: 'permission_1',
             permission_name: 'User manage',
@@ -100,6 +110,7 @@ export class StorageFileContract extends Contract {
             await ctx.stub.putState(folder.folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
             await ctx.stub.putState(role1.role_id, Buffer.from(stringify(sortKeysRecursive(role1))));
             await ctx.stub.putState(role2.role_id, Buffer.from(stringify(sortKeysRecursive(role2))));
+            await ctx.stub.putState(role3.role_id, Buffer.from(stringify(sortKeysRecursive(role3)))); 
             await ctx.stub.putState(permission1.permission_id, Buffer.from(stringify(sortKeysRecursive(permission1))));
             await ctx.stub.putState(permission2.permission_id, Buffer.from(stringify(sortKeysRecursive(permission2))));
             await ctx.stub.putState(permission3.permission_id, Buffer.from(stringify(sortKeysRecursive(permission3))));
