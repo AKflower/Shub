@@ -17,12 +17,19 @@ interface Item {
     url: string;
   }
 
+  interface ItemFile {
+    id: string;
+    named: string;
+    url: string;
+  }
+
 const Move: React.FC<MoveProps> = () => {
     const pathname = usePathname()
     const [path, setPath] = useState(pathname);
     const [create, setCreate] = useState('');
     const [dis, setDis] = useState(false);
     const [items, setItems] = useState<Item[] >([]);
+    const [itemsF, setItemsF] = useState<Item[] >([]);
     const router = useRouter();
     const userId = Cookies.get('userId');
     const accessToken = Cookies.get('accessToken');
@@ -54,11 +61,6 @@ const Move: React.FC<MoveProps> = () => {
     const handleMove =async () => {
         const load = toast.loading('Loading...')
         toggleShowMove()
-
-        
-            
-        
-
         if (type == 'folder'){
             let i = 1;
             let j = true;
@@ -72,7 +74,7 @@ const Move: React.FC<MoveProps> = () => {
                 }
                 else j = false
             }
-            const data2 = {
+            if(name != nameCheck){const data2 = {
                 new_folder_name: nameCheck,
                 user_id: userId,
                 folder_path: path,
@@ -89,7 +91,7 @@ const Move: React.FC<MoveProps> = () => {
               })
               .catch(error => {
                 console.error('Error Renaming folder:', error);
-              });
+              });}
             const data = {
                 folder_id: memoizedValue,
                 newPath: path,
@@ -114,42 +116,37 @@ const Move: React.FC<MoveProps> = () => {
               });
         }
         else{
-
             let i = 1;
             let j = true;
             let nameCheck = name
-            const filesString = Cookies.get('files');
-
-            if (filesString) {
-                const files = JSON.parse(filesString);
-                let filteredFiles = files.filter((file: { isDelete: any; }) => !file.isDelete);
-                console.log(filteredFiles)
-                while(j){
-                    let result = filteredFiles.some((el: { file_name: string; }) => el.file_name == nameCheck);
-                    if (result) {
-                        nameCheck = name
-                        nameCheck = nameCheck + ` (${i})`
-                        i = i + 1
-                    }
-                    else j = false
+            while(j){
+                let result = itemsF.some((el: { named: string; }) => el.named == nameCheck);
+                if (result) {
+                    nameCheck = name
+                    nameCheck = nameCheck + ` (${i})`
+                    i = i + 1
                 }
+                else j = false
+            
             
             }
-            const data1 = {
-                file_name: nameCheck,
-            };
-            await axios.put(`http://localhost:3001/files/${selected}`, data1,{
+            if(name != nameCheck){const data2 = {
+                user_id: userId,
+                file_id: selected,
+                new_file_name: nameCheck,
+              };
+        
+              await axios.put(`http://localhost:3001/files/rename`, data2, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`, 
                 },
-            })
-            .then(response => {
-                
-            })
-            .catch(error => {
-                console.error('Error Renaming file:', error);
-            });
+              })
+              .then(response => {
+              })
+              .catch(error => {
+                console.error('Error Renaming folder:', error);
+              });}
             const data = {
                 file_id: memoizedValue,
                 newPath: path,
@@ -181,6 +178,7 @@ const Move: React.FC<MoveProps> = () => {
         const fetchData = async () => {
             
             const itm: Item[] = []
+            const itmF: ItemFile[] = []
 
             const data = { user_id: userId, path: path };
 
@@ -192,7 +190,18 @@ const Move: React.FC<MoveProps> = () => {
                 },
               },
              );
+             const res = await axios.get(`http://localhost:3001/files/bypath`,{
+                params: data, // Truyền dữ liệu qua query parameters
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              },
+             );
+
              let filteredFolders1 = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
+             let filteredFiles= res.data.filter((file: { isDelete: any; }) => !file.isDelete);
+             
              let filteredFolders = filteredFolders1.sort((a: { folder_name: string; }, b: { folder_name: any; }) => a.folder_name.localeCompare(b.folder_name))
             if(type != 'folder'){
                 for (const pie in filteredFolders){
@@ -215,7 +224,15 @@ const Move: React.FC<MoveProps> = () => {
                 }
             }
 
-            
+            for (const pie in filteredFiles){
+                await itmF.push({
+                    id: filteredFiles[pie].file_id,
+                    named: filteredFiles[pie].file_name,
+                    url: filteredFiles[pie].file_path,
+                })
+            }
+
+            setItemsF(itmF)
             setItems(itm)
             await handleSelect(memoizedValue, 'more')
 
@@ -267,7 +284,6 @@ const Move: React.FC<MoveProps> = () => {
         setNamea(event.target.value);
     };
 
-    console.log(memoizedValue)
 
 
     return (

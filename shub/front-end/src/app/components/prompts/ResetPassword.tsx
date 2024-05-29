@@ -14,7 +14,6 @@ const ResetPassword = () => {
     const [isSaving,setIsSaving] = useState<boolean>(false);
     const accessToken = Cookies.get('accessToken');
     const params = useParams()
-    console.log(params)
 
     const reset = () => {
         // const load = toast.loading('Loading...')

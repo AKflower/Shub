@@ -15,13 +15,11 @@ const Search = () => {
   const handleSearching = () => {
     
     setSearching(true);
-    console.log('fagwawg', isSearching);
     
   }
   const offSearching = () => {
     
     setSearching(false);
-    console.log('222', isSearching);
 
   }
   

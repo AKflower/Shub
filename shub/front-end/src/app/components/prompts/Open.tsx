@@ -22,7 +22,6 @@ const Open: React.FC<OpenProps> = () => {
     const {  toggleCurrentPromptName, toggleShowLock, handleChange, selected, data, lock, toggleShowOpen, handleOpen, handleStream } = useShub();
     const accessToken = Cookies.get('accessToken');
     const userId = Cookies.get('userId');
-    console.log(selected,'test')
     const [PIN, setPIN] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [retype, setRetype] = useState<string>();

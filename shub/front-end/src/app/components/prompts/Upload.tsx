@@ -33,17 +33,42 @@ const Upload: React.FC<UploadProps> = () => {
   useEffect(() => {
     const uploadFile = async () => {
 
+
         if (selectedFile) {
           toggleShowUpload()
-
           const load = toast.loading('Loading...')
+          const data1 = { user_id: userId, path: pathname };
 
+          const res = await axios.get(`http://localhost:3001/files/bypath`,{
+                params: data1, // Truyền dữ liệu qua query parameters
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              },
+             );
+
+             let i = 1;
+             let j = true;
+             let nameCheck = selectedFile.name
+             while(j){
+                 let result = res.data.some((el: { file_name: string; }) => el.file_name == nameCheck);
+                 if (result) {
+                     nameCheck = selectedFile.name
+                     nameCheck = nameCheck + ` (${i})`
+                     i = i + 1
+                 }
+                 else j = false
+             
+             
+             }
+             const myRenamedFile = new File([selectedFile], nameCheck, { type: selectedFile.type });
           const data = {
             userId: userId,
             filePath: pathname
           }
             const formData = new FormData();
-            formData.append('file', selectedFile);
+            formData.append('file', myRenamedFile);
             await axios.post(`http://localhost:3001/files/new`, formData, {
                 params: data,
                 headers: {
@@ -180,9 +205,37 @@ const Upload: React.FC<UploadProps> = () => {
   
   };
   const uploadFoldersSequentially = async () => {
-    for (const folder of directories) {
-      console.log(folder)
-        await uploadFolder(folder.slice(folder.lastIndexOf('/')+1, folder.length), folder);
+    for (const folder in directories) {
+      if(folder == (directories.length-1).toString()){
+        const data1 = { user_id: userId, path: pathname };
+
+          const res = await axios.get(`http://localhost:3001/folders/bypath`,{
+                params: data1, // Truyền dữ liệu qua query parameters
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              },
+             );
+
+             let i = 1;
+             let j = true;
+             let nameCheck = directories[folder].slice(directories[folder].lastIndexOf('/')+1, directories[folder].length)
+             while(j){
+                 let result = res.data.some((el: { folder_name: string; }) => el.folder_name == nameCheck);
+                 if (result) {
+                     nameCheck = directories[folder].slice(directories[folder].lastIndexOf('/')+1, directories[folder].length)
+                     nameCheck = nameCheck + ` (${i})`
+                     i = i + 1
+                 }
+                 else j = false
+             
+             
+             }
+        await uploadFolder(nameCheck, directories[folder]);
+        
+      }
+      else await uploadFolder(directories[folder].slice(directories[folder].lastIndexOf('/')+1, directories[folder].length), directories[folder]);
 
     }
     if (!files[0] && directories[0]){

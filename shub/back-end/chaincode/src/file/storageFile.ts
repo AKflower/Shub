@@ -209,7 +209,14 @@ export class StorageFileContract extends Contract {
         } 
         return fileJSON.toString();
     }
-
+    @Transaction()
+    public async RenameFile(ctx: Context,user_id:string,file_id:string, new_file_name: string): Promise<void> {
+      const fileString = await this.GetFile(ctx,file_id);
+      const fileJSON = JSON.parse(fileString);
+      fileJSON.file_name = new_file_name;
+      fileJSON.file_nameForSearch=new_file_name.toLowerCase()
+      await ctx.stub.putState(file_id,Buffer.from(stringify(sortKeysRecursive(fileJSON))))
+    }
     @Transaction(false)
     @Returns('boolean')
     public async FileExists(ctx:Context, file_id: string): Promise<boolean>{

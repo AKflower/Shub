@@ -108,7 +108,11 @@ export class FileController {
     async getFilesByPrefix(@Query('user_id') user_id:string,@Query('prefix') prefix: string) {
         return this.fileService.getFilesByPrefix(this.contract,user_id,prefix);
     }
-
+    @Put('/rename')
+    renameFolder(@Body() params: {user_id:string,file_id:string,new_file_name:string}){ 
+        const {user_id,file_id,new_file_name} = params;
+        return this.fileService.renameFile(this.contract,user_id,file_id,new_file_name);
+    }
     @Put('/updatePath')
     @UseGuards(JwtAuthGuard)
     async updateFilePath(@Body() params: {file_id: string, newPath: string}) {

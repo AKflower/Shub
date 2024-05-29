@@ -51,7 +51,6 @@ const Share: React.FC<MoveProps> = () => {
                 share: checkedNames,
             };
 
-            console.log(data)
 
 
             axios.put(`http://localhost:3001/folders/updateShare`, data, {

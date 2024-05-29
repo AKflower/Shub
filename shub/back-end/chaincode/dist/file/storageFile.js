@@ -184,6 +184,13 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return fileJSON.toString();
     }
+    async RenameFile(ctx, user_id, file_id, new_file_name) {
+        const fileString = await this.GetFile(ctx, file_id);
+        const fileJSON = JSON.parse(fileString);
+        fileJSON.file_name = new_file_name;
+        fileJSON.file_nameForSearch = new_file_name.toLowerCase();
+        await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
+    }
     async FileExists(ctx, file_id) {
         const fileJSON = await ctx.stub.getState(file_id);
         return fileJSON && fileJSON.length > 0;
@@ -1051,6 +1058,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFile", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], StorageFileContract.prototype, "RenameFile", null);
 __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('boolean'),

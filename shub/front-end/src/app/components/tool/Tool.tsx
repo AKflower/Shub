@@ -34,7 +34,6 @@ const Tool = () => {
     setOverlay
   } = useShub();
 
-  console.log(currentPromptName)
   const handleFavourite = async() => {
     const load = toast.loading('Loading...')
     if (type == 'folder'){
