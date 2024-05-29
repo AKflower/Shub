@@ -166,6 +166,9 @@ export class FileService {
       
     return files;
   }
+  async renameFile(contract:Contract, user_id:string,file_id:string,new_file_name:string): Promise<void> {
+    await contract.submitTransaction('RenameFile',user_id,file_id,new_file_name);
+}
   async copyFile(contract:Contract, file: FileDTO): Promise<File> {
       const res = await this.upload(contract,file);
       return res;

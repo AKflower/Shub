@@ -6,6 +6,7 @@ export declare class StorageFileContract extends Contract {
     /**************************File *****************/
     UploadFile(ctx: Context, file_name: string, file_path: string, cid: string, user_id: string, created_date: string, updated_date: string, file_size: string, file_type: string): Promise<void>;
     GetFile(ctx: Context, file_id: string): Promise<string>;
+    RenameFile(ctx: Context, user_id: string, file_id: string, new_file_name: string): Promise<void>;
     FileExists(ctx: Context, file_id: string): Promise<boolean>;
     GetAllFile(ctx: Context): Promise<string>;
     GetFilesByName(ctx: Context, fileName: string): Promise<string>;
