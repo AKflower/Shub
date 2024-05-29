@@ -83,8 +83,8 @@ export class FolderService {
         await contract.submitTransaction('RenameFolder',user_id,folder_path,folder_id,new_folder_name);
     }
 
-    async getFoldersByPrefix(contract: Contract, prefix:string): Promise<Folder[]> {
-        const resultBytes=await contract.evaluateTransaction('GetFoldersByPrefix',prefix);
+    async getFoldersByPrefix(contract: Contract, user_id:string, prefix:string): Promise<Folder[]> {
+        const resultBytes=await contract.evaluateTransaction('GetFoldersByPrefix',user_id,prefix);
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
         const result = JSON.parse(resultJson);

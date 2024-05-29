@@ -225,10 +225,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         }
         return JSON.stringify(allResults);
     }
-    async GetFilesByPrefix(ctx, prefix) {
+    async GetFilesByPrefix(ctx, user_id, prefix) {
         prefix = prefix.toLowerCase();
         const queryString = {
             selector: {
+                owner: user_id,
                 file_nameForSearch: {
                     $regex: `^${prefix}`
                 }
@@ -738,7 +739,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const old_name = folder.folder_name;
         await this.ChangePath(ctx, user_id, folder_path, folder_id, old_name, new_folder_name, pathLength);
         folder.folder_name = new_folder_name;
-        await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
+        folder.folder_nameForSearch = new_folder_name.toLowerCase(),
+            await ctx.stub.putState(folder_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(folder))));
     }
     async ChangePath(ctx, user_id, folder_path, folder_id, old_name, new_parent_name, pathLength) {
         const subFoldersString = await this.GetSubFolders(ctx, user_id, folder_path, folder_id);
@@ -789,10 +791,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             return null;
         }
     }
-    async GetFoldersByPrefix(ctx, prefix) {
+    async GetFoldersByPrefix(ctx, user_id, prefix) {
         prefix = prefix.toLowerCase();
         const queryString = {
             selector: {
+                owner: user_id,
                 folder_nameForSearch: {
                     $regex: `^${prefix}`
                 }
@@ -1063,7 +1066,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFilesByPrefix", null);
 __decorate([
@@ -1186,7 +1189,7 @@ __decorate([
     (0, fabric_contract_api_1.Transaction)(false),
     (0, fabric_contract_api_1.Returns)('string'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
     __metadata("design:returntype", Promise)
 ], StorageFileContract.prototype, "GetFoldersByPrefix", null);
 __decorate([

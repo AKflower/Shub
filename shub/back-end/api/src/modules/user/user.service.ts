@@ -8,6 +8,7 @@ import { FabricService } from '../fabric/fabric.service';
 import { RoleService } from '../role/role.service';
 
 
+
 @Injectable()
 export class UserService {
   private contract: Contract;
@@ -217,4 +218,30 @@ export class UserService {
       throw new Error('Failed!');
     }
   }
+  async updateRole(contract: Contract, user_id: string,role: string) : Promise<string>{
+    try{
+      await contract.submitTransaction('UpdateRole',user_id,role);
+      return `Update successfully!`
+    }
+    catch (error) {
+      throw new Error('Failed!');
+    }
+  }
+  async updateInfo(contract: Contract, user_id: string, firstName: string, lastName: string): Promise<string> {
+    try {
+        await contract.submitTransaction('UpdateInfo', user_id, firstName, lastName);
+        return `User information updated successfully!`;
+    } catch (error) {
+        throw new Error('Failed to update user information: ' + error.message);
+    }
+}
+
+  async updateEmail(contract: Contract, user_id: string, email: string): Promise<string> {
+    try {
+        await contract.submitTransaction('UpdateEmail', user_id, email);
+        return `User email updated successfully!`;
+    } catch (error) {
+        throw new Error('Failed to update user email: ' + error.message);
+    }
+}
 }

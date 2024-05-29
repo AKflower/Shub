@@ -93,4 +93,36 @@ export class UserController {
             throw new Error(error.message);
         }
     }
+    @Put('/updateRole')
+    async updateRole(@Body() params: {user_id: string, role: string}) {
+        const {user_id,role} = params;
+        try {
+            const res = await this.userService.updateRole(this.contract,user_id,role);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        }
+        catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    @Put('/updateInfo')
+    async updateInfo(@Body() params: {user_id: string, firstName: string, lastName: string}) {
+        const { user_id, firstName, lastName } = params;
+        try {
+            const res = await this.userService.updateInfo(this.contract, user_id, firstName, lastName);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    @Put('/updateEmail')
+    async updateEmail(@Body() params: {user_id: string, email: string}) {
+        const { user_id, email } = params;
+        try {
+            const res = await this.userService.updateEmail(this.contract, user_id, email);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }

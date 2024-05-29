@@ -14,4 +14,8 @@ export declare class UserContract extends Contract {
     ChangeUserFirstAccess(ctx: Context, user_id: string, isFirstAccess: boolean): Promise<void>;
     ResetPassword(ctx: Context, user_id: string, newPassword: string): Promise<void>;
     GetSession(ctx: Context, user_id: string): Promise<string>;
+    UpdateRole(ctx: Context, user_id: string, role: string): Promise<void>;
+    UpdateInfo(ctx: Context, user_id: string, firstName: string, lastName: string): Promise<void>;
+    UpdateEmail(ctx: Context, user_id: string, email: string): Promise<void>;
+    UpdateRoleForUsers(ctx: Context, role_id: string): Promise<string>;
 }

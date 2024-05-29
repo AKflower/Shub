@@ -233,8 +233,77 @@ let UserContract = class UserContract extends fabric_contract_api_1.Contract {
             role: userJSON.role,
             fullName: userJSON.firstName + userJSON.lastName,
             isActive: userJSON.isActive,
+            organization: userJSON.organization,
         };
         return JSON.stringify(userInfo);
+    }
+    async UpdateRole(ctx, user_id, role) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx, user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.role = role;
+        await ctx.stub.putState(user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(userJSON))));
+    }
+    async UpdateInfo(ctx, user_id, firstName, lastName) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx, user_id);
+        const userJSON = JSON.parse(userString);
+        if (firstName != '')
+            userJSON.firstName = firstName;
+        if (lastName != '')
+            userJSON.lastName = lastName;
+        await ctx.stub.putState(user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(userJSON))));
+    }
+    async UpdateEmail(ctx, user_id, email) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const queryString = {
+            selector: {
+                email: email,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        if (result.done) {
+            const userString = await this.GetUserById(ctx, user_id);
+            const userJSON = JSON.parse(userString);
+            userJSON.email = email;
+            await ctx.stub.putState(user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(userJSON))));
+        }
+    }
+    async UpdateRoleForUsers(ctx, role_id) {
+        const queryString = {
+            selector: {
+                role: role_id,
+            },
+        };
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const allResults = [];
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+                record.role = 'role_2';
+                await ctx.stub.putState(record.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(record))));
+            }
+            catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
     }
 };
 __decorate([
@@ -318,6 +387,30 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], UserContract.prototype, "GetSession", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "UpdateRole", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "UpdateInfo", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "UpdateEmail", null);
+__decorate([
+    (0, fabric_contract_api_1.Transaction)(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], UserContract.prototype, "UpdateRoleForUsers", null);
 UserContract = __decorate([
     (0, fabric_contract_api_1.Info)({ title: 'ManageUser', description: 'Smart contract for User' })
 ], UserContract);

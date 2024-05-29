@@ -75,7 +75,7 @@ export class StorageFileContract extends Contract {
             role_id: 'role_2',
             idInt: 2,
             role_name: 'user',
-            level: Infinity,
+            level: 1000,
             role_type: 1,
             role_organization: '',
             role_permissionIds: []
@@ -260,10 +260,11 @@ export class StorageFileContract extends Contract {
         }
       @Transaction(false)
       @Returns('string')
-        public async GetFilesByPrefix(ctx: Context, prefix: string): Promise<string> {
+        public async GetFilesByPrefix(ctx: Context, user_id: string, prefix: string): Promise<string> {
         prefix=prefix.toLowerCase();
         const queryString = {
             selector: {
+            owner: user_id,
             file_nameForSearch: {
                 $regex: `^${prefix}`
                 
@@ -854,8 +855,10 @@ export class StorageFileContract extends Contract {
         const folder: Folder = JSON.parse(folderString);
         const pathLength=folder.folder_path.length+2-1; //Plus 2 -1 -> indexOf
         const old_name=folder.folder_name;
+
         await this.ChangePath(ctx,user_id,folder_path,folder_id,old_name,new_folder_name,pathLength);
         folder.folder_name = new_folder_name;
+        folder.folder_nameForSearch=new_folder_name.toLowerCase(),
         await ctx.stub.putState(folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
     }
     
@@ -923,11 +926,12 @@ export class StorageFileContract extends Contract {
 
     @Transaction(false)
     @Returns('string')
-    public async GetFoldersByPrefix(ctx: Context, prefix: string): Promise<string> {
+    public async GetFoldersByPrefix(ctx: Context, user_id:string, prefix: string): Promise<string> {
       prefix=prefix.toLowerCase();
       const queryString = {
           selector: {
-          folder_nameForSearch: {
+            owner: user_id,
+            folder_nameForSearch: {
               $regex: `^${prefix}`
           }
           }

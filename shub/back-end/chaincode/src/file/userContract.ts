@@ -279,9 +279,83 @@ export class UserContract extends Contract {
             role: userJSON.role,
             fullName: userJSON.firstName + userJSON.lastName,
             isActive: userJSON.isActive,
-        
+            organization: userJSON.organization,
         }
         return JSON.stringify(userInfo);
+      }
+      @Transaction(true)
+      public async UpdateRole(ctx: Context,user_id: string,role: string) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.role=role;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
+      @Transaction(true)
+      public async UpdateInfo(ctx: Context,user_id: string,firstName: string, lastName: string) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        if (firstName!='') userJSON.firstName=firstName;
+        if (lastName!='') userJSON.lastName=lastName;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
+      @Transaction(true)
+      public async UpdateEmail(ctx: Context,user_id: string,email: string) {
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const queryString = {
+            selector: {
+                email: email,
+            },
+        };
+
+        const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+        const result = await iterator.next();
+        if (result.done) {
+            const userString = await this.GetUserById(ctx,user_id);
+            const userJSON = JSON.parse(userString);
+            userJSON.email=email;
+            await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+        }
+        
+      }
+      @Transaction(true)
+      public async UpdateRoleForUsers(ctx: Context,role_id:string){
+        const queryString = {
+            selector: {
+              role: role_id,
+            },
+          };
+      
+          const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));
+          const allResults = [];
+      
+          let result = await iterator.next();
+          while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+              record = JSON.parse(strValue);
+              record.role = 'role_2';
+              await ctx.stub.putState(record.user_id,Buffer.from(stringify(sortKeysRecursive(record))));
+            } catch (err) {
+              console.log(err);
+              record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+          }
+      
+          return JSON.stringify(allResults);
       }
 }
    

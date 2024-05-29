@@ -5,17 +5,18 @@ import { Role } from 'src/model/role.model';
 import { AuthService } from '../auth/auth.service';
 import * as bcrypt from "bcrypt";
 import { FabricService } from '../fabric/fabric.service';
-
+import { UserService } from '../user/user.service';
 
 
 @Injectable()
 export class RoleService {
   private contract: Contract;
+  private userContract: Contract;
 
   constructor(
-    private readonly fabricService: FabricService,
-  ) {
+    private readonly fabricService: FabricService  ) {
     this.contract = this.fabricService.getContract('RoleContract');
+    this.userContract = this.fabricService.getContract('UserContract');
 
   }
   async getAllRole(contract: Contract): Promise<Role[]> {
@@ -114,7 +115,9 @@ export class RoleService {
   }
   
   async updateTypeRole(contract: Contract,role_id: string, role_type: number): Promise<string> {
+    if (role_type===0) this.updateRoleForUsers(this.userContract,role_id)
     await contract.submitTransaction('UpdateTypeRole',role_id,role_type+'');
+    
     return 'Update Successful!'
   }
 
@@ -133,8 +136,16 @@ export class RoleService {
     return "Update successfully!"
   }
   async updateRolePermissionIds(contract: Contract,role_id: string, role_permissionIds: string[]): Promise<string>{
+    
+    if (role_permissionIds.includes('permission_1') && !role_permissionIds.includes('permission_2')) role_permissionIds.push('permission_2');
+    console.log(role_permissionIds);
     const rolesParam = JSON.stringify(role_permissionIds);
     await contract.submitTransaction('UpdatePermissionIds',role_id,rolesParam);
     return "Update successfully!"
+  }
+  async updateRoleForUsers(contract: Contract, role_id: string): Promise<string>{
+    console.log('heheh');
+     const res =await contract.submitTransaction('UpdateRoleForUsers',role_id);
+     return "Update successfully!"
   }
 }

@@ -59,8 +59,8 @@ export class FolderController {
 
     @Get('/search')
     @UseGuards(JwtAuthGuard)
-    getFoldersByPrefix(@Query('prefix') prefix: string) {
-        return this.folderService.getFoldersByPrefix(this.contract,prefix);
+    getFoldersByPrefix(@Query('user_id') user_id: string,@Query('prefix') prefix: string,) {
+        return this.folderService.getFoldersByPrefix(this.contract,user_id,prefix);
     }
 
     @Put('/updatePath')
