@@ -115,7 +115,7 @@ export class RoleContract extends Contract {
          const roleString = await this.GetRoleById(ctx,role_id);
           const roleJSON = JSON.parse(roleString);
           roleJSON.role_type= parseInt(role_type,10);
-
+         
           await ctx.stub.putState(role_id,Buffer.from(stringify(sortKeysRecursive(roleJSON))))
           
     }

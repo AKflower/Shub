@@ -37,12 +37,13 @@ interface FoldersProps {
     folder_id: string,
     folder_name: string,
     folder_path: string,
-    user_id: string,
+    owner: string,
     created_date: string,
     updated_date: string,
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
+    user_id:string,
 }
 
 const File = () => {
@@ -108,7 +109,6 @@ const File = () => {
         <div className={cx('container')}>
             {(userId == folder[0]?.user_id) || (userId == file[0]?.user_id) ? <Tool /> : <ToolFS />}
             
-            <div className={cx('doc', fonts.poppins.className)}>Viewing documents of AK</div>
 
             <BCFO />
             

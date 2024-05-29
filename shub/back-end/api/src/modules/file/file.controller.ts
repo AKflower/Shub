@@ -105,8 +105,8 @@ export class FileController {
     // The API is used to get files whose names start with prefix
     @Get('/search')
     @UseGuards(JwtAuthGuard)
-    async getFilesByPrefix(@Query('prefix') prefix: string) {
-        return this.fileService.getFilesByPrefix(this.contract,prefix);
+    async getFilesByPrefix(@Query('user_id') user_id:string,@Query('prefix') prefix: string) {
+        return this.fileService.getFilesByPrefix(this.contract,user_id,prefix);
     }
 
     @Put('/updatePath')

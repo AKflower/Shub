@@ -18,7 +18,7 @@ interface FoldersProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
-
+    owner: string
 }
 
 export default function FolderSection ({folders} : {folders:FoldersProps[]})  {

@@ -1,0 +1,20 @@
+.container {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    width: 100vw;
+    background-color: #000;
+    z-index: 9999999;
+    padding: 2em 0;
+}
+
+
+  .doc{
+    display: flex;
+    justify-content: space-around;
+    font-size: 2em;
+    color: white;
+  }
+
+ 

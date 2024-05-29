@@ -20,13 +20,14 @@ const Info: FC<InfoProps> = () => {
     infoFolder,
     type,
     toggleShowInfo,
-    toggleCurrentPromptName
+    toggleCurrentPromptName,
+    currentPromptName
   } = useShub();
   let selectedCount = 1
   const accessToken = Cookies.get('accessToken');
   const [owner, setOwner] = useState('');
   const [share, setShare] = useState([]);
-
+console.log(currentPromptName)
   useEffect(()=>{
     const fetchData = async () => {
 

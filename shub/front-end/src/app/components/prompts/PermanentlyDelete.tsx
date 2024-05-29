@@ -22,31 +22,38 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
     handleChange, 
     type, 
     toggleCurrentPromptName,
-    isDelete 
   } = useShub();
   
   const toggle = () => {
     toggleShowPermanentlyDelete()
     toggleCurrentPromptName()
   }
+
   
-  const submit = () => {
+  
+  const submit = async () => {
     const load = toast.loading('Loading...')
     toggleShowPermanentlyDelete()
 
           if (type == 'folder'){
-            const foldersString = Cookies.get('folders');
-      
-            if (foldersString) {
-              const folders = JSON.parse(foldersString);
-              const name = folders.find((el: { folder_id: string; })  => el.folder_id == selected)
-              const data = {
+            const data = { user_id: userId };
+
+            const res = await axios.get(`http://localhost:3001/folders/trash`,{
+                params: data, // Truyền dữ liệu qua query parameters
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+            });
+            
+              const name = res.data.folders.find((el: { folder_id: string; })  => el.folder_id == selected)
+              const data1 = {
                 user_id: userId,
                 folder_path: name.folder_path,
                 folder_id: selected,
             };
-              axios.delete(`http://localhost:3001/folders/delete`,  {
-                params: data,
+            await axios.delete(`http://localhost:3001/folders/delete`,  {
+                params: data1,
                 headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${accessToken}`, 
@@ -64,7 +71,6 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
               .catch(error => {
                 console.error('Error creating folder:', error);
               });
-            }
             
           }
           else {
@@ -90,8 +96,10 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
   }
 
   return (
-    <div className={cx('card','floating')}>
-      <div className={cx("card-content")}>
+    <div className={cx('card','floating')}
+    >
+      <div className={cx("card-content")}
+          >
         <p>
           Are you sure you want to delete this file/folder?
         </p>
@@ -108,6 +116,7 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
         </button>
         <button
           onClick={() => submit()}
+          
           className={cx('button','button--flat',"button--red")}
           aria-label="Delete"
           title="Delete"

@@ -21,7 +21,7 @@ const Input = ({label,type,value,changePossible=false,isDisabled=true,isError=fa
                 {changePossible && <span className={styles.edit} 
                 onClick={() => {
                     console.log(user_id,sessionInfo.user_id);
-                    if (sessionInfo.role==="Admin" && sessionInfo.user_id !== user_id) {
+                    if ((sessionInfo.permissionIds.includes('permission_1') || sessionInfo.permissionIds.includes('permission_2')) && sessionInfo.user_id !== user_id) {
                        toggleShowResetPassword()
                        toggleCurrentPromptName()
                     }

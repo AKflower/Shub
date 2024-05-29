@@ -31,6 +31,7 @@ interface FileProps {
     share: string[],
     file_size:string,
     file_lock:boolean
+    owner: string
 }
 
 interface FoldersProps {
@@ -43,6 +44,7 @@ interface FoldersProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
+    owner: string
 }
 
 
@@ -54,7 +56,6 @@ const File = () => {
     const pathname = usePathname()
     const accessToken = Cookies.get('accessToken');
     const router = useRouter();
-
     const userId = Cookies.get('userId');
     useEffect(() => {
         if ( accessToken == '' || !accessToken) {
@@ -94,10 +95,10 @@ const File = () => {
             }
             else setBlank('')
             
-            const folders = JSON.stringify(filteredFolders);
+            const folders = JSON.stringify(resF.data);
             Cookies.set('folders', folders, { secure: true, sameSite: 'strict' });
             
-            const files = JSON.stringify(filteredFiles);
+            const files = JSON.stringify(res.data);
             Cookies.set('files', files, { secure: true, sameSite: 'strict' });
 
         }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames/bind';
 import { usePathname, useRouter } from 'next/navigation'
 import styles from './Move.module.scss'
@@ -13,7 +13,7 @@ interface MoveProps { }
 
 interface Item {
     id: string;
-    name: string;
+    named: string;
     url: string;
   }
 
@@ -21,6 +21,7 @@ const Move: React.FC<MoveProps> = () => {
     const pathname = usePathname()
     const [path, setPath] = useState(pathname);
     const [create, setCreate] = useState('');
+    const [dis, setDis] = useState(false);
     const [items, setItems] = useState<Item[] >([]);
     const router = useRouter();
     const userId = Cookies.get('userId');
@@ -31,7 +32,14 @@ const Move: React.FC<MoveProps> = () => {
         handleChange,
         toggleCurrentPromptName,
         toggleShowMove,
+        name,
+        handleSelect,
+        
     } = useShub();
+
+    const a = '1'
+    const memoizedValue = useMemo(() => selected, [a]);
+
 
     const handleClick = (name: string) => {
         const newPath = path + '/' + name 
@@ -43,17 +51,52 @@ const Move: React.FC<MoveProps> = () => {
         setPath(newPath)
     }
     
-    const handleMove = () => {
+    const handleMove =async () => {
         const load = toast.loading('Loading...')
+        toggleShowMove()
+
+        
+            
+        
 
         if (type == 'folder'){
-            const data = {
+            let i = 1;
+            let j = true;
+            let nameCheck = name
+            while(j){
+                let result = items.some((el: { named: string; }) => el.named == nameCheck);
+                if (result) {
+                    nameCheck = name
+                    nameCheck = nameCheck + ` (${i})`
+                    i = i + 1
+                }
+                else j = false
+            }
+            const data2 = {
+                new_folder_name: nameCheck,
+                user_id: userId,
+                folder_path: path,
                 folder_id: selected,
+              };
+        
+              await axios.put(`http://localhost:3001/folders/rename`, data2, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+              })
+              .then(response => {
+              })
+              .catch(error => {
+                console.error('Error Renaming folder:', error);
+              });
+            const data = {
+                folder_id: memoizedValue,
                 newPath: path,
                 user_id: userId,
             };
 
-            axios.put(`http://localhost:3001/folders/updatePath`, data, {
+            await axios.put(`http://localhost:3001/folders/updatePath`, data, {
                 headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${accessToken}`, 
@@ -71,12 +114,48 @@ const Move: React.FC<MoveProps> = () => {
               });
         }
         else{
+
+            let i = 1;
+            let j = true;
+            let nameCheck = name
+            const filesString = Cookies.get('files');
+
+            if (filesString) {
+                const files = JSON.parse(filesString);
+                let filteredFiles = files.filter((file: { isDelete: any; }) => !file.isDelete);
+                console.log(filteredFiles)
+                while(j){
+                    let result = filteredFiles.some((el: { file_name: string; }) => el.file_name == nameCheck);
+                    if (result) {
+                        nameCheck = name
+                        nameCheck = nameCheck + ` (${i})`
+                        i = i + 1
+                    }
+                    else j = false
+                }
+            
+            }
+            const data1 = {
+                file_name: nameCheck,
+            };
+            await axios.put(`http://localhost:3001/files/${selected}`, data1,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+            })
+            .then(response => {
+                
+            })
+            .catch(error => {
+                console.error('Error Renaming file:', error);
+            });
             const data = {
-                file_id: selected,
+                file_id: memoizedValue,
                 newPath: path,
             };
 
-            axios.put(`http://localhost:3001/files/updatePath`, data, {
+            await axios.put(`http://localhost:3001/files/updatePath`, data, {
                 headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${accessToken}`, 
@@ -95,12 +174,12 @@ const Move: React.FC<MoveProps> = () => {
               });
         }
 
-        toggleShowMove()
     }
     
 
     useEffect(()=>{
         const fetchData = async () => {
+            
             const itm: Item[] = []
 
             const data = { user_id: userId, path: path };
@@ -119,7 +198,7 @@ const Move: React.FC<MoveProps> = () => {
                 for (const pie in filteredFolders){
                     await itm.push({
                         id: filteredFolders[pie].folder_id,
-                        name: filteredFolders[pie].folder_name,
+                        named: filteredFolders[pie].folder_name,
                         url: filteredFolders[pie].folder_path,
                     })
                 }
@@ -129,7 +208,7 @@ const Move: React.FC<MoveProps> = () => {
                     if(filteredFolders[pie].folder_id != selected){
                         await itm.push({
                             id: filteredFolders[pie].folder_id,
-                            name: filteredFolders[pie].folder_name,
+                            named: filteredFolders[pie].folder_name,
                             url: filteredFolders[pie].folder_path,
                         })
                     }
@@ -138,19 +217,20 @@ const Move: React.FC<MoveProps> = () => {
 
             
             setItems(itm)
+            await handleSelect(memoizedValue, 'more')
 
         }
         fetchData()
     },[path, create])
 
-    const [name, setName] = useState<string>("");
+    const [namea, setNamea] = useState<string>("");
     
 
     const submit = () => {
         const load = toast.loading('Loading...')
-
+        setDis(true)
         const folderData = {
-            folder_name: name,
+            folder_name: namea,
             folder_path: path,
             user_id: userId, 
         };
@@ -161,17 +241,17 @@ const Move: React.FC<MoveProps> = () => {
                 'Authorization': `Bearer ${accessToken}`, 
             },
         })
-        .then(response => {
+        .then( response => {
             toast.success('Folder Created')
             toast.dismiss(load);
-
             handleChange()
 
+            setDis(false)
+            
             setCreate('')
-
-
         })
         .catch(error => {
+            setDis(false)
             console.error('Error creating folder:', error);
         });
 
@@ -184,8 +264,10 @@ const Move: React.FC<MoveProps> = () => {
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
+        setNamea(event.target.value);
     };
+
+    console.log(memoizedValue)
 
 
     return (
@@ -207,17 +289,17 @@ const Move: React.FC<MoveProps> = () => {
                 {items[0] ? items.map((item) => (
                     <li
                         className={cx('li')}
-                        key={item.name}
+                        key={item.named}
                         role="button"
                         tabIndex={0}
-                        aria-label={item.name}
+                        aria-label={item.named}
                         aria-url={item.url}
-                        onDoubleClick={() => handleClick(item.name)}
+                        onDoubleClick={() => handleClick(item.named)}
                     >
                         <img src="/folder.svg" alt="" />
 
                         <span className={cx('name')}>
-                            {item.name}
+                            {item.named}
                         </span>
 
           
@@ -284,7 +366,8 @@ const Move: React.FC<MoveProps> = () => {
                     type='text'
                     onKeyDown={handleKeyPress}
                     onChange={handleInputChange}
-                    name={name}
+                    name={namea}
+                    disabled={dis}
                 />
             </div>
 
@@ -297,7 +380,9 @@ const Move: React.FC<MoveProps> = () => {
                         }
                     }
                     aria-label='Cancel'
-                    title='Cancel'>
+                    title='Cancel'
+                    disabled={dis}
+                    >
                     Cancel
                 </button>
                 <button
@@ -305,6 +390,7 @@ const Move: React.FC<MoveProps> = () => {
                     aria-label='Create'
                     title='Create'
                     onClick={submit}
+                    disabled={dis}
                     >
                     Create
                 </button>

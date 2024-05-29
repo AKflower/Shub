@@ -112,6 +112,8 @@ interface ShubContextProps {
     toggleShowResetPassword: () => void;
     showNewRole: string;
     toggleShowNewRole: () => void;
+    setOverlay: () => void;
+
 }
 
 const ShubContext = createContext<ShubContextProps | undefined>(undefined);
@@ -124,6 +126,7 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const router = useRouter();
   const pathname = usePathname()
   const userId = Cookies.get('userId');
+  const token = Cookies.get('accessToken');
 
   const [sessionInfo, setSessionInfo] = useState()
   const fetchDataSession = async () => {
@@ -132,11 +135,17 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
       user_id: userId
     }
   });
+
+    if(!res.data.isActive) {
+      router.push('/')
+      Cookies.set('accessToken', '', { secure: true, sameSite: 'strict' });
+    }
     setSessionInfo(res.data)
   }
   useEffect(() => {
    
-    fetchDataSession();
+    if(pathname != '/') fetchDataSession();
+
     
   }, [pathname]
   
@@ -149,6 +158,9 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const [currentPromptName, setCurrentPromptName] = useState('');
   const toggleCurrentPromptName = () => {
     setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  };  
+  const setOverlay = () => {
+    setCurrentPromptName('');
   };  
 
   const [showNewFile, setShowNewFile] = useState('');
@@ -419,6 +431,7 @@ const value: ShubContextProps = {
 
     showNewRole,
     toggleShowNewRole,
+    setOverlay
   };
 
   return <ShubContext.Provider value={value}>{children}</ShubContext.Provider>;

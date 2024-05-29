@@ -65,6 +65,8 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, children }) => {
                       <img src="/pdf.svg" alt="" />
                     : option.type == 'vnd.openxmlformats-officedocument.wordprocessingml.document' ?
                       <img src="/word.svg" alt="" />
+                    : option.type == 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' ?
+                      <img src="/ex.svg" alt="" />
                     : <img src="/un.svg" alt="" />
                   }
                   <span className={cx('name')}>{option.name}</span>

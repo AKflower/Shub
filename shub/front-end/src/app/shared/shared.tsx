@@ -30,6 +30,7 @@ interface FileProps {
     share: string[],
     file_size: string,
     file_lock:boolean
+    owner: string
 }
 
 interface FoldersProps {
@@ -42,6 +43,7 @@ interface FoldersProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
+    owner: string
 }
 
 const Shared = () => {
@@ -90,10 +92,19 @@ const Shared = () => {
                         }
                     }
 
-                    setFolder(folderD)
-                    setFile(fileD) 
+                    let filteredFolders = folderD.filter((folder: { isDelete: any; }) => !folder.isDelete);
+                    let filteredFiles = fileD.filter((file: { isDelete: any; }) => !file.isDelete);
 
-                    if (!fileD[0] && !folderD[0]) {
+                    const folders = JSON.stringify(filteredFolders);
+                    Cookies.set('foldersS', folders, { secure: true, sameSite: 'strict' });
+            
+                    const files = JSON.stringify(filteredFiles);
+                    Cookies.set('filesS', files, { secure: true, sameSite: 'strict' });
+
+                    setFolder(filteredFolders)
+                    setFile(filteredFiles) 
+
+                    if (!filteredFolders[0] && !filteredFiles[0]) {
                         setBlank('show')
                     }
                     else setBlank('')

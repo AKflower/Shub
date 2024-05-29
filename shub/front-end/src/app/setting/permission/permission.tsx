@@ -38,7 +38,7 @@ export default function Permission() {
     const fetchData = async () => {
         setIsSaving(true)
         const params = {
-            role_organization: sessionInfo ? sessionInfo.organization : selectedOrgId,
+            role_organization: (sessionInfo &&  sessionInfo.role != 'role_1') ? sessionInfo.organization : selectedOrgId,
         }
         const res = await axios.get(`http://localhost:3001/role/org`,{ params});
         res.data.sort((a: { level: number; }, b: { level: number; }) => a.level - b.level);
@@ -144,8 +144,12 @@ export default function Permission() {
                               {listPermissions.map((permission) => (
                                  <td className={styles.td}>
                                     {(!sessionInfo.permissionIds.includes('permission_1') && permission.permission_id == 'permission_1') ? 
-                                        <input type="checkbox" className={styles.checkbox+' '+ styles.disabled}  disabled={true}/> :
-                                    sessionInfo.level > role.level && sessionInfo.level ? 
+                                        <input type="checkbox" checked={role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)} className={styles.checkbox+' '+ styles.disabled}  disabled={true}/> :
+                                    (!sessionInfo.permissionIds.includes('permission_2') && permission.permission_id == 'permission_2') ? 
+                                        <input type="checkbox" checked={role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)} className={styles.checkbox+' '+ styles.disabled}  disabled={true}/> :
+                                    (sessionInfo.role_name == role.role_name && permission.permission_id == 'permission_3') ? 
+                                        <input type="checkbox" checked={role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)} className={styles.checkbox+' '+ styles.disabled}  disabled={true}/> :
+                                    (role.role_permissionIds.includes('permission_2') && sessionInfo.role != 'role_1') ? 
                                         <input type="checkbox" checked={role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)} className={styles.checkbox+' '+ styles.disabled}  disabled={true}/> :
                                         <input type="checkbox" checked={role.role_permissionIds && role.role_permissionIds.includes(permission.permission_id)} className={styles.checkbox+' '+(isSaving ? styles.disabled: '')} onClick={() => handleChangePermission(role,permission.permission_id)} disabled={isSaving}/>}
                                      

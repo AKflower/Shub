@@ -4,6 +4,8 @@ import {useShub} from '@/app/Provider/Provider'
 import { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useParams } from 'next/navigation';
+
 
 const cx=classNames.bind(styles)
 const ResetPassword = () => {
@@ -11,13 +13,14 @@ const ResetPassword = () => {
     const {toggleCurrentPromptName, toggleShowResetPassword} = useShub();
     const [isSaving,setIsSaving] = useState<boolean>(false);
     const accessToken = Cookies.get('accessToken');
-
+    const params = useParams()
+    console.log(params)
 
     const reset = () => {
         // const load = toast.loading('Loading...')
             setIsSaving(true)
             const data = {
-                user_id : "user_2",
+                user_id : params.id,
             }
              axios.put(`http://localhost:3001/user/reset-password`, data, {
                 headers: {

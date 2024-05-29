@@ -10,14 +10,15 @@ const cx = classNames.bind(styles);
 
 interface FoldersProps {
     folder_id: string,
-    folder_name: string,
-    folder_path: string,
-    user_id: string,
-    created_date: string,
-    updated_date: string,
-    isFavourite: boolean,
-    isDelete: boolean,
-    share: string[],
+  folder_name: string,
+  folder_path: string,
+  owner: string,
+  created_date: string,
+  updated_date: string,
+  isFavourite: boolean,
+  isDelete: boolean,
+  share: string[],
+  user_id:string,
 
 }
 
@@ -35,7 +36,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
         handleData
     } = useShub();
     const pathname = usePathname()
-    const bo1 = pathname.replace('/setting/userManage/', '')
+    const bo1 = pathname.replace('/setting/org/', '')
     const bo2 = bo1.slice(0, bo1.indexOf('/'))
     
     return (

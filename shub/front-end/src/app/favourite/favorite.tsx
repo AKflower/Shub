@@ -33,6 +33,8 @@ interface FileProps {
     isDelete: boolean,
     share: string[],
     file_size: string,
+    file_lock:boolean
+
 }
 
 interface FoldersProps {

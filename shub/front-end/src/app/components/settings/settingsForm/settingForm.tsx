@@ -17,6 +17,8 @@ type User = {
   email:string,
   firstName: string,
   lastName: string,
+  organization: string,
+  role: string,
 }    
 
 const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userAffected?:User | null,isAddNew?: boolean}) => {
@@ -162,20 +164,21 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const fetchData = async () => {
       
       const res = await axios.get(`http://localhost:3001/role/org`,{ params: {
-        role_organization: sessionInfo ? sessionInfo.organization : selectedOrgId,
+        role_organization: (sessionInfo &&  sessionInfo.role != 'role_1') ? sessionInfo.organization : userAffected ? userAffected.organization :selectedOrgId,
       }});
-      
-      var roleName: string [] = []
-      
-      res.data.forEach((item: Role) => {
-        roleName.push(item.role_name);
-      })
-      setRolesName(roleName)
-      console.log('tead',res.data)
       res.data.sort((a: { level: number; }, b: { level: number; }) => a.level - b.level);
       
-      setRoles(res.data);
-      setRole(res.data[0]?.role_id)
+      var roleName: Role [] = []
+      
+      res.data.forEach((item: Role) => {
+        if(userAffected?.role == item.role_id) roleName.unshift(item);
+        else roleName.push(item);
+      })
+      // setRolesName(roleName)
+      console.log('tead',res.data)
+      
+      setRoles(roleName);
+      setRole(roleName[0]?.role_id)
     }
   useEffect(() => {
       
@@ -194,6 +197,44 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     const themes = [
         "Light", "Dark"
     ]
+
+    const handleModify = (event : any) => {
+      event.preventDefault();
+      setIsSaving(true);
+      
+      console.log(role);
+      const data = { user_id: userAffected?.user_id, role: role };
+
+       axios.put(`http://localhost:3001/user/updateRole`, data,{
+                
+            })
+            .then(response => {
+              
+               
+                setRole(role)
+                setIsSaving(false)
+                if(pathname.includes('org')) router.push('/setting/org');
+                else router.push('/setting/userManage');
+  
+            })
+            .catch(error => {
+                console.error('Error updating user:', error);
+                
+                toast.error(`Error updating user`, {
+                  position: "bottom-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  transition: Bounce,
+                  });
+                  setIsSaving(false);
+            });
+     
+      } 
   
     
   
@@ -211,7 +252,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     console.log(user);
 
   return ( 
-        <form action="" className={fonts.poppins.className}>
+      <>
+        {sessionInfo && (<form action="" className={fonts.poppins.className}>
             <div className="grid grid-cols-2 gap-x-16 gap-y-2 pr-16 mt-1" style={{display:'grid'}}>
                 <Input label='First name' type='text' value={user.firstName} />
                 <Input label='Last name' type='text' value={user.lastName} />
@@ -220,7 +262,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='Organization' type='text' value={orgs.find((el: { id: string; })  => el.id == sessionInfo.organization)?.name}/> 
                 <Input label='Role' type='text' value={sessionInfo?.role_name}/> 
             </div>
-        </form>
+        </form>)}
+      </>
     )
   }
   else if (actionBy==='admin') {
@@ -239,7 +282,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                     <Input label='Password' type='password' isDisabled={true} value={email} onChange={setPassword} isProcessing={isSaving}/>
                     {<div style={{display:'flex',flexDirection:'column'}}>
                       <label htmlFor="" className="" style={{ fontSize: '0.8rem',color: '#546E7A'}}>Organization</label>  
-                      <select value={sessionInfo.organization} onChange={handleChange} style={{padding:'.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver',width: '80%',background: !sessionInfo.permissionIds.includes('permission_1') ? '#f7f7f7' : 'white'}} disabled={!sessionInfo.permissionIds.includes('permission_1')}>
+                      <select value={sessionInfo.organization != '' ? sessionInfo.organization : selectedOrgId} onChange={handleChange} style={{padding:'.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver',width: '80%',background: !sessionInfo.permissionIds.includes('permission_1') ? '#f7f7f7' : 'white'}} disabled={!sessionInfo.permissionIds.includes('permission_1')}>
                             {orgs.map((org) => (
                             <option key={org.id} value={org.id}>
                                 {org.name}
@@ -298,15 +341,24 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
             <Input label='Last name' type='text' value={userAffected?.lastName}/>
             <Input label='Email' type='email' value={userAffected?.email} />
             <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={userAffected?.user_id}/>
-            <Input label='Organization' type='text' value={orgs.find((el: { id: string; })  => el.id == sessionInfo?.organization)?.name}/>
-            <Select label='Role' list={rolesName}/>
+            <Input label='Organization' type='text' value={orgs.find((el: { id: string; })  => el.id == userAffected?.organization)?.name}/>
+            <div style={{display:'flex',flexDirection:'column'}}>
+                      <label htmlFor="" className="" style={{    fontSize: '0.8rem',color: '#546E7A'}}>Role</label>  
+                      <select value={role} onChange={handleChangeRole} style={{padding:'.5em',borderRadius: '10px',boxShadow: '1px 1px 2px silver',width: '80%'}} >
+                            {roles.map((role) => (
+                            <option key={role.role_id} value={role.role_id}>
+                                {role.role_name}
+                            </option>
+                        ))}
+                      </select>
+            </div>
         </div>
 
         
         
         <div className={styles.buttonContainer}>
-            <Button1 name='Cancel' type='' isDisabled={isSaving}/>
-            <Button1 name='Save' type='success' isDisabled={isSaving}/>
+            <Button1 name='Cancel' type='' onClick={handleCancel} isDisabled={isSaving}/>
+            <Button1 name='Save' onClick={handleModify} type='success' isDisabled={isSaving}/>
         </div>
            
      

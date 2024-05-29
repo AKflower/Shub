@@ -58,6 +58,7 @@ const [showToast, setShowToast] = useState("");
   const [name, setName] = useState('');
   const [filter, setFilter] = useState('');
   const [searchData, setSearchData] = useState<Option[] >([]);
+  const userId = Cookies.get('userId');
   
   const { 
     currentPromptName, 
@@ -114,7 +115,10 @@ const [showToast, setShowToast] = useState("");
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
-      const data = { prefix: searchQuery };
+      const data = { 
+        prefix: searchQuery,
+        user_id: userId,
+       };
       
       const resFile = await axios.get(`http://localhost:3001/files/search`,{
         params: data, // Truyền dữ liệu qua Data parameters

@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -7,6 +6,7 @@ import Search from './components/search/search'
 import HeaderBar from './components/header/HeaderBar'
 import { ShubProvider } from './Provider/Provider'
 import Breadcrumbs from './components/breadcumbs/breadcrumbs'
+import Foot from './components/footer/footer'
 
 
 
@@ -37,6 +37,8 @@ export default function RootLayout({
       </main>
       
       </body>
+      <Foot/>
+
     </html>
     </ShubProvider> 
    

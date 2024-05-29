@@ -45,6 +45,13 @@ interface FoldersProps {
     share: string[],
 }
 
+interface User {
+    firstName: string,
+    lastName: string,
+    
+}
+
+
 const File = () => {
     const { 
         change, 
@@ -52,6 +59,7 @@ const File = () => {
         hideOption,
     } = useShub();
     const [blank, setBlank] = useState('');
+    const [user, setUser] = useState<User>();
     const [folder, setFolder] = useState<FoldersProps[]>([]);
     const [file, setFile] = useState<FileProps[]>([]);
     const pathname = usePathname()
@@ -85,9 +93,17 @@ const File = () => {
                 },
             });
 
+            const resU = await axios.get(`http://localhost:3001/user/${bo2}`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`, 
+                },
+            });
+
             let filteredFolders = resF.data.filter((folder: { isDelete: any; }) => !folder.isDelete);
             let filteredFiles = res.data.filter((file: { isDelete: any; }) => !file.isDelete);
 
+            setUser(resU.data)
             setFile(filteredFiles)
             setFolder(filteredFolders)
 
@@ -107,7 +123,6 @@ const File = () => {
         <div className={cx('container')}>
             {(userId == folder[0]?.user_id) || (userId == file[0]?.user_id) ? <Tool /> : <ToolFS />}
             
-            <div className={cx('doc', fonts.poppins.className)}>Viewing documents of AK</div>
 
             <BCFV />
             
@@ -121,6 +136,8 @@ const File = () => {
                 </div>
                 <div className={cx('message')}>It feels lonely here...</div>
             </div>)}
+
+
            
             <Toaster 
                 position="top-center"

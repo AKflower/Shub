@@ -17,6 +17,7 @@ interface FoldersProps {
     isFavourite: boolean,
     isDelete: boolean,
     share: string[],
+    owner: string
 
 }
 
@@ -31,7 +32,8 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
         handleIsDelete,
         handleShare,
         handleInfoFolder,
-        handleData
+        handleData,
+        handleName
     } = useShub();
 
     return (
@@ -59,6 +61,7 @@ export default function FolderSection ({folders} : {folders:FoldersProps[]})  {
                             else {
                                 handleIsDelete(folder.isDelete)
                             }
+                            handleName(folder.folder_name)
 
                             handleShare(folder.share)
                             handleInfoFolder(folder)

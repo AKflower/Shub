@@ -145,8 +145,8 @@ export class FileService {
       
     return files;
   }
-  async getFilesByPrefix(contract: Contract, prefix: string): Promise<File[]> {
-    const resultBytes= await contract.evaluateTransaction('GetFilesByPrefix',prefix);
+  async getFilesByPrefix(contract: Contract,user_id:string, prefix: string): Promise<File[]> {
+    const resultBytes= await contract.evaluateTransaction('GetFilesByPrefix',user_id,prefix);
     const utf8Decoder = new TextDecoder();
     const resultJson = utf8Decoder.decode(resultBytes);
     const result = JSON.parse(resultJson);

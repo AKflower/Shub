@@ -21,7 +21,7 @@ interface FileProps {
     share: string[],
     file_size:string,
     file_lock:boolean
-
+    owner:string
 }
 
 

@@ -15,6 +15,7 @@ const Tool = () => {
   const accessToken = Cookies.get('accessToken');
 
   const { 
+    currentPromptName,
     toggleCurrentPromptName,
     toggleShowShare,
     option, 
@@ -29,10 +30,12 @@ const Tool = () => {
     isFavourite,
     handleChange,
     toggleShowLock,
-    lock
+    lock,
+    setOverlay
   } = useShub();
 
-  const handleFavourite = () => {
+  console.log(currentPromptName)
+  const handleFavourite = async() => {
     const load = toast.loading('Loading...')
     if (type == 'folder'){
       const data = {
@@ -41,7 +44,7 @@ const Tool = () => {
         isFavourite: isFavourite ? false : true
       };
 
-      axios.put(`http://localhost:3001/folders/updateFavourite`, data, {
+      await axios.put(`http://localhost:3001/folders/updateFavourite`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`, 
@@ -51,11 +54,14 @@ const Tool = () => {
                 if(isFavourite) toast.success('File removed from Favourite')
                 else toast.success('File added to Favourite')
                 toast.dismiss(load);
+               setOverlay()
+                
                 handleChange()
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+
     }
     else{
       const data = {
@@ -63,7 +69,7 @@ const Tool = () => {
         file_id: selected,
         isFavourite: isFavourite ? false : true
       };
-      axios.put(`http://localhost:3001/files/updateFavourite`, data, {
+      await axios.put(`http://localhost:3001/files/updateFavourite`, data, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`, 
@@ -74,10 +80,15 @@ const Tool = () => {
         else toast.success('File added to Favourite')
         toast.dismiss(load);
         handleChange()
+        setOverlay()
       })
       .catch(error => {
         console.error('Error:', error);
+        
       });
+
+    
+      
     }
   }
   
@@ -178,7 +189,14 @@ const Tool = () => {
           icon={isFavourite ? (<img src='/fa.svg'></img>) : (<img src='/star.svg'></img>)}
           label='Favourite'
           counter={0}        
-          onAction={handleFavourite}
+          onAction={()=>{
+            toggleCurrentPromptName()
+
+             handleFavourite()
+          }
+             
+
+          }
         />
       </div>
       </>

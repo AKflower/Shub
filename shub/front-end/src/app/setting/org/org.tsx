@@ -186,14 +186,14 @@ const Org = ({role}:{role:string}) => {
                 </thead>
                 <tbody>
                    {users.map((item)=> (
-                        <tr>
+                        <tr key={item.user_id}>
                             <td>{item.fullName}</td>
                             <td className={styles.blue}>{item.email}</td>
                             <td>{orgs.find((el: { id: string; })  => el.id == item.organization)?.name}</td>
                             <td>{item.role_name}</td>
                             <td className={styles.action}>
                               {sessionInfo.permissionIds.includes('permission_2') && <Link href={`/setting/org/${item.user_id}`}><span className={styles.edit} onClick={()=>handleMore(item)}><EditOutlinedIcon /></span></Link>}
-                              {(item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}><div className={styles.view}><img  src='/view.svg'></img></div></Link>)}
+                              {sessionInfo.permissionIds.includes('permission_4') && (item.user_id != userId && sessionInfo.level < item.level) && (<Link onClick={() => handleView(item.user_id)} href={`/setting/org/${item.user_id}/view`}><div className={styles.view}><img  src='/view.svg'></img></div></Link>)}
                             </td>
                             
                         </tr>

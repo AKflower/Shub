@@ -34,15 +34,15 @@ export default function Role () {
     }
     const [selectedOrgId, setSelectedOrgId] = useState('Org1');
     const [newRole,setNewRole] = useState<string>("")
-    const [isSaving,setIsSaving]= useState<Boolean>(false)
+    const [isSaving,setIsSaving]= useState<boolean>(false)
     const { toggleShowNewRole, toggleCurrentPromptName} = useShub()
-    const [ isAddNew, setIsAddNew] = useState<Boolean>(false)
+    const [ isAddNew, setIsAddNew] = useState<boolean>(false)
     const [roles,setRoles] = useState<Role[]>([])
     const [roleType,setRoleType] = useState<RoleType[]>([])
     const [listRoles,setListRoles] = useState<RoleType[] | []>([])
     const fetchData = async () => {
         const params = {
-            role_organization: sessionInfo ? sessionInfo.organization : selectedOrgId,
+            role_organization: (sessionInfo &&  sessionInfo.role != 'role_1') ? sessionInfo.organization : selectedOrgId,
         }
         const res = await axios.get(`http://localhost:3001/role/org`,{ params});
         var data : RoleType [] = [
@@ -122,7 +122,10 @@ export default function Role () {
         setIsSaving(true)
         console.log(e);
         const {source,destination} =e;
-        if (!destination) return;
+        if (!destination) {
+            setIsSaving(false)
+            return;
+        }
         if (source.droppableId === destination?.droppableId) {
             
             console.log('case 1');
@@ -149,6 +152,7 @@ export default function Role () {
                     fetchData()
                 })
             }
+            setIsSaving(false)
         //     const params = {
                 
         //     }
@@ -288,7 +292,7 @@ export default function Role () {
                                 </div>
                                 {   roleType.id==1 && isAddNew &&
                                     <div className={styles.cardInactive}>
-                                        <input type="text" className={styles.inputNew} value={newRole} onChange={handleInputNewRole}/>
+                                        <input disabled={isSaving} type="text" className={styles.inputNew} value={newRole} onChange={handleInputNewRole}/>
                                         <div className={styles.button}>
                                            {!isSaving && <button className={styles.btn} onClick={handleCreateRole}>Add</button>}
                                            {!isSaving && <button className={styles.btn} style={{background:'red'}} onClick={handleAddNew}>Cancel</button>}

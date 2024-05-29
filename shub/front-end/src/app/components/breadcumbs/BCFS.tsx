@@ -19,12 +19,22 @@ interface BCFSProps {
 const BCFS =() => {
   const pathname = usePathname();
   let parts = pathname.split("/").filter(Boolean);
-  const folderNS = Cookies.get('folderNS');
+  const folderNS = Cookies.get('foldersS');
   let f = 0
-  for(let i = 0; i < parts.length; i++){
-    if (folderNS == parts[i]) f = i
+  const path = pathname.replace('shared', 'files')
+  if(folderNS){
+    const folders = JSON.parse(folderNS);
+
+    for(let i = 0; i < parts.length; i++){
+      for(let j = 0; j < folders.length; j++){
+        if (folders[j].folder_name == parts[i] && (folders[j].folder_path + '/' + folders[j].folder_name) == path) f = i
+
+      }
+    }
   }
-  parts.splice(1,f - 1)
+  
+  parts.splice(1,f-1)
+
  
   let routes = parts.map((part,index) => {
     
