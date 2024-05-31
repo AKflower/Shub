@@ -32,7 +32,8 @@ export class User {
     @Property()
     public organization: string;
 
-   
+   @Property()
+   public subordinates?: string[];
     
    
 }

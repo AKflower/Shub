@@ -357,6 +357,17 @@ export class UserContract extends Contract {
       
           return JSON.stringify(allResults);
       }
+      @Transaction(true)
+      public async UpdateSubordinates(ctx: Context,user_id: string,subordinates: string[]){
+        const exists = await this.UserExists(ctx, user_id);
+        if (!exists) {
+            throw new Error(`The user ${user_id} does not exist`);
+        }
+        const userString = await this.GetUserById(ctx,user_id);
+        const userJSON = JSON.parse(userString);
+        userJSON.subordinates=subordinates;
+        await ctx.stub.putState(user_id,Buffer.from(stringify(sortKeysRecursive(userJSON))));
+      }
 }
    
     

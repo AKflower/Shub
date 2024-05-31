@@ -39,7 +39,8 @@ export class UserService {
         role: item.role,
         isActive: item.isActive,
         isFirstAccess: item.isFirstAccess,
-        organization: item.organization
+        organization: item.organization,
+        subordinates: item.subordinates
       }
       const roleDetail = await this.roleService.getRoleByID(this.contractForRole,user.role);
       user.role_name = roleDetail.role_name;
@@ -151,6 +152,12 @@ export class UserService {
     else users.push(result);
     return users;
   }
+  async getLowerLevelUser(contract: Contract,role_id:string,organization:string): Promise<User[]> {
+    const role = await this.roleService.getRoleByID(this.contractForRole,role_id);
+    const users = await this.getUserByOrganization(contract,organization);
+    const usersLowerLevel = users.filter(item => item.level<role.level);
+    return usersLowerLevel;
+  }
   async createNewUser(contract: Contract, newUser : User): Promise<string> {
     console.log('check new user');
     const saltOfRounds = 10;
@@ -243,5 +250,14 @@ export class UserService {
     } catch (error) {
         throw new Error('Failed to update user email: ' + error.message);
     }
-}
+
+  }
+  async updateSubordinates(contract: Contract, user_id:string,subordinates: string): Promise<string>{
+    try {
+      await contract.submitTransaction('UpdateSubordinates', user_id, subordinates);
+      return `Subordinates updated successfully!`;
+  } catch (error) {
+      throw new Error('Failed to update user\'s subordinates: ' + error.message);
+  }
+  }
 }

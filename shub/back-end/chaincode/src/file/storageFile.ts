@@ -41,7 +41,8 @@ export class StorageFileContract extends Contract {
             lastName:'',
             isFirstAccess: false,
             isActive: true,
-            organization: ""
+            organization: "",
+            subordinates: ['*']
             
           }
            
@@ -67,7 +68,8 @@ export class StorageFileContract extends Contract {
             level: -Infinity,
             role_type: 1,
             role_organization: '',
-            role_permissionIds: ['permission_1','permission_2','permission_3','permission_4']
+            role_permissionIds: ['permission_1','permission_2','permission_3'],
+            isGlobal: true
           }
           
           const role2 : Role = 
@@ -78,7 +80,8 @@ export class StorageFileContract extends Contract {
             level: 1000,
             role_type: 1,
             role_organization: '',
-            role_permissionIds: []
+            role_permissionIds: [],
+            isGlobal: false
           }
           const permission1 : Permission = {
             permission_id: 'permission_1',
@@ -86,20 +89,13 @@ export class StorageFileContract extends Contract {
           }
           const permission2 : Permission = {
             permission_id: 'permission_2',
-            permission_name: 'User manage in Organization',
+            permission_name: 'Document manage',
           }
           const permission3 : Permission = {
             permission_id: 'permission_3',
-            permission_name: 'Role manage',
+            permission_name: 'Lower Level Access',
           }
-          const permission4 : Permission = {
-            permission_id: 'permission_4',
-            permission_name: 'Lower-level document access',
-          }
-          const permission5: Permission = {
-            permission_id: 'permission_5',
-            permission_name: 'Modify document'
-          }
+          
             await ctx.stub.putState(firstfile.file_id, Buffer.from(stringify(sortKeysRecursive(firstfile))));
             await ctx.stub.putState(admin.user_id, Buffer.from(stringify(sortKeysRecursive(admin))));
             await ctx.stub.putState(folder.folder_id, Buffer.from(stringify(sortKeysRecursive(folder))));
@@ -108,9 +104,7 @@ export class StorageFileContract extends Contract {
             await ctx.stub.putState(permission1.permission_id, Buffer.from(stringify(sortKeysRecursive(permission1))));
             await ctx.stub.putState(permission2.permission_id, Buffer.from(stringify(sortKeysRecursive(permission2))));
             await ctx.stub.putState(permission3.permission_id, Buffer.from(stringify(sortKeysRecursive(permission3))));
-            await ctx.stub.putState(permission4.permission_id, Buffer.from(stringify(sortKeysRecursive(permission4))));
-            await ctx.stub.putState(permission5.permission_id, Buffer.from(stringify(sortKeysRecursive(permission5))));
-
+            
             console.info(`Asset ${firstfile.file_id} initialized`);
             console.info(`Asset ${admin.user_id} initialized`);
     }

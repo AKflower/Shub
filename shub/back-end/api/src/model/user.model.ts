@@ -25,6 +25,8 @@ export class User {
     organization?:string;
 
     level?: number;
+    
+    subordinates?:string;
 
     constructor({email,password,firstName,lastName}) {
         

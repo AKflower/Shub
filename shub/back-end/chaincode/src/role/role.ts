@@ -24,4 +24,7 @@ export class Role {
    
     @Property()
     public role_permissionIds: string[]
+
+    @Property()
+    public isGlobal: boolean;
 }

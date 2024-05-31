@@ -42,7 +42,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             lastName: '',
             isFirstAccess: false,
             isActive: true,
-            organization: ""
+            organization: "",
+            subordinates: ['*']
         };
         const folder = {
             folder_id: 'folder_1',
@@ -63,7 +64,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             level: -Infinity,
             role_type: 1,
             role_organization: '',
-            role_permissionIds: ['permission_1', 'permission_2', 'permission_3', 'permission_4']
+            role_permissionIds: ['permission_1', 'permission_2', 'permission_3'],
+            isGlobal: true
         };
         const role2 = {
             role_id: 'role_2',
@@ -72,7 +74,8 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
             level: 1000,
             role_type: 1,
             role_organization: '',
-            role_permissionIds: []
+            role_permissionIds: [],
+            isGlobal: false
         };
         const permission1 = {
             permission_id: 'permission_1',
@@ -80,19 +83,11 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         };
         const permission2 = {
             permission_id: 'permission_2',
-            permission_name: 'User manage in Organization',
+            permission_name: 'Document manage',
         };
         const permission3 = {
             permission_id: 'permission_3',
-            permission_name: 'Role manage',
-        };
-        const permission4 = {
-            permission_id: 'permission_4',
-            permission_name: 'Lower-level document access',
-        };
-        const permission5 = {
-            permission_id: 'permission_5',
-            permission_name: 'Modify document'
+            permission_name: 'Lower Level Access',
         };
         await ctx.stub.putState(firstfile.file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(firstfile))));
         await ctx.stub.putState(admin.user_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(admin))));
@@ -102,8 +97,6 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         await ctx.stub.putState(permission1.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission1))));
         await ctx.stub.putState(permission2.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission2))));
         await ctx.stub.putState(permission3.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission3))));
-        await ctx.stub.putState(permission4.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission4))));
-        await ctx.stub.putState(permission5.permission_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(permission5))));
         console.info(`Asset ${firstfile.file_id} initialized`);
         console.info(`Asset ${admin.user_id} initialized`);
     }
@@ -178,6 +171,7 @@ let StorageFileContract = class StorageFileContract extends fabric_contract_api_
         const fileString = await this.GetFile(ctx, file_id);
         const fileJSON = JSON.parse(fileString);
         fileJSON.file_name = new_file_name;
+        fileJSON.file_nameForSearch = new_file_name.toLowerCase();
         await ctx.stub.putState(file_id, Buffer.from((0, json_stringify_deterministic_1.default)((0, sort_keys_recursive_1.default)(fileJSON))));
     }
     async FileExists(ctx, file_id) {

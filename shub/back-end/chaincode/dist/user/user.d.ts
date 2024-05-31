@@ -8,4 +8,5 @@ export declare class User {
     isFirstAccess: boolean;
     isActive: boolean;
     organization: string;
+    subordinates?: string[];
 }

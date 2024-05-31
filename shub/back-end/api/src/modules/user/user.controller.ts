@@ -125,4 +125,15 @@ export class UserController {
             throw new Error(error.message);
         }
     }
+    @Put('/updateSubordinates')
+    async updateSubordinates(@Body() params: {user_id: string, subordinates: string[]}) {
+        const { user_id, subordinates } = params;
+        const subordinatesString = JSON.stringify(subordinates)
+        try {
+            const res = await this.userService.updateEmail(this.contract, user_id, subordinatesString);
+            return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
