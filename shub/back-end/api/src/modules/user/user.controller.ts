@@ -130,8 +130,18 @@ export class UserController {
         const { user_id, subordinates } = params;
         const subordinatesString = JSON.stringify(subordinates)
         try {
-            const res = await this.userService.updateEmail(this.contract, user_id, subordinatesString);
+            const res = await this.userService.updateSubordinates(this.contract, user_id, subordinatesString);
             return new ResponseData<String>(res,HttpStatus.SUCCESS,HttpMessage.SUCCESS );
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    @Get('/lowerlevel')
+    async getLowerLevelUser(@Body() params: {role_id:string,organization: string}) {
+        const {role_id,organization} = params;
+        try {
+            const res = await this.userService.getLowerLevelUser(this.contract, role_id, organization);
+            return res;
         } catch (error) {
             throw new Error(error.message);
         }
