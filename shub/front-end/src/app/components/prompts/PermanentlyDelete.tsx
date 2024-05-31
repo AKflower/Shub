@@ -101,7 +101,7 @@ const PermanentlyDelete: React.FC<DeleteProps> = () => {
       <div className={cx("card-content")}
           >
         <p>
-          Are you sure you want to delete this file/folder?
+          Are you sure you want to permanently delete this file/folder?
         </p>
       </div>
       <div className={cx("card-action")}>

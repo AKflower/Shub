@@ -17,6 +17,8 @@ const ModifyUser = () => {
         email:string,
         firstName: string,
         lastName: string,
+        organization: string,
+        role: string,
     }    
     const [userCurrent, setUserCurrent] = useState<User | null >(null);
     

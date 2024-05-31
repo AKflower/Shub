@@ -34,7 +34,6 @@ const ModifyUser = () => {
         }
         fetchUser()
       }, []);
-    console.log(user);
     return (
       
         <div className="px-4">

@@ -12,7 +12,6 @@ const Input = ({label,type,value,changePossible=false,isDisabled=true,isError=fa
     const { toggleCurrentPromptName, toggleShowChangePassword, toggleShowResetPassword, sessionInfo, fetchDataSession } = useShub()
    
     
-    console.log('Hello: ',user_id);
     return (
         <div className={styles.container}>
             <label className={styles.label}>{label}</label>
@@ -20,7 +19,6 @@ const Input = ({label,type,value,changePossible=false,isDisabled=true,isError=fa
                 <input type={type} className={styles.input} value={value} disabled={isDisabled} style={isError ? {borderColor: 'red'}: isProcessing ? {opacity: '50%'} : {}} onChange={e => onChange && onChange(e.target.value)}/>
                 {changePossible && <span className={styles.edit} 
                 onClick={() => {
-                    console.log(user_id,sessionInfo.user_id);
                     if ((sessionInfo.permissionIds.includes('permission_1') || sessionInfo.permissionIds.includes('permission_2')) && sessionInfo.user_id !== user_id) {
                        toggleShowResetPassword()
                        toggleCurrentPromptName()

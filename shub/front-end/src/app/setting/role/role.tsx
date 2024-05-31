@@ -71,7 +71,6 @@ export default function Role () {
         data[0].roles.sort((a,b) => {
             return a.level - b.level
         })
-        console.log(data);
         setListRoles(data);
       }
     useEffect(() => {
@@ -120,7 +119,6 @@ export default function Role () {
     const onDragEnd = (e:DropResult) => {
         if (isSaving===true) return;
         setIsSaving(true)
-        console.log(e);
         const {source,destination} =e;
         if (!destination) {
             setIsSaving(false)
@@ -128,23 +126,17 @@ export default function Role () {
         }
         if (source.droppableId === destination?.droppableId) {
             
-            console.log('case 1');
             const newListRoles = [...listRoles]
             const index=parseInt(source.droppableId.split("droppable")[1]);
-            console.log(index);
             
-            console.log(newListRoles[index].roles);
             const el = newListRoles[index].roles.splice(source.index,1)
-            console.log(el);
             newListRoles[index].roles.splice(destination.index,0,...el);
-            console.log(newListRoles);
             
             if (index===0 && source.index !== destination.index) {
                 newListRoles[0].roles.forEach((role,index) => {
                     role.level=index;
                 })
                 const params = {roles: newListRoles[0].roles}
-                console.log(params);
                 axios.put(`http://localhost:3001/role/updateLevel`, params, {
                 
                 }).then(respone => {
@@ -162,7 +154,6 @@ export default function Role () {
             setListRoles(newListRoles);
         }
         else {
-            console.log('case 2');
             const newListRoles = [...listRoles];
             const oldIndex= parseInt(source.droppableId.split("droppable")[1])
             
@@ -177,7 +168,6 @@ export default function Role () {
                     role_type: newIndex? 0 : 1,
                 }
                 el[0].role_type= newIndex? 0 : 1
-                console.log('heyyyy: ',el[0]);
                 axios.put(`http://localhost:3001/role/updateTypeRole`, params, {
                 
                 }).then(respone => {
@@ -186,7 +176,6 @@ export default function Role () {
                             role.level=index;
                         })
                         const params = {roles: newListRoles[0].roles}
-                        console.log(params);
                         axios.put(`http://localhost:3001/role/updateLevel`, params, {
                         
                         }).then(respone2 => {
@@ -223,7 +212,6 @@ export default function Role () {
     }
     const handleInputNewRole = (event: any) => {
         setNewRole(event.target.value);
-        console.log(newRole);
     }
     const orgs= [
         {

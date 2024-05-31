@@ -30,7 +30,6 @@ const ChangePassword = () => {
     }
     const {toggleCurrentPromptName, toggleShowChangePassword} = useShub();
     const checkPassword = (pass: string) => {
-        console.log(pass.length);
 
         if (pass.length<8) return false;
         return true;

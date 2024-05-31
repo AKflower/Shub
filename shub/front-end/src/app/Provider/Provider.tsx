@@ -52,6 +52,8 @@ interface ShubContextProps {
     toggleShowUpload: () => void;
     showShare: string;
     toggleShowShare: () => void;
+    showSubordinate: string;
+    toggleShowSubordinate: () => void;
     option: string;
     showOption: () => void;
     hideOption: () => void;
@@ -103,6 +105,8 @@ interface ShubContextProps {
     isDelete: boolean;
     handleShare: (share: string[]) => void;
     share: string[];
+    handleSubordinate: (subordinate: string[]) => void;
+    subordinate: string[];
     handleIsDelete: (isFavourite: boolean) => void;
     showChangePassword: string;
     toggleShowChangePassword: () => void;
@@ -178,6 +182,12 @@ export function ShubProvider({ children }: ShubProviderProps): JSX.Element {
   const [showUpload, setShowUpload] = useState('');
   const toggleShowUpload = () => {
     setShowUpload(showUpload == '' ? 'more' : '');
+    // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
+  }; 
+
+  const [showSubordinate, setShowSubordinate] = useState('');
+  const toggleShowSubordinate = () => {
+    setShowSubordinate(showSubordinate == '' ? 'more' : '');
     // setCurrentPromptName(currentPromptName == '' ? 'more' : '');
   }; 
 
@@ -358,6 +368,11 @@ const handleShare = (share: string[]) =>{
   setShare(share)
 }
 
+const [subordinate, setSubordinate] = useState<string[]>([]);
+const handleSubordinate = (subordinate: string[]) =>{
+  setSubordinate(subordinate)
+}
+
 
 const value: ShubContextProps = {
     currentPromptName,
@@ -428,7 +443,10 @@ const value: ShubContextProps = {
     handleS,
     view,
     handleView,
-
+    subordinate,
+    showSubordinate,
+    toggleShowSubordinate,
+    handleSubordinate,
     showNewRole,
     toggleShowNewRole,
     setOverlay

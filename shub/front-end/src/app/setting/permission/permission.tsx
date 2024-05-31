@@ -66,7 +66,6 @@ export default function Permission() {
     const handleChangePermission = (role: Role,permission_id: string) => {
         if (isSaving) return;
         setIsSaving(true)
-        console.log(role,permission_id);
         if (role.role_permissionIds)
         {
             let index = role.role_permissionIds.indexOf(permission_id);
@@ -76,7 +75,6 @@ export default function Permission() {
             }
         }
         else role.role_permissionIds=[permission_id];
-        console.log(role,permission_id);
         const params = {
             role_id: role.role_id,
             role_permissionIds : role.role_permissionIds
@@ -106,7 +104,6 @@ export default function Permission() {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOrgId(event.target.value);
       };
-      console.log(listRoles)
 
     return (
         <>

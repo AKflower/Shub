@@ -5,7 +5,6 @@ import UserDetail from './userDetail';
 import Navigation from '../../navigation/navigation';
 export default function UserDetailPage () {
     const id = useParams() as { id: string };
-    console.log(typeof(id.id))
     
     
     return (

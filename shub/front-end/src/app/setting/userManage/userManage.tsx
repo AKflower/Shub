@@ -85,7 +85,6 @@ const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
       })
       setUsers(res.data);
   
-      console.log(users);
     }
     fetchData();
   }, [reload]
@@ -96,7 +95,6 @@ const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
         user_id: user.user_id,
         isActive: !user.isActive
       }
-      console.log(data);
       setIsSaving(true);
       axios.put(`http://localhost:3001/user/changeStatus`, data, {
                 headers: {
@@ -145,7 +143,6 @@ const UserManage = ({permissionIds}:{permissionIds:string[]}) => {
         
         item.check= !item.check;
     }
-    console.log(users)
 
     return (
       <>

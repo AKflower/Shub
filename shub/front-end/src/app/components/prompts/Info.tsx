@@ -27,7 +27,6 @@ const Info: FC<InfoProps> = () => {
   const accessToken = Cookies.get('accessToken');
   const [owner, setOwner] = useState('');
   const [share, setShare] = useState([]);
-console.log(currentPromptName)
   useEffect(()=>{
     const fetchData = async () => {
 
@@ -42,7 +41,6 @@ console.log(currentPromptName)
 
         if (type == 'folder'){
           let name = res.data.find((el: { user_id: string; })  => el.user_id == (infoFolder?.owner ? infoFolder?.owner : infoFolder?.user_id))
-          console.log('daw',infoFolder?.user_id)
           setOwner(name?.firstName + ' ' + name?.lastName)
         }
         else {

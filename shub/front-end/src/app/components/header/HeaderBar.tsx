@@ -30,6 +30,7 @@ import PermanentlyDelete from '../prompts/PermanentlyDelete';
 import Restore from '../prompts/Restore';
 import Open from '../prompts/Open';
 import NewRole from '../prompts/NewRole';
+import Subordinate from '../prompts/Subordinate';
 
 const cx = classNames.bind(styles);
 
@@ -46,10 +47,7 @@ interface Option {
   type: string;
 }
 
-
 const HeaderBar: FC<HeaderBarProps> = ({ showLogo, showMenu, children }) => {
-
-const [showToast, setShowToast] = useState("");
 
   const pathname = usePathname()
   const isLogin = (pathname=='/') 
@@ -59,7 +57,6 @@ const [showToast, setShowToast] = useState("");
   const [filter, setFilter] = useState('');
   const [searchData, setSearchData] = useState<Option[] >([]);
   const userId = Cookies.get('userId');
-  
   const { 
     currentPromptName, 
     showRestore,
@@ -79,20 +76,16 @@ const [showToast, setShowToast] = useState("");
     showDownload,
     showInfo,
     handleStream,
-    toggleShowInfo,
-    sessionInfo,
-    fetchDataSession,
     showResetPassword,
-    toggleShowResetPassword,
     showNewRole,
-    toggleShowNewRole,
     showLock,
     showOpen,
-    toggleCurrentPromptName
-
+    toggleCurrentPromptName,
+    showSubordinate
   } = useShub();
   const accessToken = Cookies.get('accessToken');
   const router = useRouter();
+
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -109,9 +102,9 @@ const [showToast, setShowToast] = useState("");
       }
     } else {
       console.log('No saved user found');
-    
     }
   }, [pathname]);
+
   useEffect(()=>{
     const fetchData = async () => {
       const otp: Option[] = []
@@ -135,6 +128,7 @@ const [showToast, setShowToast] = useState("");
           'Authorization': `Bearer ${accessToken}`, 
         },
       })
+
       if (filter == 'File'){
         for (const pie in resFile.data){
           await otp.push({
@@ -173,111 +167,92 @@ const [showToast, setShowToast] = useState("");
           })
         }
       }
-      
-        
-          await setSearchData(otp)
-      
+      await setSearchData(otp)
     }
 
     if(searchQuery.length > 0) fetchData()
     else setSearchData([])
-    
   },[searchQuery, filter])
 
   useEffect(()=>{
     setSearchQuery('')
   },[pathname])
-
   
   const handleSelect = (selectedOption: any) => {
     setSearchQuery('')
     router.push(selectedOption.path);
   };
-
+  console.log(showSubordinate)
  
   return (
     <>
       {!isLogin && 
       <header>
-      <div className={cx('flex')}>
-      
-      
-      
-        <div className={cx('left')}>
-            
-          <form 
-            // onSubmit={handleSubmit}
-            >
-            <Dropdown 
-              options={searchData}
-              onSelect={handleSelect}
-            >
-              <div className={cx('search-input')}>
-                <img className={cx('icon')} src='/sr.svg'></img>
-                <input 
-                  className={cx('search-box')} 
-                  type="text" 
-                  placeholder="Search Files..." 
-                  value={searchQuery} 
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-          </Dropdown>
-              
-            
-          </form>
-          
-
-          <div className={cx('filter')}>
-            <select name="lang" id="lang-select" onChange={(e) => setFilter(e.target.value)}>
-                <option value="">All</option>
-              <option value="File">File</option>
-              <option value="Folder">Folder</option>
-            
-            </select>
-          </div>
-        </div>
-
-        <div className={cx('right')}>
-          
-          
-          <div className={cx('id')}>
-            {/* <img className={cx('ava')} src='/dan.jpg'></img> */}
-            <div className={cx('avar')}>
-              <span>
-                {name}
-              </span>
-            </div>
-            <Link href="/setting/profile"><div className={cx('info')}>
-              <p className={cx('name')}>{user.firstName}</p>
-              <p className={cx('mail')}>{user.email}</p>
-            </div>
-            </Link>
-          </div>
-        </div>
-        
-
-        {showLogo !== undefined && 
-        <Link href='/files'>
-          <div className={cx('logo')}>
-            <Image src='/images/logo.png' alt='Shub' width={40} height={40}/>
-          </div>
-        </Link>
-        
-        }
-      {showMenu !== undefined && (
-        <Action
-                  icon="menu"
-                  label={'Toggle Sidebar'}
-                //   onAction={openSidebar}
-                  className={cx('menu-button')} 
-                  counter={0}        
+        <div className={cx('flex')}>
+          <div className={cx('left')}>
+            <form>
+              <Dropdown 
+                options={searchData}
+                onSelect={handleSelect}
+              >
+                <div className={cx('search-input')}>
+                  <img className={cx('icon')} src='/sr.svg'></img>
+                  <input 
+                    className={cx('search-box')} 
+                    type="text" 
+                    placeholder="Search Files..." 
+                    value={searchQuery} 
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
-      )}
+                </div>
+              </Dropdown>
+            </form>
+          
+            <div className={cx('filter')}>
+              <select name="lang" id="lang-select" onChange={(e) => setFilter(e.target.value)}>
+                <option value="">All</option>
+                <option value="File">File</option>
+                <option value="Folder">Folder</option>
+              </select>
+            </div>
+          </div>
 
-      {children}
-      </div>
-        
+          <div className={cx('right')}>
+            <div className={cx('id')}>
+              <div className={cx('avar')}>
+                <span>
+                  {name}
+                </span>
+              </div>
+              
+              <Link href="/setting/profile">
+                <div className={cx('info')}>
+                  <p className={cx('name')}>{user.firstName}</p>
+                  <p className={cx('mail')}>{user.email}</p>
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {showLogo !== undefined && 
+            <Link href='/files'>
+              <div className={cx('logo')}>
+                <Image src='/images/logo.png' alt='Shub' width={40} height={40}/>
+              </div>
+            </Link>
+          }
+
+          {showMenu !== undefined && (
+            <Action
+              icon="menu"
+              label={'Toggle Sidebar'}
+              className={cx('menu-button')} 
+              counter={0}        
+            />
+          )}
+
+          {children}
+        </div>
 
       {showDownload && (
         <Download />
@@ -323,7 +298,6 @@ const [showToast, setShowToast] = useState("");
         <Lock />
       )}
 
-
       {showDelete && (
         <Delete />
       )}
@@ -334,6 +308,10 @@ const [showToast, setShowToast] = useState("");
 
       {showRestore && (
         <Restore />
+      )}
+
+      {showSubordinate && (
+        <Subordinate />
       )}
 
       {stream && data && type && (
@@ -349,6 +327,7 @@ const [showToast, setShowToast] = useState("");
       {showNewRole && (
         <NewRole />
       )}
+
       {children && (
         <Action
                   id={cx('more')} 
@@ -360,29 +339,16 @@ const [showToast, setShowToast] = useState("");
 
       {currentPromptName === 'more' && (
         <div className={cx('overlay')}
-      // onClick={*/() => dispatch({ type: 'closeHovers' })*/} 
-        onClick={
-          ()=>{
-            // toggleCurrentPromptName()
-            // if(showDownload){setShowDownload('')}
-            // if(showInfo){setShowInfo('')}
-            // if(showUpload){toggleShowUpload()}
-            // if(showNewFile){toggleShowNewFile()}
-            // if(showNewDir){toggleShowNewDir()}
-            // if(showShare){setShowShare('')}
-            // if(showRename){toggleShowRename()}
-            // if(showCopy){setShowCopy('')}
-            // if(showMove){setShowMove('')}
-            // if(showDelete){toggleShowDelete()}
-            if(stream){
-              toggleCurrentPromptName();
-
-              handleStream();
+          onClick={
+            ()=>{
+              if(stream){
+                toggleCurrentPromptName();
+                handleStream();
+              }
             }
-            // if(showChangePassword){toggleShowChangePassword()}
           }
-        }
-      >
+        >
+
         <ToastContainer
                 position="bottom-right"
                 autoClose={5000}
@@ -400,13 +366,10 @@ const [showToast, setShowToast] = useState("");
       )}
     
       
-    </header>
+      </header>
     }
-      </>
-    
+   </>
   );
 };
-
-
 
 export default HeaderBar;

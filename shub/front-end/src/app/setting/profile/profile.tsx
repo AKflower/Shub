@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 const Profile =  () => {
    const { sessionInfo } = useShub()
     // style={sessionInfo.role === "Admin" ? {display: "none"}: {}}
-    console.log(sessionInfo)
     return (
         <div className={fonts.poppins.className}>
             <div className={styles.headerContainer}>

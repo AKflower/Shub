@@ -109,7 +109,6 @@ const Org = ({role}:{role:string}) => {
         user_id: user.user_id,
         isActive: !user.isActive
       }
-      console.log(data);
       setIsSaving(true);
       axios.put(`http://localhost:3001/user/changeStatus`, data, {
                 headers: {
@@ -158,7 +157,6 @@ const Org = ({role}:{role:string}) => {
         
         item.check= !item.check;
     }
-    console.log(users);
 
 
     return (

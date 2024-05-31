@@ -3,15 +3,14 @@ import styles from './settingForm.module.scss';
 import Input from '../../input/input';
 import Button1 from '../../button/button1';
 import { useState, useEffect } from 'react';
-import Select from '../../select/select';
 import fonts from '../../../../../public/fonts/fonts';
 import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { usePathname, useRouter } from 'next/navigation';
-import { error } from 'console';
 import { useShub } from '@/app/Provider/Provider';
-
+import { Grid } from 'gridjs-react'
+       
 type User = {
   user_id: string,
   email:string,
@@ -23,7 +22,11 @@ type User = {
 
 const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userAffected?:User | null,isAddNew?: boolean}) => {
   const router = useRouter();
-  const { sessionInfo } = useShub()
+  const { 
+    sessionInfo, 
+    toggleShowSubordinate,
+    toggleCurrentPromptName
+  } = useShub()
   const pathname = usePathname()
   const [selectedOrgId, setSelectedOrgId] = useState('Org1');
   const [isSaving, setIsSaving] = useState(false);
@@ -35,10 +38,6 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const [firstName,setFirstName] = useState<string>("");
   const [lastName,setLastName] = useState<string>("");
   const [role,setRole] = useState<string>("");
-
-  useEffect(() => {
-    console.log('test: ', errorEmail);
-  }, [errorEmail]);
 
   useEffect(() => {
     if (errorEmail) setErrorEmail(false)
@@ -55,7 +54,6 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const handleSubmit = (event : any) => {
     event.preventDefault();
     setIsSaving(true);
-    console.log(email,password,firstName,lastName);
     if (email==='' || firstName==='' || lastName === '') {
       if (email==='') setErrorEmail(true);
       if (firstName==='') setErrorFirstName(true);
@@ -74,7 +72,6 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
       setIsSaving(false);
       return;      
     }
-    console.log(role);
      const newUser = {
         email: email,
         password: email,
@@ -133,9 +130,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     else router.push('/setting/userManage');
   }
 
-
     const [user, setUser] = useState<User | null >(null);
-
     const orgs= [
       {
           id: "Org1",
@@ -150,6 +145,7 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
           name: "Phòng CTCTSV"
       }
   ]
+
   interface Role {
     role_id: string;
     idInt: number;
@@ -158,8 +154,8 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
     role_type: number;
     role_organization: string;
   }
+
   const [roles,setRoles] = useState<Role[]>([])
-  const [rolesName,setRolesName] = useState<string[]>([])
 
   const fetchData = async () => {
       
@@ -175,7 +171,6 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
         else roleName.push(item);
       })
       // setRolesName(roleName)
-      console.log('tead',res.data)
       
       setRoles(roleName);
       setRole(roleName[0]?.role_id)
@@ -190,19 +185,14 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   };
 
   const handleChangeRole =  (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target.value)
     setRole(event.target.value);
     
   }
-    const themes = [
-        "Light", "Dark"
-    ]
 
     const handleModify = (event : any) => {
       event.preventDefault();
       setIsSaving(true);
       
-      console.log(role);
       const data = { user_id: userAffected?.user_id, role: role };
 
        axios.put(`http://localhost:3001/user/updateRole`, data,{
@@ -236,8 +226,6 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
      
       } 
   
-    
-  
   // Lấy thông tin người dùng từ localStorage khi component được render
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -249,7 +237,12 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
   const encryptPassword = ' '.repeat(8)
   // Nếu user không null, hiển thị thông tin người dùng
   if (actionBy==='user' && user) {
-    console.log(user);
+  const subordinates = [
+    {name: 'Trần Quốc Dũng', role: 'Giảng viên', mail: 'dung.tran@hcmut.edu.vn'},
+    {name: 'Trần Quốc Dũng', role: 'Giảng viên', mail: 'dung.tran@hcmut.edu.vn'},
+    {name: 'Trần Quốc Dũng', role: 'Giảng viên', mail: 'dung.tran@hcmut.edu.vn'},
+
+  ]
 
   return ( 
       <>
@@ -261,7 +254,48 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                 <Input label='Password' type='password' value={encryptPassword} changePossible={true} user_id={user.user_id}/> 
                 <Input label='Organization' type='text' value={orgs.find((el: { id: string; })  => el.id == sessionInfo.organization)?.name}/> 
                 <Input label='Role' type='text' value={sessionInfo?.role_name}/> 
+                
+                
             </div>
+            <div className={styles.list}>
+                  <label htmlFor="Subordinate">Subordinate</label>
+                  <table className={styles.subordinate}>
+                    <thead>
+                      <tr >
+                        <th>Name</th>
+                        <th>Mail</th>
+                        <th>Role</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {subordinates.map((subordinate) => (
+                        <tr>
+                          <th>
+                            {subordinate.name}
+                          </th>
+                          <th>
+                            {subordinate.mail}
+                          </th>
+
+                          <th>
+                            {subordinate.role}
+                          </th>
+                          <th>
+                            {/* {item.user_id != userId && item.isActive &&  */}
+                            {/* (<Link onClick={() => handleView(item.user_id)} href={`/setting/userManage/${item.user_id}/view`}> */}
+                              <div className={styles.view}>
+                                <img src='/view.svg'></img>
+                              </div>
+                            {/* </Link>)} */}
+
+                          </th>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
         </form>)}
       </>
     )
@@ -351,6 +385,15 @@ const SettingsForm = ({actionBy,userAffected,isAddNew} : {actionBy: string,userA
                             </option>
                         ))}
                       </select>
+            </div>
+            <div 
+              className={styles.buttonSubordinate}
+              onClick={() => {
+                toggleCurrentPromptName()
+                toggleShowSubordinate()
+              }}
+            >
+              Subordinate
             </div>
         </div>
 

@@ -90,7 +90,6 @@ const submit = async (event: React.FormEvent<HTMLFormElement>) => {
       if(!response.data.isFirstAccess && response.data.isActive) {
         setDisabledL(true)
         localStorage.setItem('user', JSON.stringify(response.data));
-        console.log(response.data);
         Cookies.set('accessToken', response.data.access_token, { secure: true, sameSite: 'strict' });
         Cookies.set('userId', response.data.user_id, { secure: true, sameSite: 'strict' });
         router.push('/files');
